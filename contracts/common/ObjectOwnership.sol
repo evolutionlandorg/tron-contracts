@@ -5,9 +5,46 @@ import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "./interfaces/IInterstellarEncoder.sol";
 import "./interfaces/ISettingsRegistry.sol";
 import "./DSAuth.sol";
+import "./SupportsInterfaceWithLookup.sol";
 import "./SettingIds.sol";
 
-contract ObjectOwnership is ERC721Token("Evolution Land Objects","EVO"), DSAuth, SettingIds {
+contract ObjectOwnership is ERC721Token("Evolution Land Objects","EVO"), DSAuth, SupportsInterfaceWithLookup, SettingIds {
+    bytes4 internal constant InterfaceId_ERC721 = 0x80ac58cd;
+    /*
+    * 0x80ac58cd ===
+    *   bytes4(keccak256('balanceOf(address)')) ^
+    *   bytes4(keccak256('ownerOf(uint256)')) ^
+    *   bytes4(keccak256('approve(address,uint256)')) ^
+    *   bytes4(keccak256('getApproved(uint256)')) ^
+    *   bytes4(keccak256('setApprovalForAll(address,bool)')) ^
+    *   bytes4(keccak256('isApprovedForAll(address,address)')) ^
+    *   bytes4(keccak256('transferFrom(address,address,uint256)')) ^
+    *   bytes4(keccak256('safeTransferFrom(address,address,uint256)')) ^
+    *   bytes4(keccak256('safeTransferFrom(address,address,uint256,bytes)'))
+    */
+
+    bytes4 internal constant InterfaceId_ERC721Exists = 0x4f558e79;
+    /*
+    * 0x4f558e79 ===
+    *   bytes4(keccak256('exists(uint256)'))
+    */
+
+    bytes4 internal constant InterfaceId_ERC721Enumerable = 0x780e9d63;
+    /**
+    * 0x780e9d63 ===
+    *   bytes4(keccak256('totalSupply()')) ^
+    *   bytes4(keccak256('tokenOfOwnerByIndex(address,uint256)')) ^
+    *   bytes4(keccak256('tokenByIndex(uint256)'))
+    */
+
+    bytes4 internal constant InterfaceId_ERC721Metadata = 0x5b5e139f;
+    /**
+    * 0x5b5e139f ===
+    *   bytes4(keccak256('name()')) ^
+    *   bytes4(keccak256('symbol()')) ^
+    *   bytes4(keccak256('tokenURI(uint256)'))
+    */
+    
     ISettingsRegistry public registry;
 
     bool private singletonLock = false;

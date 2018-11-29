@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.0;
 
 contract IObjectOwnership {
     function mintObject(address _to, uint128 _objectId) public returns (uint256 _tokenId);
