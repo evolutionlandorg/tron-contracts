@@ -3,7 +3,7 @@ pragma solidity ^0.4.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../common/interfaces/ISettingsRegistry.sol";
 import "../common/DSAuth.sol";
-import "/common/SettingIds.sol";
+import "../common/SettingIds.sol";
 import "./interfaces/ILandBase.sol";
 import "./interfaces/IMysteriousTreasure.sol";
 

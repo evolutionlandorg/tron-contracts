@@ -1,8 +1,8 @@
 pragma solidity ^0.4.23;
 
 import "../common/interfaces/ISettingsRegistry.sol";
-import "../common/contracts/PausableDSAuth.sol";
-import "../common/contracts/SettingIds.sol";
+import "../common/PausableDSAuth.sol";
+import "../common/SettingIds.sol";
 import "./converter/interfaces/IBancorConverter.sol";
 import "./token/interfaces/ISmartToken.sol";
 import "./IBancorNetwork.sol";

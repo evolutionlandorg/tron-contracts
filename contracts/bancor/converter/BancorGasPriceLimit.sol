@@ -11,7 +11,7 @@ import '../utility/Utils.sol';
     with the network's current gas price.
 */
 contract BancorGasPriceLimit is IBancorGasPriceLimit, Owned, Utils {
-    uint256 public gasPrice = 0 wei;    // maximum gas price for bancor transactions
+    uint256 public gasPrice = 0;    // maximum gas price for bancor transactions
     
     /**
         @dev constructor

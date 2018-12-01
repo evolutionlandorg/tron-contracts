@@ -1,7 +1,7 @@
 pragma solidity ^0.4.23;
 import '../../token/interfaces/IERC20Token.sol';
 import '../../token/interfaces/ISmartToken.sol';
-import "../../common/interfaces/ISettingsRegistry.sol";
+import "../../../common/interfaces/ISettingsRegistry.sol";
 
 /*
     Bancor Converter Factory interface

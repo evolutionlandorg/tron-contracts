@@ -48,11 +48,11 @@ contract PointsRewardPool is PausableDSAuth, AuctionSettingIds {
     }
 
     function playWithSmallTicket() public isHuman whenNotPaused {
-        _play(10 ether, 8);
+        _play(10 trx, 8);
     }
 
     function playWithLargeTicket() public isHuman whenNotPaused {
-        _play(100 ether, 10);
+        _play(100 trx, 10);
     }
 
     function totalRewardInPool(address _token) public view returns (uint256) {
