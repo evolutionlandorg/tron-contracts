@@ -1,0 +1,26 @@
+{
+  "name": "@evolutionland/tron",
+  "version": "1.0.0",
+  "description": "Evolution Land contracts on TRON network",
+  "main": "tronbox.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "openzeppelin-solidity": "^1.10.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evolutionlandorg/tron-contracts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evolutionlandorg/tron-contracts/issues"
+  },
+  "homepage": "https://github.com/evolutionlandorg/tron-contracts#readme"
+}
