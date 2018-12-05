@@ -1,6 +1,23 @@
 # tron-contracts
 Evolution Land contracts on TRON network
 
+# Local provate testnet
+https://github.com/tronprotocol/docker-tron-quickstart
+
+For docker mirror config:
+
+https://www.jianshu.com/p/9fce6e583669
+
+After install docker:
+
+```
+docker pull trontools/quickstart:1.2.4
+```
+
+```
+docker run -it   -p 9090:9090   --rm   --name tron   trontools/quickstart:1.2.4
+```
+
 当前波场测试网合约部署
   已经部署
 
