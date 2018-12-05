@@ -1,12 +1,13 @@
 {
   "name": "@evolutionland/tron",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Evolution Land contracts on TRON network",
   "main": "tronbox.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
+    "@evolutionland/upgraeability-using-unstructured-storage": "^0.1.1",
     "openzeppelin-solidity": "^1.10.0"
   },
   "devDependencies": {},
