@@ -6,14 +6,31 @@ const SettingsRegistry = artifacts.require("SettingsRegistry");
 const StandardERC223 = artifacts.require("StandardERC223");
 const Proxy = artifacts.require("OwnedUpgradeabilityProxy");
 
+const ObjectOwnership = artifacts.require('ObjectOwnership');
+
+const DeployAndTest = artifacts.require('DeployAndTest');
+
+const SettingIds = artifacts.require('SettingIds');
 const BankSettingIds = artifacts.require('BankSettingIds');
+
+
+const IDSettingIds = artifacts.require('IDSettingIds');
 const MintAndBurnAuthority = artifacts.require('MintAndBurnAuthority');
 const DividendPool = artifacts.require('DividendPool');
 const FrozenDividend = artifacts.require('FrozenDividend');
-const IDSettingIds = artifacts.require('IDSettingIds');
 const RolesUpdater = artifacts.require("RolesUpdater");
 const UserRoles = artifacts.require("UserRoles");
 const UserRolesAuthority = artifacts.require("UserRolesAuthority");
+const RevenuePool = artifacts.require('RevenuePool');
+const UserPoints = artifacts.require('UserPoints');
+const UserPointsAuthority = artifacts.require('UserPointsAuthority');
+const PointsRewardPool = artifacts.require('PointsRewardPool');
+
+
+const MysteriousTreasure = artifacts.require('MysteriousTreasure');
+const GenesisHolder = artifacts.require('GenesisHolder')
+const LandBase = artifacts.require('LandBase');
+
 const BancorConverter = artifacts.require('BancorConverter');
 const BancorFormula = artifacts.require('BancorFormula');
 const BancorGasPriceLimit = artifacts.require('BancorGasPriceLimit');
@@ -24,8 +41,13 @@ const BancorNetwork = artifacts.require('BancorNetwork');
 const BancorExchange = artifacts.require('BancorExchange');
 const ContractIds = artifacts.require('ContractIds');
 const FeatureIds = artifacts.require('FeatureIds');
-const DeployAndTest = artifacts.require('DeployAndTest');
 const SmartTokenRING = artifacts.require('ERC223SmartToken')
+
+const AuctionSettingIds = artifacts.require('AuctionSettingIds');
+const ClockAuction = artifacts.require('ClockAuction')
+const LandBaseAuthority = artifacts.require('LandBaseAuthority');
+const BancorExchangeAuthority = artifacts.require('BancorExchangeAuthority');
+const ClockAuctionAuthority = artifacts.require('ClockAuctionAuthority');
 
 const conf = {
     bank_unit_interest: 1000,
@@ -38,8 +60,6 @@ const conf = {
     bagCountLimit: 50,
     perMinAmount: 20 ** 10**18,
     weight10Percent: 100000,
-    // remember to change this.
-    from: '0x4cc4c344eba849dc09ac9af4bff1977e44fc1d7e',
     land_objectClass: 1,
     gasPrice: 10000000000,
     bank_unit_interest: 1000,
@@ -54,25 +74,14 @@ const conf = {
     uint_error_space: 0
 }
 
+let ring;
+let kton;
+
 let gold;
 let wood;
 let water;
 let fire;
 let soil;
-
-let landBaseProxy;
-let objectOwnershipProxy;
-let tokenLocationProxy;
-let dividendPoolProxy_address;
-let frozenDividendProxy;
-let userRolesProxy;
-
-let clockAuctionProxy;
-let mysteriousTreasureProxy;
-let genesisHolderProxy;
-let revenuePoolProxy;
-let pointsRewardPoolProxy;
-let userPointsProxy;
 
 let settingIds;
 let settingsRegistry;
@@ -89,7 +98,7 @@ module.exports = function(deployer, network, accounts) {
 async function developmentDeploy(deployer, network, accounts) {
     console.log(network);
 
-    await deployer.deploy(LocationCoder);
+    // await deployer.deploy(LocationCoder);
     await deployer.deploy(InterstellarEncoder);
 
     await deployer.deploy(SettingIds);
@@ -153,7 +162,14 @@ async function developmentDeploy(deployer, network, accounts) {
         await settingsRegistry.setAddressProperty(soilId, soil.address);
     })
 
+    
     ///////////   Deploy Land Contracts     ////////////////
+    let landBaseProxy;
+    let objectOwnershipProxy;
+    let tokenLocationProxy;
+    let dividendPoolProxy_address;
+    let frozenDividendProxy;
+    let userRolesProxy;
     deployer.deploy(Proxy).then(async () => {
         tokenLocationProxy = await Proxy.deployed();
         return deployer.deploy(Proxy);
@@ -209,9 +225,13 @@ async function developmentDeploy(deployer, network, accounts) {
     });
 
     /// Bank
-    await deployer.deploy(BankSettingIds);
-
-    deployer.deploy(GringottsBank).then(async () => {
+    deployer.deploy(BankSettingIds).then(async() => {
+        console.log("\n========================\n" +
+            "BANK MIGRATION STARTS!!" +
+            "\n========================\n\n");
+        await deployer.deploy(Proxy);
+        await deployer.deploy(GringottsBank);
+    }).then(async () => {
         return deployer.deploy(MintAndBurnAuthority, [Proxy.address]);
     }).then(async() => {
         let settingIds = await BankSettingIds.deployed();
@@ -291,14 +311,14 @@ async function developmentDeploy(deployer, network, accounts) {
         console.log("UPGRADE DONE! ");
 
         // initialize
-        let dividendPoolProxy = await DividendPool.at(dividendPoolProxy.address);
-        await dividendPoolProxy.initializeContract(settingsRegistry.address);
+        let dividendPool = await DividendPool.at(dividendPoolProxy.address);
+        await dividendPool.initializeContract(settingsRegistry.address);
 
-        let frozenDividendProxy = await FrozenDividend.at(frozenDividendProxy.address);
-        await frozenDividendProxy.initializeContract(settingsRegistry.address);
+        let frozenDividend = await FrozenDividend.at(frozenDividendProxy.address);
+        await frozenDividend.initializeContract(settingsRegistry.address);
 
-        let userRolesProxy = await UserRoles.at(userRolesProxy.address);
-        await userRolesProxy.initializeContract();
+        let userRoles = await UserRoles.at(userRolesProxy.address);
+        await userRoles.initializeContract();
 
         console.log("INITIALIZATION DONE! ");
 
@@ -310,42 +330,21 @@ async function developmentDeploy(deployer, network, accounts) {
         console.log('MIGRATION SUCCESS!');
     });
 
-    deployer.deploy([
-        Proxy
-    ]).then(async () => {
-        frozenDividendProxy = await Proxy.deployed();
-
-        return deployer.deploy(FrozenDividend);
-    }).then(async () => {
-        let frozenDividend = await FrozenDividend.deployed();
-        await frozenDividendProxy.upgradeTo(FrozenDividend.address);
-
-        let frozenDividendProxy = await FrozenDividend.at(frozenDividendProxy.address);
-        let instance = await DeployAndTest.deployed();
-        let ring  =  await instance.testRING.call();
-        let kton  =  await instance.testKTON.call();
-        console.log("Loging: ring..." + ring);
-        await frozenDividendProxy.initializeContract(SettingsRegistry.address);
-
-        // return deployer.deploy(MintAndBurnAuthority, DividendPoolProxy.address);
-    })
-
-    deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
+    // deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
 
     /// Bancor
-
     deployer.deploy(ContractIds);
     deployer.deploy(ContractFeatures);
     deployer.deploy(BancorFormula);
     deployer.deploy(WhiteList);
     deployer.deploy(EtherToken);
-    deployer.deploy(BancorGasPriceLimit, CONF.gasPrice);
+    deployer.deploy(BancorGasPriceLimit, conf.gasPrice);
     deployer.deploy(BancorNetwork, settingsRegistry.address).then(async () => {
         let contractIds = await ContractIds.deployed();
         let contractFeaturesId = await contractIds.CONTRACT_FEATURES.call();
         await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
     }).then(async () => {
-        await deployer.deploy(BancorConverter, ring, settingsRegistry.address, 0, EtherToken.address, CONF.weight10Percent, {gas: 8000000});
+        await deployer.deploy(BancorConverter, ring.address, settingsRegistry.address, 0, EtherToken.address, conf.weight10Percent, {gas: 8000000});
     }).then(async () => {
         await deployer.deploy(BancorExchange, BancorNetwork.address, BancorConverter.address, settingsRegistry.address, {gas: 5000000});
     }).then(async () => {
@@ -370,8 +369,8 @@ async function developmentDeploy(deployer, network, accounts) {
         await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetwork.address);
 
         //do this to make SmartToken.totalSupply > 0
-        await ring.changeCap(20 * 10**8 * COIN);
-        await ring.issue(CONF.from, 12 * 10 **8 * COIN);
+        // await ring.changeCap(20 * 10**8 * COIN);
+        // await ring.issue(conf.from, 12 * 10 **8 * COIN);
         // await smartTokenAuthority.setWhitelist(bancorConverter.address, true);
         await ring.transferOwnership(bancorConverter.address);
         await bancorConverter.acceptTokenOwnership();
@@ -385,101 +384,53 @@ async function developmentDeploy(deployer, network, accounts) {
 
         await bancorNetwork.registerEtherToken(etherToken.address, true);
 
-        await bancorExchange.setQuickBuyPath([etherToken.address, CONF.ring_address, CONF.ring_address]);
-        await bancorExchange.setQuickSellPath([CONF.ring_address, CONF.ring_address, etherToken.address]);
+        await bancorExchange.setQuickBuyPath([etherToken.address, ring.address, ring.address]);
+        await bancorExchange.setQuickSellPath([ring.address, ring.address, etherToken.address]);
 
         console.log('SUCCESS!')
     })
 
+    let clockAuctionProxy;
+    let mysteriousTreasureProxy;
+    let genesisHolderProxy;
+    let revenuePoolProxy;
+    let pointsRewardPoolProxy;
+    let userPointsProxy;
 
     /// Market...
-    deployer.deploy(BankSettingIds).then(async() => {
-        console.log("\n========================\n" +
-            "BANK MIGRATION STARTS!!" +
-            "\n========================\n\n");
-        await deployer.deploy(Proxy);
-        await deployer.deploy(GringottsBank);
-    }).then(async () => {
-        bankProxy = await Proxy.deployed();
-
-        return deployer.deploy(MintAndBurnAuthority, [Proxy.address]);
-    }).then(async() => {
-        let settingIds = await BankSettingIds.deployed();
-
-        let bank_unit_interest = await settingIds.UINT_BANK_UNIT_INTEREST.call();
-        await settingsRegistry.setUintProperty(bank_unit_interest, conf.bank_unit_interest);
-
-        let bank_penalty_multiplier = await settingIds.UINT_BANK_PENALTY_MULTIPLIER.call();
-        await settingsRegistry.setUintProperty(bank_penalty_multiplier, conf.bank_penalty_multiplier);
-        console.log("REGISTRATION DONE! ");
-
-        await bankProxy.upgradeTo(GringottsBank.address);
-        console.log("UPGRADE DONE! ");
-
-        // initialize
-        let bankProxy = await GringottsBank.at(Proxy.address);
-        await bankProxy.initializeContract(settingsRegistry.address);
-        console.log("INITIALIZATION DONE! ");
-
-        // setAuthority to kton
-        await kton.setAuthority(MintAndBurnAuthority.address);
-
-        console.log('MIGRATION SUCCESS!');
-
-
-        // kton.setAuthority will be done in market's migration
-        let interest = await bankProxy.computeInterest.call(10000, 12, conf.bank_unit_interest);
-        console.log("Current annual interest for 10000 RING is: ... " + interest + " KTON");
-
-        console.log("\n======================\n" +
-            "BANK MIGRATION SUCCESS!!" +
-            "\n======================\n\n");
-    }).then(async() => {
+    deployer.deploy(AuctionSettingIds).then(async() => {
         console.log("\n========================\n" +
             "AUCTION MIGRATION STARTS!!" +
             "\n========================\n\n");
-        await deployer.deploy(AuctionSettingIds);
         await deployer.deploy(Proxy)
     }).then(async () => {
-        let clockAuctionProxy = await Proxy.deployed();
-        clockAuctionProxy_address = clockAuctionProxy.address;
-        console.log("ClockAuctionProxy_address: ", clockAuctionProxy_address);
+        clockAuctionProxy = await Proxy.deployed();
         await deployer.deploy(ClockAuction);
         return deployer.deploy(Proxy);
     }).then(async () => {
-        let mysteriousTreasureProxy = await Proxy.deployed();
-        mysteriousTreasureProxy_address = mysteriousTreasureProxy.address;
-        console.log("mysteriousTreasureProxy_address: ", mysteriousTreasureProxy_address);
+        mysteriousTreasureProxy = await Proxy.deployed();
         await deployer.deploy(MysteriousTreasure);
         return deployer.deploy(Proxy)
     }).then(async () => {
-        let genesisHolderProxy  = await Proxy.deployed();
-        genesisHolderProxy_address = genesisHolderProxy.address;
-        console.log("genesisHolderProxy_address: ", genesisHolderProxy_address);
+        genesisHolderProxy  = await Proxy.deployed();
         await deployer.deploy(GenesisHolder);
         return deployer.deploy(Proxy)
     }).then(async () => {
-        let revenuePoolProxy = await Proxy.deployed();
-        revenuePoolProxy_address = revenuePoolProxy.address;
-        console.log("revenuePoolProxy_address: ", revenuePoolProxy_address);
+        revenuePoolProxy = await Proxy.deployed();
         await deployer.deploy(RevenuePool);
         return deployer.deploy(Proxy)
     }).then(async() => {
-        let pointsRewardPoolProxy = await Proxy.deployed();
-        pointsRewardPoolProxy_address = pointsRewardPoolProxy.address;
-        console.log("pointsRewardPoolProxy_address: ", pointsRewardPoolProxy_address);
+        pointsRewardPoolProxy = await Proxy.deployed();
         await deployer.deploy(PointsRewardPool);
         return deployer.deploy(Proxy)
     }).then(async() => {
-        let userPointsProxy = await Proxy.deployed();
-        userPointsProxy_address = userPointsProxy.address;
-        console.log("userPoints Proxy address: ", userPointsProxy_address);
+        userPointsProxy = await Proxy.deployed();
         await deployer.deploy(UserPoints);
     }).then(async() => {
-        await deployer.deploy(UserPointsAuthority, [revenuePoolProxy_address, pointsRewardPoolProxy_address]);
-        await deployer.deploy(LandBaseAuthority, [mysteriousTreasureProxy_address]);
-        await deployer.deploy(BancorExchangeAuthority, [clockAuctionProxy_address]);
-        await deployer.deploy(ClockAuctionAuthority, [genesisHolderProxy_address]);
+        await deployer.deploy(UserPointsAuthority, [revenuePoolProxy.address, pointsRewardPoolProxy.address]);
+        await deployer.deploy(LandBaseAuthority, [mysteriousTreasureProxy.address]);
+        await deployer.deploy(BancorExchangeAuthority, [clockAuctionProxy.address]);
+        await deployer.deploy(ClockAuctionAuthority, [genesisHolderProxy.address]);
     }).then(async () => {
 
         // let ring = await RING.at(conf.ring_address);
@@ -488,13 +439,13 @@ async function developmentDeploy(deployer, network, accounts) {
         //register to registry
 
         let revenueId = await settingIds.CONTRACT_REVENUE_POOL.call();
-        await settingsRegistry.setAddressProperty(revenueId, revenuePoolProxy_address);
+        await settingsRegistry.setAddressProperty(revenueId, revenuePoolProxy.address);
 
         let pointsRewardId = await settingIds.CONTRACT_POINTS_REWARD_POOL.call();
-        await settingsRegistry.setAddressProperty(pointsRewardId, pointsRewardPoolProxy_address);
+        await settingsRegistry.setAddressProperty(pointsRewardId, pointsRewardPoolProxy.address);
 
         let userPointsId = await settingIds.CONTRACT_USER_POINTS.call();
-        await settingsRegistry.setAddressProperty(userPointsId, userPointsProxy_address);
+        await settingsRegistry.setAddressProperty(userPointsId, userPointsProxy.address);
 
         let contributionId = await settingIds.CONTRACT_CONTRIBUTION_INCENTIVE_POOL.call();
         await settingsRegistry.setAddressProperty(contributionId, conf.contribution_incentive_address);
@@ -505,11 +456,8 @@ async function developmentDeploy(deployer, network, accounts) {
         let devId = await settingIds.CONTRACT_DEV_POOL.call();
         await settingsRegistry.setAddressProperty(devId, conf.dev_pool_address);
 
-        let ringId = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
-        await settingsRegistry.setAddressProperty(ringId, ring_address);
-
         let auctionId = await settingIds.CONTRACT_CLOCK_AUCTION.call();
-        await settingsRegistry.setAddressProperty(auctionId, clockAuctionProxy_address);
+        await settingsRegistry.setAddressProperty(auctionId, clockAuctionProxy.address);
 
         let auctionCutId = await settingIds.UINT_AUCTION_CUT.call();
         await settingsRegistry.setUintProperty(auctionCutId, conf.uint_auction_cut);
@@ -518,7 +466,7 @@ async function developmentDeploy(deployer, network, accounts) {
         await settingsRegistry.setUintProperty(waitingTimeId, conf.uint_bid_waiting_time);
 
         let treasureId = await settingIds.CONTRACT_MYSTERIOUS_TREASURE.call();
-        await settingsRegistry.setAddressProperty(treasureId, mysteriousTreasureProxy_address);
+        await settingsRegistry.setAddressProperty(treasureId, mysteriousTreasureProxy.address);
 
         let bancorExchangeId = await settingIds.CONTRACT_BANCOR_EXCHANGE.call();
         await settingsRegistry.setAddressProperty(bancorExchangeId, BancorExchange.address);
@@ -532,43 +480,43 @@ async function developmentDeploy(deployer, network, accounts) {
         console.log("REGISTRATION DONE! ");
 
         // upgrade
-        await Proxy.at(clockAuctionProxy_address).upgradeTo(ClockAuction.address);
-        await Proxy.at(mysteriousTreasureProxy_address).upgradeTo(MysteriousTreasure.address);
-        await Proxy.at(genesisHolderProxy_address).upgradeTo(GenesisHolder.address);
-        await Proxy.at(revenuePoolProxy_address).upgradeTo(RevenuePool.address);
-        await Proxy.at(pointsRewardPoolProxy_address).upgradeTo(PointsRewardPool.address);
-        await Proxy.at(userPointsProxy_address).upgradeTo(UserPoints.address);
+        await clockAuctionProxy.upgradeTo(ClockAuction.address);
+        await mysteriousTreasureProxy.upgradeTo(MysteriousTreasure.address);
+        await genesisHolderProxy.upgradeTo(GenesisHolder.address);
+        await revenuePoolProxy.upgradeTo(RevenuePool.address);
+        await pointsRewardPoolProxy.upgradeTo(PointsRewardPool.address);
+        await userPointsProxy.upgradeTo(UserPoints.address);
         console.log("UPGRADE DONE! ");
 
         // initialize
-        let clockAuctionProxy = await ClockAuction.at(clockAuctionProxy_address);
-        await clockAuctionProxy.initializeContract(settingsRegistry.address);
+        let clockAuction = await ClockAuction.at(clockAuctionProxy.address);
+        await clockAuction.initializeContract(settingsRegistry.address);
 
-        let genesisHolderProxy = await GenesisHolder.at(genesisHolderProxy_address);
-        await genesisHolderProxy.initializeContract(settingsRegistry.address);
+        let genesisHolder = await GenesisHolder.at(genesisHolderProxy.address);
+        await genesisHolder.initializeContract(settingsRegistry.address);
 
-        let mysteriousTreasureProxy = await MysteriousTreasure.at(mysteriousTreasureProxy_address);
-        await mysteriousTreasureProxy.initializeContract(settingsRegistry.address, [10439, 419, 5258, 12200, 12200]);
+        let mysteriousTreasure = await MysteriousTreasure.at(mysteriousTreasureProxy.address);
+        await mysteriousTreasure.initializeContract(settingsRegistry.address, [10439, 419, 5258, 12200, 12200]);
 
-        let revenuePoolProxy = await RevenuePool.at(revenuePoolProxy_address);
-        await revenuePoolProxy.initializeContract(settingsRegistry.address);
+        let revenuePool = await RevenuePool.at(revenuePoolProxy.address);
+        await revenuePool.initializeContract(settingsRegistry.address);
 
-        let pointsRewardPoolProxy = await PointsRewardPool.at(pointsRewardPoolProxy_address);
-        await pointsRewardPoolProxy.initializeContract(settingsRegistry.address);
+        let pointsRewardPool = await PointsRewardPool.at(pointsRewardPoolProxy.address);
+        await pointsRewardPool.initializeContract(settingsRegistry.address);
 
-        let userPointsProxy = await UserPoints.at(userPointsProxy_address);
-        await userPointsProxy.initializeContract();
+        let userPoints = await UserPoints.at(userPointsProxy.address);
+        await userPoints.initializeContract();
         console.log("INITIALIZATION DONE! ");
 
         // allow treasure to modify data in landbase
-        let landBaseProxy = await LandBase.at(landBaseProxy_address);
-        await landBaseProxy.setAuthority(LandBaseAuthority.address);
+        let landBase = await LandBase.at(landBaseProxy.address);
+        await landBase.setAuthority(LandBaseAuthority.address);
 
         // transfer treasure's owner to clockAuction
-        await mysteriousTreasureProxy.setOwner(clockAuctionProxy_address);
+        await mysteriousTreasure.setOwner(clockAuctionProxy.address);
 
         // set authority
-        await userPointsProxy.setAuthority(UserPointsAuthority.address);
+        await userPoints.setAuthority(UserPointsAuthority.address);
         await BancorExchange.at(BancorExchange.address).setAuthority(BancorExchangeAuthority.address);
 
         await clockAuctionProxy.setAuthority(ClockAuctionAuthority.address);
