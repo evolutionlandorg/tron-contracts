@@ -1,9 +1,9 @@
-const LocationCoder = artifacts.require("./LocationCoder.sol");
-const TokenLocation = artifacts.require("./TokenLocation.sol");
-const InterstellarEncoder = artifacts.require("./InterstellarEncoderV2.sol");
-const GringottsBank = artifacts.require("./GringottsBank.sol");
-const SettingsRegistry = artifacts.require("./SettingsRegistry.sol");
-const StandardERC223 = artifacts.require("./StandardERC223.sol");
+const LocationCoder = artifacts.require("LocationCoder");
+const TokenLocation = artifacts.require("TokenLocation.sol");
+const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");
+const GringottsBank = artifacts.require("GringottsBank");
+const SettingsRegistry = artifacts.require("SettingsRegistry");
+const StandardERC223 = artifacts.require("StandardERC223");
 const Proxy = artifacts.require("OwnedUpgradeabilityProxy");
 
 const BankSettingIds = artifacts.require('BankSettingIds');
@@ -11,10 +11,6 @@ const MintAndBurnAuthority = artifacts.require('MintAndBurnAuthority');
 const DividendPool = artifacts.require('DividendPool');
 const FrozenDividend = artifacts.require('FrozenDividend');
 const IDSettingIds = artifacts.require('IDSettingIds');
-const SettingsRegistry = artifacts.require('SettingsRegistry');
-const MintAndBurnAuthority = artifacts.require('MintAndBurnAuthority');
-const StandardERC223 = artifacts.require('StandardERC223');
-const Proxy = artifacts.require("OwnedUpgradeabilityProxy");
 const RolesUpdater = artifacts.require("RolesUpdater");
 const UserRoles = artifacts.require("UserRoles");
 const UserRolesAuthority = artifacts.require("UserRolesAuthority");
@@ -23,7 +19,6 @@ const BancorFormula = artifacts.require('BancorFormula');
 const BancorGasPriceLimit = artifacts.require('BancorGasPriceLimit');
 const EtherToken = artifacts.require('EtherToken');
 const ContractFeatures = artifacts.require('ContractFeatures');
-const SettingsRegistry = artifacts.require('SettingsRegistry');
 const WhiteList = artifacts.require('Whitelist');
 const BancorNetwork = artifacts.require('BancorNetwork');
 const BancorExchange = artifacts.require('BancorExchange');
@@ -83,7 +78,7 @@ let settingIds;
 let settingsRegistry;
 
 module.exports = function(deployer, network, accounts) {
-    if (network != "development")
+    if (network == "development")
     {
         deployer.then(async () => {
             await developmentDeploy(deployer, network, accounts);
