@@ -263,8 +263,7 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
         returns (uint256)
     {
         if (_v == 0x0 && _r == 0x0 && _s == 0x0) {
-            IBancorGasPriceLimit gasPriceLimit = IBancorGasPriceLimit(registry.addressOf(ContractIds.BANCOR_GAS_PRICE_LIMIT));
-            gasPriceLimit.validateGasPrice(tx.gasprice);
+            // Do not verify TRON gas ...
         }
         else {
             require(verifyTrustedSender(_path, _amount, _block, _for, _v, _r, _s));
