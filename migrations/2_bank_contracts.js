@@ -28,14 +28,8 @@ const UserPointsAuthority = artifacts.require('UserPointsAuthority');
 const PointsRewardPool = artifacts.require('PointsRewardPool');
 const TakeBack = artifacts.require('TakeBack');
 
-
-const MysteriousTreasure = artifacts.require('MysteriousTreasure');
-const GenesisHolder = artifacts.require('GenesisHolder')
-const LandBase = artifacts.require('LandBase');
-
 const BancorConverter = artifacts.require('BancorConverter');
 const BancorFormula = artifacts.require('BancorFormula');
-const BancorGasPriceLimit = artifacts.require('BancorGasPriceLimit');
 const TrxToken = artifacts.require('TrxToken');
 const ContractFeatures = artifacts.require('ContractFeatures');
 const WhiteList = artifacts.require('Whitelist');
@@ -44,17 +38,12 @@ const BancorExchange = artifacts.require('BancorExchange');
 const ContractIds = artifacts.require('ContractIds');
 const FeatureIds = artifacts.require('FeatureIds');
 
-const AuctionSettingIds = artifacts.require('AuctionSettingIds');
-const ClockAuction = artifacts.require('ClockAuction')
-const LandBaseAuthority = artifacts.require('LandBaseAuthority');
 const BancorExchangeAuthority = artifacts.require('BancorExchangeAuthority');
-const ClockAuctionAuthority = artifacts.require('ClockAuctionAuthority');
 
 const conf = {
     bank_unit_interest: 1000,
     bank_penalty_multiplier: 3,
-    land_objectClass: 1,
-    networkId: 42,
+    networkId: 200001,  // TRON shasta
     ringAmountLimit: 500000 * 10**18,
     bagCountLimit: 50,
     perMinAmount: 20 ** 10**18,
@@ -63,12 +52,6 @@ const conf = {
     supervisor_address: '00a1537d251a6a4c4effAb76948899061FeA47b9',
     dev_pool_address: '00a1537d251a6a4c4effAb76948899061FeA47b9',
     contribution_incentive_address: '00a1537d251a6a4c4effAb76948899061FeA47b9',
-    // 4%
-    uint_auction_cut: 400,
-    // 20%
-    uint_referer_cut: 2000,
-    // 30 minutes
-    uint_bid_waiting_time: 1800,
     // errorsparce
     uint_error_space: 0
 }
@@ -113,17 +96,19 @@ async function developmentDeploy(deployer, network, accounts) {
     );
 
     ///////////   Token Contracts     ////////////////
-    await deployer.deploy(DeployAndTest).then(async () => {
-        let instance = await DeployAndTest.deployed();
-        ring  =  await instance.testRING.call();
-        kton  =  await instance.testKTON.call();
+    await deployer.deploy(StandardERC223, "RING");
 
-        let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
-        await settingsRegistry.setAddressProperty(ring_settings, ring);
+    // .then(async () => {
+    //     let instance = await DeployAndTest.deployed();
+    //     ring  =  await instance.testRING.call();
+    //     kton  =  await instance.testKTON.call();
 
-        let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
-        return settingsRegistry.setAddressProperty(kton_settings, kton);
-    })
+    //     let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
+    //     await settingsRegistry.setAddressProperty(ring_settings, ring);
+
+    //     let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
+    //     return settingsRegistry.setAddressProperty(kton_settings, kton);
+    // })
 
     // web3.toHex('GOLD') = "0x474f4c44"
     // web3.toHex('WOOD') = "0x574f4f44"
@@ -275,7 +260,6 @@ async function developmentDeploy(deployer, network, accounts) {
         let whiteList = await WhiteList.deployed();
         let trxToken = await TrxToken.deployed();
         let bancorNetwork = await BancorNetwork.deployed();
-        let bancorGasPriceLimit = await BancorGasPriceLimit.deployed();
         let bancorFormula = await BancorFormula.deployed();
 
         let contractIds = await ContractIds.deployed();
@@ -285,8 +269,7 @@ async function developmentDeploy(deployer, network, accounts) {
         // register
         let formulaId = await contractIds.BANCOR_FORMULA.call();
         await settingsRegistry.setAddressProperty(formulaId, bancorFormula.address);
-        // let gasPriceLimitId = await contractIds.BANCOR_GAS_PRICE_LIMIT.call();
-        // await settingsRegistry.setAddressProperty(gasPriceLimitId, bancorGasPriceLimit.address);
+        
         let bancorNetworkId = await contractIds.BANCOR_NETWORK.call();
         await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetwork.address);
 

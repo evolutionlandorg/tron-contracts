@@ -4,7 +4,6 @@ import './ContractIds.sol';
 import './FeatureIds.sol';
 import './converter/interfaces/IBancorConverter.sol';
 import './converter/interfaces/IBancorFormula.sol';
-import './converter/interfaces/IBancorGasPriceLimit.sol';
 import './utility/TokenHolder.sol';
 import "../common/interfaces/ISettingsRegistry.sol";
 import './utility/interfaces/IContractFeatures.sol';

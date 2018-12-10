@@ -12,19 +12,19 @@ contract StandardERC223 is StandardERC20Base, DSAuth, ERC223 {
     event Burn(address indexed burner, uint256 value);
     event Mint(address indexed to, uint256 amount);
 
-    bytes32  public  symbol;
+    string  public  symbol;
     uint256  public  decimals = 18; // standard token precision. override to customize
     // Optional token name
-    bytes32   public  name = "";
+    string   public  name = "";
 
     address public controller;
 
-    constructor(bytes32 _symbol) public {
+    constructor(string _symbol) public {
         symbol = _symbol;
         controller = msg.sender;
     }
 
-    function setName(bytes32 name_) public auth {
+    function setName(string name_) public auth {
         name = name_;
     }
 

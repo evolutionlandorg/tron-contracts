@@ -233,10 +233,10 @@ contract DSTokenBase is ERC20, DSMath {
 
 contract DSToken is DSTokenBase(0), DSStop {
 
-    bytes32  public  symbol;
+    string  public  symbol;
     uint256  public  decimals = 18; // standard token precision. override to customize
 
-    constructor(bytes32 symbol_) public {
+    constructor(string symbol_) public {
         symbol = symbol_;
     }
 
@@ -300,9 +300,9 @@ contract DSToken is DSTokenBase(0), DSStop {
     }
 
     // Optional token name
-    bytes32   public  name = "";
+    string   public  name = "";
 
-    function setName(bytes32 name_) public auth {
+    function setName(string name_) public auth {
         name = name_;
     }
 }
