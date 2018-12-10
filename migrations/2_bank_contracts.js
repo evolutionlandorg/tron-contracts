@@ -1,3 +1,20 @@
+const TronWeb = require('tronweb')
+
+const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
+const fullNode = new HttpProvider('http://127.0.0.1:8090'); // Full node http endpoint
+const solidityNode = new HttpProvider('http://127.0.0.1:8091'); // Solidity node http endpoint
+const eventServer = 'http://127.0.0.1:8092'; // Contract events http endpoint
+
+const privateKey = '163ef951a884410357f40646069f68d084576f4e10786f74c373643f44ebdaaa';
+
+const tronWeb = new TronWeb(
+    fullNode,
+    solidityNode,
+    eventServer,
+    privateKey
+);
+
+
 const LocationCoder = artifacts.require("LocationCoder");
 const TokenLocation = artifacts.require("TokenLocation.sol");
 const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");
@@ -60,7 +77,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "development")
     {
         deployer.then(async () => {
-            await deployer.deploy(TrxToken);
+            // await deployer.deploy(TrxToken);
             // await developmentDeploy(deployer, network, accounts);
         });
     }
@@ -68,6 +85,8 @@ module.exports = function(deployer, network, accounts) {
 
 async function developmentDeploy(deployer, network, accounts) {
     console.log(network);
+    console.log(deployer);
+    console.log(accounts);
 
     // await deployer.deploy(LocationCoder);
     await deployer.deploy(InterstellarEncoder);
@@ -119,6 +138,17 @@ async function developmentDeploy(deployer, network, accounts) {
     // let bank = await GringottsBank.at(bankProxy.address);
     // await bank.initializeContract(settingsRegistry.address);
     // console.log("INITIALIZATION DONE! ");
+
+    // console.log(GringottsBank.address);
+    // let bank = await tronWeb.contract(GringottsBank.abi, GringottsBank.address);
+
+    // console.log(bank);
+
+    // console.log(await bank.owner().call());
+    
+    // await bank.initializeContract(settingsRegistry.address).send();
+    // console.log("INITIALIZATION DONE! ");
+    
 
     // // kton.setAuthority will be done in market's migration
     // let interest = await bankProxy.computeInterest.call(10000, 12, conf.bank_unit_interest);

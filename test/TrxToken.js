@@ -6,12 +6,10 @@ const utils = require('./helpers/Utils');
 
 contract('TrxToken', accounts => {
     it('verifies the token name after construction', async () => {
-        // let token = await TrxToken.new();
-        let token = await TrxToken.deployed();
+        let token = await tronWeb.contract().new(TrxToken);
 
-        console.log(token.address);
-        // let name = await token.call('name');
-        // assert.equal(name, 'Trx Token');
+        let name = await token.name().call();
+        assert.equal(name, 'Trx Token');
     });
 
     it('verifies the token symbol after construction', async () => {
@@ -24,11 +22,25 @@ contract('TrxToken', accounts => {
         let token = await TrxToken.deployed();
         console.log(token.deposit);
         await token.deposit({ callValue: 1000 });
+        // truffle format
         // let balance = await token.balanceOf.call(accounts[0]);
+
         let balance = await token.call('balanceOf', accounts[0]);
-        console.log(balance);
         assert.equal(balance.toNumber(), 1000);
         let supply = await token.call('totalSupply');
+        assert.equal(supply.toNumber(), 1000);
+    });
+
+    it('another example: verifies the balance and supply after a deposit through the deposit function', async () => {
+        let token = await tronWeb.contract().new(TrxToken);
+        console.log(token.deposit);
+        await token.deposit().send({
+            callValue: 1000 
+        });
+        let balance = await token.balanceOf(accounts[0]).call();
+        console.log(balance);
+        assert.equal(balance.toNumber(), 1000);
+        let supply = await token.totalSupply().call();
         assert.equal(supply.toNumber(), 1000);
     });
 
