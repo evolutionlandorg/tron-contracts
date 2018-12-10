@@ -9,7 +9,7 @@ import './utility/TokenHolder.sol';
 import "../common/interfaces/ISettingsRegistry.sol";
 import './utility/interfaces/IContractFeatures.sol';
 import './utility/interfaces/IWhitelist.sol';
-import './token/interfaces/IEtherToken.sol';
+import './token/interfaces/ITrxToken.sol';
 import './token/interfaces/ISmartToken.sol';
 
 /*
@@ -36,7 +36,7 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
     address public signerAddress = 0x0;         // verified address that allows conversions with higher gas price
     ISettingsRegistry public registry;          // contract registry contract address
 
-    mapping (address => bool) public etherTokens;       // list of all supported ether tokens
+    mapping (address => bool) public trxTokens;       // list of all supported ether tokens
     mapping (bytes32 => bool) public conversionHashes;  // list of conversion hashes, to prevent re-use of the same hash
 
     /**
@@ -88,13 +88,13 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
         @param _token       ether token contract address
         @param _register    true to register, false to unregister
     */
-    function registerEtherToken(IEtherToken _token, bool _register)
+    function registerTrxToken(ITrxToken _token, bool _register)
         public
         ownerOnly
         validAddress(_token)
         notThis(_token)
     {
-        etherTokens[_token] = _register;
+        trxTokens[_token] = _register;
     }
 
     /**
@@ -165,12 +165,12 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
     {
         // if ETH is provided, ensure that the amount is identical to _amount and verify that the source token is an ether token
         IERC20Token fromToken = _path[0];
-        require(msg.value == 0 || (_amount == msg.value && etherTokens[fromToken]));
+        require(msg.value == 0 || (_amount == msg.value && trxTokens[fromToken]));
 
         // if ETH was sent with the call, the source is an ether token - deposit the ETH in it
         // otherwise, we assume we already have the tokens
         if (msg.value > 0)
-            IEtherToken(fromToken).deposit.value(msg.value)();
+            ITrxToken(fromToken).deposit.value(msg.value)();
 
         return convertForInternal(_path, _amount, _minReturn, _for, _block, _v, _r, _s);
     }
@@ -215,12 +215,12 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
             // verify that the source token is an ether token. otherwise ensure that 
             // the source is not an ether token
             IERC20Token fromToken = path[0];
-            require(msg.value == 0 || (_amounts[i] <= msg.value && etherTokens[fromToken]) || !etherTokens[fromToken]);
+            require(msg.value == 0 || (_amounts[i] <= msg.value && trxTokens[fromToken]) || !trxTokens[fromToken]);
 
             // if ETH was sent with the call, the source is an ether token - deposit the ETH path amount in it.
             // otherwise, we assume we already have the tokens
-            if (msg.value > 0 && etherTokens[fromToken]) {
-                IEtherToken(fromToken).deposit.value(_amounts[i])();
+            if (msg.value > 0 && trxTokens[fromToken]) {
+                ITrxToken(fromToken).deposit.value(_amounts[i])();
                 convertedValue += _amounts[i];
             }
             _amounts[i] = convertForInternal(path, _amounts[i], _minReturns[i], _for, 0x0, 0x0, 0x0, 0x0);
@@ -279,8 +279,8 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
         // finished the conversion, transfer the funds to the target account
         // if the target token is an ether token, withdraw the tokens and send them as ETH
         // otherwise, transfer the tokens as is
-        if (etherTokens[toToken])
-            IEtherToken(toToken).withdrawTo(_for, _amount);
+        if (trxTokens[toToken])
+            ITrxToken(toToken).withdrawTo(_for, _amount);
         else
             assert(toToken.transfer(_for, _amount));
 

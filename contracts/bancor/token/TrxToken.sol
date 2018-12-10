@@ -1,15 +1,15 @@
 pragma solidity ^0.4.23;
 import './ERC20Token.sol';
-import './interfaces/IEtherToken.sol';
+import './interfaces/ITrxToken.sol';
 import '../utility/Owned.sol';
 import '../utility/TokenHolder.sol';
 
 /**
-    Ether tokenization contract
+    Trx tokenization contract
 
     'Owned' is specified here for readability reasons
 */
-contract EtherToken is IEtherToken, Owned, ERC20Token, TokenHolder {
+contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
     // triggered when the total supply is increased
     event Issuance(uint256 _amount);
     // triggered when the total supply is decreased
@@ -20,7 +20,7 @@ contract EtherToken is IEtherToken, Owned, ERC20Token, TokenHolder {
     */
     constructor()
         public
-        ERC20Token('Ether Token', 'ETH', 18) {
+        ERC20Token('Trx Token', 'TRX', 6) {
     }
 
     /**

@@ -9,7 +9,7 @@ import "../../common/interfaces/ISettingsRegistry.sol";
 import '../utility/interfaces/IContractFeatures.sol';
 import '../token/SmartTokenController.sol';
 import '../token/interfaces/ISmartToken.sol';
-import '../token/interfaces/IEtherToken.sol';
+import '../token/interfaces/ITrxToken.sol';
 
 /*
     Bancor Converter v0.10

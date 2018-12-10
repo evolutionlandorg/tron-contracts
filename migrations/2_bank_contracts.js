@@ -36,7 +36,7 @@ const LandBase = artifacts.require('LandBase');
 const BancorConverter = artifacts.require('BancorConverter');
 const BancorFormula = artifacts.require('BancorFormula');
 const BancorGasPriceLimit = artifacts.require('BancorGasPriceLimit');
-const EtherToken = artifacts.require('EtherToken');
+const TrxToken = artifacts.require('TrxToken');
 const ContractFeatures = artifacts.require('ContractFeatures');
 const WhiteList = artifacts.require('Whitelist');
 const BancorNetwork = artifacts.require('BancorNetwork');
@@ -260,21 +260,20 @@ async function developmentDeploy(deployer, network, accounts) {
     await deployer.deploy(ContractFeatures);
     await deployer.deploy(BancorFormula);
     await deployer.deploy(WhiteList);
-    await deployer.deploy(EtherToken);
-    await deployer.deploy(BancorGasPriceLimit, conf.gasPrice);
+    await deployer.deploy(TrxToken);
     await deployer.deploy(BancorNetwork, settingsRegistry.address).then(async () => {
         let contractIds = await ContractIds.deployed();
         let contractFeaturesId = await contractIds.CONTRACT_FEATURES.call();
         await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
     }).then(async () => {
-        await deployer.deploy(BancorConverter, ring, settingsRegistry.address, 0, EtherToken.address, conf.weight10Percent);
+        await deployer.deploy(BancorConverter, ring, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
     }).then(async () => {
         await deployer.deploy(BancorExchange, BancorNetwork.address, BancorConverter.address, settingsRegistry.address);
     }).then(async () => {
         let bancorExchange = await BancorExchange.deployed();
 
         let whiteList = await WhiteList.deployed();
-        let etherToken = await EtherToken.deployed();
+        let trxToken = await TrxToken.deployed();
         let bancorNetwork = await BancorNetwork.deployed();
         let bancorGasPriceLimit = await BancorGasPriceLimit.deployed();
         let bancorFormula = await BancorFormula.deployed();
@@ -299,19 +298,19 @@ async function developmentDeploy(deployer, network, accounts) {
         // await ring.transferOwnership(bancorConverter.address);
         // await bancorConverter.acceptTokenOwnership();
 
-        // await etherToken.deposit({value: 1 * COIN});
-        // await etherToken.transfer(BancorConverter.address, 1 * COIN);
+        // await trxToken.deposit({value: 1 * COIN});
+        // await trxToken.transfer(BancorConverter.address, 1 * COIN);
         
         // let COIN = 1000000;
-        // await bancorConverter.updateConnector(etherToken.address, 100000, true, 1200 * COIN);
+        // await bancorConverter.updateConnector(trxToken.address, 100000, true, 1200 * COIN);
 
         // await whiteList.addAddress(bancorExchange.address);
         // await bancorConverter.setConversionWhitelist(whiteList.address);
 
-        // await bancorNetwork.registerEtherToken(etherToken.address, true);
+        // await bancorNetwork.registerTrxToken(trxToken.address, true);
 
-        // await bancorExchange.setQuickBuyPath([etherToken.address, ring, ring]);
-        // await bancorExchange.setQuickSellPath([ring, ring, etherToken.address]);
+        // await bancorExchange.setQuickBuyPath([trxToken.address, ring, ring]);
+        // await bancorExchange.setQuickSellPath([ring, ring, trxToken.address]);
 
         console.log('SUCCESS!')
     })
