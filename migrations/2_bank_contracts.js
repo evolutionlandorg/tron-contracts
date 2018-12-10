@@ -56,18 +56,6 @@ const conf = {
     uint_error_space: 0
 }
 
-let ring;
-let kton;
-
-let gold;
-let wood;
-let water;
-let fire;
-let soil;
-
-let settingIds;
-let settingsRegistry;
-
 module.exports = function(deployer, network, accounts) {
     if (network == "development")
     {
@@ -80,165 +68,116 @@ module.exports = function(deployer, network, accounts) {
 async function developmentDeploy(deployer, network, accounts) {
     console.log(network);
 
-    let interstellarEncoder
     // await deployer.deploy(LocationCoder);
     await deployer.deploy(InterstellarEncoder);
     await deployer.deploy(SettingIds);
-    await deployer.deploy(SettingsRegistry).then(
-        async() => {
-            settingIds = await SettingIds.deployed();
-            settingsRegistry = await SettingsRegistry.deployed();
+    await deployer.deploy(SettingsRegistry);
+    let settingIds = await SettingIds.deployed();
+    let settingsRegistry = await SettingsRegistry.deployed();
 
-            interstellarEncoder = await InterstellarEncoder.deployed();
-            let interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
-            await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
-        }
-    );
+    let interstellarEncoder = await InterstellarEncoder.deployed();
+    let interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
+    await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
 
     ///////////   Token Contracts     ////////////////
     await deployer.deploy(StandardERC223, "RING");
+    let ring = await StandardERC223.deployed();
+    await deployer.deploy(StandardERC223, "KTON");
+    let kton = await StandardERC223.deployed();
 
-    // .then(async () => {
-    //     let instance = await DeployAndTest.deployed();
-    //     ring  =  await instance.testRING.call();
-    //     kton  =  await instance.testKTON.call();
+    let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
+    await settingsRegistry.setAddressProperty(ring_settings, ring.address);
 
-    //     let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
-    //     await settingsRegistry.setAddressProperty(ring_settings, ring);
-
-    //     let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
-    //     return settingsRegistry.setAddressProperty(kton_settings, kton);
-    // })
-
-    // web3.toHex('GOLD') = "0x474f4c44"
-    // web3.toHex('WOOD') = "0x574f4f44"
-    // web3.toHex('WATER') = "0x5741544552"
-    // web3.toHex('FIRE') = "0x46495245"
-    // web3.toHex('SOIL') = "0x534f494c"
-    // await deployer.deploy(StandardERC223, 0x474f4c44
-    // ).then(async() => {
-    //     gold = await StandardERC223.deployed();
-    //     return deployer.deploy(StandardERC223, 0x574f4f44)
-    // }).then(async() => {
-    //     wood = await StandardERC223.deployed();
-    //     return deployer.deploy(StandardERC223, 0x5741544552)
-    // }).then(async() => {
-    //     water = await StandardERC223.deployed();
-    //     return deployer.deploy(StandardERC223, 0x46495245)
-    // }).then(async () => {
-    //     fire = await StandardERC223.deployed();
-    //     return deployer.deploy(StandardERC223, 0x534f494c)
-    // }).then(async() => {
-    //     soil = await StandardERC223.deployed();
-
-    //     let goldId = await settingIds.CONTRACT_GOLD_ERC20_TOKEN.call();
-    //     let woodId = await settingIds.CONTRACT_WOOD_ERC20_TOKEN.call();
-    //     let waterId = await settingIds.CONTRACT_WATER_ERC20_TOKEN.call();
-    //     let fireId = await settingIds.CONTRACT_FIRE_ERC20_TOKEN.call();
-    //     let soilId = await settingIds.CONTRACT_SOIL_ERC20_TOKEN.call();
-
-    //     // register resouces to registry
-    //     await settingsRegistry.setAddressProperty(goldId, gold.address);
-    //     await settingsRegistry.setAddressProperty(woodId, wood.address);
-    //     await settingsRegistry.setAddressProperty(waterId, water.address);
-    //     await settingsRegistry.setAddressProperty(fireId, fire.address);
-    //     await settingsRegistry.setAddressProperty(soilId, soil.address);
-    // })
+    let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
+    await settingsRegistry.setAddressProperty(kton_settings, kton.address);
 
     ////////////    Bank Contracts   ///////////
-    let bankProxy;
-    await deployer.deploy(BankSettingIds).then(async() => {
-        console.log("\n========================\n" +
+    console.log("\n========================\n" +
             "BANK MIGRATION STARTS!!" +
             "\n========================\n\n");
+    let bankProxy;
+    await deployer.deploy(BankSettingIds);
+    let bankSettingIds = await BankSettingIds.deployed();
 
-        await deployer.deploy(Proxy);
-        await deployer.deploy(GringottsBank);
-    }).then(async() => {
-        bankProxy = await Proxy.deployed();
-        let bankSettingIds = await BankSettingIds.deployed();
+    await deployer.deploy(Proxy);
+    await deployer.deploy(GringottsBank);
 
-        let bank_unit_interest = await bankSettingIds.UINT_BANK_UNIT_INTEREST.call();
-        await settingsRegistry.setUintProperty(bank_unit_interest, conf.bank_unit_interest);
+    bankProxy = await Proxy.deployed();
+    let bank_unit_interest = await bankSettingIds.UINT_BANK_UNIT_INTEREST.call();
+    await settingsRegistry.setUintProperty(bank_unit_interest, conf.bank_unit_interest);
 
-        let bank_penalty_multiplier = await bankSettingIds.UINT_BANK_PENALTY_MULTIPLIER.call();
-        await settingsRegistry.setUintProperty(bank_penalty_multiplier, conf.bank_penalty_multiplier);
-        console.log("REGISTRATION DONE! ");
+    let bank_penalty_multiplier = await bankSettingIds.UINT_BANK_PENALTY_MULTIPLIER.call();
+    await settingsRegistry.setUintProperty(bank_penalty_multiplier, conf.bank_penalty_multiplier);
+    console.log("REGISTRATION DONE! ");
 
-        // upgrade
-        await bankProxy.upgradeTo(GringottsBank.address);
-        console.log("UPGRADE DONE! ");
+    // upgrade
+    await bankProxy.upgradeTo(GringottsBank.address);
+    console.log("UPGRADE DONE! ");
 
-        // initialize
-        // let bank = await GringottsBank.at(bankProxy.address);
-        // await bank.initializeContract(settingsRegistry.address);
-        // console.log("INITIALIZATION DONE! ");
+    // initialize
+    // let bank = await GringottsBank.at(bankProxy.address);
+    // await bank.initializeContract(settingsRegistry.address);
+    // console.log("INITIALIZATION DONE! ");
 
-        // // kton.setAuthority will be done in market's migration
-        // let interest = await bankProxy.computeInterest.call(10000, 12, conf.bank_unit_interest);
-        // console.log("Current annual interest for 10000 RING is: ... " + interest + " KTON");
-    });
+    // // kton.setAuthority will be done in market's migration
+    // let interest = await bankProxy.computeInterest.call(10000, 12, conf.bank_unit_interest);
+    // console.log("Current annual interest for 10000 RING is: ... " + interest + " KTON");
+
+
 
     // deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
-    await deployer.deploy(TakeBack, ring, conf.supervisor_address, conf.networkId);
+    await deployer.deploy(TakeBack, ring.address, conf.supervisor_address, conf.networkId);
 
     ////////////    ID Contracts   ///////////
     await deployer.deploy(IDSettingIds);
-    let frozenDividendProxy;
-    let dividendPoolProxy;
-    let userRolesProxy;
-    await deployer.deploy(Proxy).then(async () => {
-        dividendPoolProxy = await Proxy.deployed();
 
-        await deployer.deploy(Proxy);
+    await deployer.deploy(Proxy)
+    let dividendPoolProxy = await Proxy.deployed();
 
-        
-    }).then(async () => {
-        frozenDividendProxy = await Proxy.deployed();
+    await deployer.deploy(Proxy);
+    let frozenDividendProxy = await Proxy.deployed();
 
-        await  deployer.deploy(Proxy)
-    }).then(async () => {
-        userRolesProxy = await Proxy.deployed();
+    await  deployer.deploy(Proxy);
+    let userRolesProxy = await Proxy.deployed();
 
-        await deployer.deploy(UserRoles);
-        await deployer.deploy(FrozenDividend);
-        await deployer.deploy(DividendPool);
-        await deployer.deploy(RolesUpdater, userRolesProxy.address, conf.networkId, conf.supervisor_address);
-        // await deployer.deploy(UserRolesAuthority, [RolesUpdater.address]);
-    }).then(async () => {
-        let idSettingIds = await IDSettingIds.deployed();
+    await deployer.deploy(UserRoles);
+    await deployer.deploy(FrozenDividend);
+    await deployer.deploy(DividendPool);
+    await deployer.deploy(RolesUpdater, userRolesProxy.address, conf.networkId, conf.supervisor_address);
+    // await deployer.deploy(UserRolesAuthority, [RolesUpdater.address]);
 
-        // register
-        let dividendPoolId = await idSettingIds.CONTRACT_DIVIDENDS_POOL.call();
-        await settingsRegistry.setAddressProperty(dividendPoolId, dividendPoolProxy.address);
+    let idSettingIds = await IDSettingIds.deployed();
 
-        let channelDivId = await idSettingIds.CONTRACT_CHANNEL_DIVIDEND.call();
-        await settingsRegistry.setAddressProperty(channelDivId, TakeBack.address);
+    // register
+    let dividendPoolId = await idSettingIds.CONTRACT_DIVIDENDS_POOL.call();
+    await settingsRegistry.setAddressProperty(dividendPoolId, dividendPoolProxy.address);
 
-        let frozenDivId = await idSettingIds.CONTRACT_FROZEN_DIVIDEND.call();
-        await settingsRegistry.setAddressProperty(frozenDivId, frozenDividendProxy.address);
-        console.log("REGISTRATION DONE! ");
+    let channelDivId = await idSettingIds.CONTRACT_CHANNEL_DIVIDEND.call();
+    await settingsRegistry.setAddressProperty(channelDivId, TakeBack.address);
 
-        // upgrade
-        await dividendPoolProxy.upgradeTo(DividendPool.address);
-        await frozenDividendProxy.upgradeTo(FrozenDividend.address);
-        await userRolesProxy.upgradeTo(UserRoles.address);
-        console.log("UPGRADE DONE! ");
+    let frozenDivId = await idSettingIds.CONTRACT_FROZEN_DIVIDEND.call();
+    await settingsRegistry.setAddressProperty(frozenDivId, frozenDividendProxy.address);
+    console.log("REGISTRATION DONE! ");
 
-        // initialize
-        // let dividendPool = await DividendPool.at(dividendPoolProxy.address);
-        // await dividendPool.initializeContract(settingsRegistry.address);
+    // upgrade
+    await dividendPoolProxy.upgradeTo(DividendPool.address);
+    await frozenDividendProxy.upgradeTo(FrozenDividend.address);
+    await userRolesProxy.upgradeTo(UserRoles.address);
+    console.log("UPGRADE DONE! ");
 
-        // let frozenDividend = await FrozenDividend.at(frozenDividendProxy.address);
-        // await frozenDividend.initializeContract(settingsRegistry.address);
+    // initialize
+    // let dividendPool = await DividendPool.at(dividendPoolProxy.address);
+    // await dividendPool.initializeContract(settingsRegistry.address);
 
-        // let userRoles = await UserRoles.at(userRolesProxy.address);
-        // await userRoles.initializeContract();
-        // console.log("INITIALIZATION DONE! ");
+    // let frozenDividend = await FrozenDividend.at(frozenDividendProxy.address);
+    // await frozenDividend.initializeContract(settingsRegistry.address);
 
-        // await userRoles.setAuthority(UserRolesAuthority.address);
-        console.log('MIGRATION SUCCESS!');
-    });
+    // let userRoles = await UserRoles.at(userRolesProxy.address);
+    // await userRoles.initializeContract();
+    // console.log("INITIALIZATION DONE! ");
+
+    // await userRoles.setAuthority(UserRolesAuthority.address);
+    console.log('MIGRATION SUCCESS!');
 
     ////////////    Bancor Contracts   /////////// 
     await deployer.deploy(ContractIds);
@@ -246,57 +185,52 @@ async function developmentDeploy(deployer, network, accounts) {
     await deployer.deploy(BancorFormula);
     await deployer.deploy(WhiteList);
     await deployer.deploy(TrxToken);
-    await deployer.deploy(BancorNetwork, settingsRegistry.address).then(async () => {
-        let contractIds = await ContractIds.deployed();
-        let contractFeaturesId = await contractIds.CONTRACT_FEATURES.call();
-        await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
-    }).then(async () => {
-        await deployer.deploy(BancorConverter, ring, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
-    }).then(async () => {
-        await deployer.deploy(BancorExchange, BancorNetwork.address, BancorConverter.address, settingsRegistry.address);
-    }).then(async () => {
-        let bancorExchange = await BancorExchange.deployed();
+    await deployer.deploy(BancorNetwork, settingsRegistry.address);
+    let contractIds = await ContractIds.deployed();
+    let contractFeaturesId = await contractIds.CONTRACT_FEATURES.call();
+    await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
+    await deployer.deploy(BancorConverter, ring.address, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
+    await deployer.deploy(BancorExchange, BancorNetwork.address, BancorConverter.address, settingsRegistry.address);
 
-        let whiteList = await WhiteList.deployed();
-        let trxToken = await TrxToken.deployed();
-        let bancorNetwork = await BancorNetwork.deployed();
-        let bancorFormula = await BancorFormula.deployed();
+    let bancorExchange = await BancorExchange.deployed();
 
-        let contractIds = await ContractIds.deployed();
+    let whiteList = await WhiteList.deployed();
+    let trxToken = await TrxToken.deployed();
+    let bancorNetwork = await BancorNetwork.deployed();
+    let bancorFormula = await BancorFormula.deployed();
 
-        let bancorConverter = await BancorConverter.deployed();
+    let bancorConverter = await BancorConverter.deployed();
 
-        // register
-        let formulaId = await contractIds.BANCOR_FORMULA.call();
-        await settingsRegistry.setAddressProperty(formulaId, bancorFormula.address);
-        
-        let bancorNetworkId = await contractIds.BANCOR_NETWORK.call();
-        await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetwork.address);
+    // register
+    let formulaId = await contractIds.BANCOR_FORMULA.call();
+    await settingsRegistry.setAddressProperty(formulaId, bancorFormula.address);
 
-        //do this to make SmartToken.totalSupply > 0
-        // await ring.changeCap(20 * 10**8 * COIN);
-        // await ring.issue(conf.from, 12 * 10 **8 * COIN);
-        // await smartTokenAuthority.setWhitelist(bancorConverter.address, true);
+    let bancorNetworkId = await contractIds.BANCOR_NETWORK.call();
+    await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetwork.address);
 
-        // await ring.transferOwnership(bancorConverter.address);
-        // await bancorConverter.acceptTokenOwnership();
+    //do this to make SmartToken.totalSupply > 0
+    // await ring.changeCap(20 * 10**8 * COIN);
+    // await ring.issue(conf.from, 12 * 10 **8 * COIN);
+    // await smartTokenAuthority.setWhitelist(bancorConverter.address, true);
 
-        // await trxToken.deposit({value: 1 * COIN});
-        // await trxToken.transfer(BancorConverter.address, 1 * COIN);
-        
-        // let COIN = 1000000;
-        // await bancorConverter.updateConnector(trxToken.address, 100000, true, 1200 * COIN);
+    // await ring.transferOwnership(bancorConverter.address);
+    // await bancorConverter.acceptTokenOwnership();
 
-        // await whiteList.addAddress(bancorExchange.address);
-        // await bancorConverter.setConversionWhitelist(whiteList.address);
+    // await trxToken.deposit({value: 1 * COIN});
+    // await trxToken.transfer(BancorConverter.address, 1 * COIN);
+    
+    // let COIN = 1000000;
+    // await bancorConverter.updateConnector(trxToken.address, 100000, true, 1200 * COIN);
 
-        // await bancorNetwork.registerTrxToken(trxToken.address, true);
+    // await whiteList.addAddress(bancorExchange.address);
+    // await bancorConverter.setConversionWhitelist(whiteList.address);
 
-        // await bancorExchange.setQuickBuyPath([trxToken.address, ring, ring]);
-        // await bancorExchange.setQuickSellPath([ring, ring, trxToken.address]);
+    // await bancorNetwork.registerTrxToken(trxToken.address, true);
 
-        console.log('SUCCESS!')
-    })
+    // await bancorExchange.setQuickBuyPath([trxToken.address, ring, ring]);
+    // await bancorExchange.setQuickSellPath([ring, ring, trxToken.address]);
+
+    console.log('SUCCESS!')
 
     // await deployer.deploy(MintAndBurnAuthority, [bankProxy.address, dividendPoolProxy.address]).then(async() => {
     //     await deployer.deploy(ObjectOwnershipAuthority, [landBaseProxy.address]);
