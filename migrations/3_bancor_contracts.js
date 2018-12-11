@@ -75,10 +75,12 @@ async function developmentDeploy(deployer, network, accounts) {
     let bancorNetworkId = await contractIds.BANCOR_NETWORK.call();
     await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetwork.address);
 
-    let ring = RING.deployed();
+    let ring = await RING.deployed();
     //do this to make SmartToken.totalSupply > 0
-    await ring.changeCap(20 * 10**8 * 10 ** 18);
-    await ring.issue(conf.from, 12 * 10 **8 * 10 ** 18);
+    // await ring.changeCap(20 * 10**8 * 10 ** 18);
+    await ring.changeCap("2000000000000000000000000000");
+    // await ring.issue(conf.from, 12 * 10 **8 * 10 ** 18);
+    await ring.issue(conf.from, "1200000000000000000000000000");
 
     // await smartTokenAuthority.setWhitelist(bancorConverter.address, true);
 
