@@ -1,13 +1,13 @@
 pragma solidity ^0.4.0;
 
-contract MintAndBurnAuthority {
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+
+contract MintAndBurnAuthority is Ownable{
 
     mapping (address => bool) public whiteList;
 
-    constructor(address[] _whitelists) public {
-        for (uint i = 0; i < _whitelists.length; i ++) {
-            whiteList[_whitelists[i]] = true;
-        }
+    constructor(address _whitelist) public {
+        whiteList[_whitelist] = true;
     }
 
     function canCall(
@@ -15,5 +15,9 @@ contract MintAndBurnAuthority {
     ) public view returns (bool) {
         return ( whiteList[_src] && _sig == bytes4(keccak256("mint(address,uint256)")) ) ||
         ( whiteList[_src] && _sig == bytes4(keccak256("burn(address,uint256)")) );
+    }
+
+    function addWhiteList(address _whitelist) public onlyOwner {
+        whiteList[_whitelist] = true;
     }
 }

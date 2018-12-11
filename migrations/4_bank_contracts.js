@@ -62,7 +62,6 @@ const conf = {
     bagCountLimit: 50,
     perMinAmount: 20 ** 10**18,
     weight10Percent: 100000,
-    gasPrice: 10000000000,
     supervisor_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
     dev_pool_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
     contribution_incentive_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
@@ -74,7 +73,6 @@ module.exports = function(deployer, network, accounts) {
     if (network == "development")
     {
         deployer.then(async () => {
-            // await deployer.deploy(TrxToken);
             await developmentDeploy(deployer, network, accounts);
         });
     }

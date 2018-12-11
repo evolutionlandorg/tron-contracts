@@ -24,7 +24,6 @@ const conf = {
     bagCountLimit: 50,
     perMinAmount: 20 ** 10**18,
     weight10Percent: 100000,
-    gasPrice: 10000000000,
     supervisor_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
     dev_pool_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
     contribution_incentive_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
@@ -82,8 +81,6 @@ async function developmentDeploy(deployer, network, accounts) {
     // await ring.issue(conf.from, 12 * 10 **8 * 10 ** 18);
     await ring.issue(conf.from, "1200000000000000000000000000");
 
-    // await smartTokenAuthority.setWhitelist(bancorConverter.address, true);
-
     await ring.transferOwnership(bancorConverter.address);
     await bancorConverter.acceptTokenOwnership();
 
@@ -102,21 +99,6 @@ async function developmentDeploy(deployer, network, accounts) {
     await bancorExchange.setQuickSellPath([RING.address, RING.address, trxToken.address]);
 
     console.log('SUCCESS!')
-
-    // await deployer.deploy(MintAndBurnAuthority, [bank.address, dividendPool.address]);
-    // await kton.setAuthority(MintAndBurnAuthority.address);
-    
-    //     await deployer.deploy(ObjectOwnershipAuthority, [landBaseProxy.address]);
-    //     await deployer.deploy(TokenLocationAuthority, [landBaseProxy.address]);
-    //     // set authority
-    //     await tokenLocationProxy.setAuthority(TokenLocationAuthority.address);
-    //     await objectOwnershipProxy.setAuthority(ObjectOwnershipAuthority.address);
-    //     // setAuthority
-    
-    // await deployer.deploy(InterstellarEncoder);
-    // let interstellarEncoder = await InterstellarEncoder.deployed();
-    // let interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
-    // await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
     
     
 }
