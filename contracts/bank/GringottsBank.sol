@@ -36,14 +36,6 @@ contract  GringottsBank is DSAuth, BankSettingIds {
         bool claimed;
     }
 
-
-    /*
-     *  Storages
-     */
-
-    bool private singletonLock = false;
-
-
     ISettingsRegistry public registry;
 
     mapping (uint256 => Deposit) public deposits;
@@ -54,15 +46,6 @@ contract  GringottsBank is DSAuth, BankSettingIds {
 
     // player => totalDepositRING, total number of ring that the player has deposited
     mapping (address => uint256) public userTotalDeposit;
-
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
 
     modifier canBeStoredWith128Bits(uint256 _value) {
         require(_value < 340282366920938463463374607431768211455);
@@ -78,20 +61,7 @@ contract  GringottsBank is DSAuth, BankSettingIds {
     /**
      * @dev Bank's constructor which set the token address and unitInterest_
      */
-    constructor () public {
-        // initializeContract(_registry);
-    }
-
-    /**
-     * @dev Same with constructor, but is used and called by storage proxy as logic contract.
-     * @param _registry - address of SettingsRegistry
-     */
-    function initializeContract(address _registry) public singletonLockCall {
-        // call Ownable's constructor
-        owner = msg.sender;
-
-        emit LogSetOwner(msg.sender);
-
+    constructor (address _registry) public {
         registry = ISettingsRegistry(_registry);
     }
 

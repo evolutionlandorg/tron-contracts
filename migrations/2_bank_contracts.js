@@ -21,7 +21,6 @@ const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");
 const GringottsBank = artifacts.require("GringottsBank");
 const SettingsRegistry = artifacts.require("SettingsRegistry");
 const StandardERC223 = artifacts.require("StandardERC223");
-const Proxy = artifacts.require("OwnedUpgradeabilityProxy");
 
 const ObjectOwnership = artifacts.require('ObjectOwnership');
 const ObjectOwnershipAuthority = artifacts.require('ObjectOwnershipAuthority');
@@ -115,39 +114,16 @@ async function developmentDeploy(deployer, network, accounts) {
     console.log("\n========================\n" +
             "BANK MIGRATION STARTS!!" +
             "\n========================\n\n");
-    let bankProxy;
-    await deployer.deploy(BankSettingIds);
-    let bankSettingIds = await BankSettingIds.deployed();
+    await deployer.deploy(GringottsBank, settingsRegistry.address);
 
-    await deployer.deploy(Proxy);
-    await deployer.deploy(GringottsBank);
+    let bank = GringottsBank.deployed();
 
-    bankProxy = await Proxy.deployed();
-    let bank_unit_interest = await bankSettingIds.UINT_BANK_UNIT_INTEREST.call();
+    let bank_unit_interest = await bank.UINT_BANK_UNIT_INTEREST.call();
     await settingsRegistry.setUintProperty(bank_unit_interest, conf.bank_unit_interest);
 
-    let bank_penalty_multiplier = await bankSettingIds.UINT_BANK_PENALTY_MULTIPLIER.call();
+    let bank_penalty_multiplier = await bank.UINT_BANK_PENALTY_MULTIPLIER.call();
     await settingsRegistry.setUintProperty(bank_penalty_multiplier, conf.bank_penalty_multiplier);
     console.log("REGISTRATION DONE! ");
-
-    // upgrade
-    await bankProxy.upgradeTo(GringottsBank.address);
-    console.log("UPGRADE DONE! ");
-
-    // initialize
-    // let bank = await GringottsBank.at(bankProxy.address);
-    // await bank.initializeContract(settingsRegistry.address);
-    // console.log("INITIALIZATION DONE! ");
-
-    // console.log(GringottsBank.address);
-    // let bank = await tronWeb.contract(GringottsBank.abi, GringottsBank.address);
-
-    // console.log(bank);
-
-    // console.log(await bank.owner().call());
-    
-    // await bank.initializeContract(settingsRegistry.address).send();
-    // console.log("INITIALIZATION DONE! ");
     
 
     // // kton.setAuthority will be done in market's migration
