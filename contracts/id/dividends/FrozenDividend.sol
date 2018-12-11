@@ -19,8 +19,6 @@ contract FrozenDividend is Ownable, SettingIds{
 
     uint256 constant internal magnitude = 2**64;
 
-    bool private singletonLock = false;
-
     mapping(address => uint256) public ktonBalances;
 
     mapping(address => int256) internal ringPayoutsTo;
@@ -31,22 +29,8 @@ contract FrozenDividend is Ownable, SettingIds{
 
     ISettingsRegistry public registry;
 
-    /*
-     * Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    constructor() public {
+    constructor(ISettingsRegistry _registry) public {
         // initializeContract
-    }
-
-    function initializeContract(ISettingsRegistry _registry) public singletonLockCall {
-        owner = msg.sender;
-
         registry = _registry;
     }
 

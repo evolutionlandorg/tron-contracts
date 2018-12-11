@@ -19,28 +19,9 @@ contract DividendPool is DSAuth, IDSettingIds {
 
     event ClaimedTokens(address indexed _token, address indexed _controller, uint _amount);
 
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
-    /*
-     * Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    constructor() public {
-        // initializeContract
-    }
-
-    function initializeContract(ISettingsRegistry _registry) public singletonLockCall {
-        owner = msg.sender;
-
-        emit LogSetOwner(msg.sender);
-
+    constructor(ISettingsRegistry _registry) public {
         registry = _registry;
     }
 

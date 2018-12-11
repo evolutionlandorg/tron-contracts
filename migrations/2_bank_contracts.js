@@ -22,13 +22,9 @@ const GringottsBank = artifacts.require("GringottsBank");
 const SettingsRegistry = artifacts.require("SettingsRegistry");
 const StandardERC223 = artifacts.require("StandardERC223");
 
-const ObjectOwnership = artifacts.require('ObjectOwnership');
-const ObjectOwnershipAuthority = artifacts.require('ObjectOwnershipAuthority');
-
 const DeployAndTest = artifacts.require('DeployAndTest');
 
 const SettingIds = artifacts.require('SettingIds');
-const BankSettingIds = artifacts.require('BankSettingIds');
 
 
 const IDSettingIds = artifacts.require('IDSettingIds');
@@ -138,18 +134,9 @@ async function developmentDeploy(deployer, network, accounts) {
     ////////////    ID Contracts   ///////////
     await deployer.deploy(IDSettingIds);
 
-    await deployer.deploy(Proxy)
-    let dividendPoolProxy = await Proxy.deployed();
-
-    await deployer.deploy(Proxy);
-    let frozenDividendProxy = await Proxy.deployed();
-
-    await  deployer.deploy(Proxy);
-    let userRolesProxy = await Proxy.deployed();
-
     await deployer.deploy(UserRoles);
-    await deployer.deploy(FrozenDividend);
-    await deployer.deploy(DividendPool);
+    await deployer.deploy(FrozenDividend, settingsRegistry.address);
+    await deployer.deploy(DividendPool, settingsRegistry.address);
     await deployer.deploy(RolesUpdater, userRolesProxy.address, conf.networkId, conf.supervisor_address);
     // await deployer.deploy(UserRolesAuthority, [RolesUpdater.address]);
 
@@ -165,23 +152,6 @@ async function developmentDeploy(deployer, network, accounts) {
     let frozenDivId = await idSettingIds.CONTRACT_FROZEN_DIVIDEND.call();
     await settingsRegistry.setAddressProperty(frozenDivId, frozenDividendProxy.address);
     console.log("REGISTRATION DONE! ");
-
-    // upgrade
-    await dividendPoolProxy.upgradeTo(DividendPool.address);
-    await frozenDividendProxy.upgradeTo(FrozenDividend.address);
-    await userRolesProxy.upgradeTo(UserRoles.address);
-    console.log("UPGRADE DONE! ");
-
-    // initialize
-    // let dividendPool = await DividendPool.at(dividendPoolProxy.address);
-    // await dividendPool.initializeContract(settingsRegistry.address);
-
-    // let frozenDividend = await FrozenDividend.at(frozenDividendProxy.address);
-    // await frozenDividend.initializeContract(settingsRegistry.address);
-
-    // let userRoles = await UserRoles.at(userRolesProxy.address);
-    // await userRoles.initializeContract();
-    // console.log("INITIALIZATION DONE! ");
 
     // await userRoles.setAuthority(UserRolesAuthority.address);
     console.log('MIGRATION SUCCESS!');

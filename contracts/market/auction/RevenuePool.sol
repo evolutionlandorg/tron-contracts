@@ -11,8 +11,6 @@ import "./AuctionSettingIds.sol";
 // Use proxy mode
 contract RevenuePool is DSAuth, ERC223ReceivingContract, AuctionSettingIds {
 
-    bool private singletonLock = false;
-
 //    // 10%
 //    address public pointsRewardPool;
 //    // 30%
@@ -27,20 +25,9 @@ contract RevenuePool is DSAuth, ERC223ReceivingContract, AuctionSettingIds {
     // claimedToken event
     event ClaimedTokens(address indexed token, address indexed owner, uint amount);
 
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    function initializeContract(address _registry) public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
-        registry = ISettingsRegistry(_registry);
+    constructor(ISettingsRegistry _registry) public {
+        // initializeContract
+        registry = _registry;
     }
 
     function tokenFallback(address _from, uint256 _value, bytes _data) public {

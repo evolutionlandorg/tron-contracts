@@ -15,8 +15,6 @@ contract PointsRewardPool is PausableDSAuth, AuctionSettingIds {
     // claimedToken event
     event ClaimedTokens(address indexed token, address indexed owner, uint amount);
 
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
     modifier isHuman() {
@@ -24,22 +22,8 @@ contract PointsRewardPool is PausableDSAuth, AuctionSettingIds {
         _;
     }
 
-    /*
-     * Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    constructor() public {
+    constructor(address _registry) public {
         // initializeContract
-    }
-
-    function initializeContract(address _registry) public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
         registry = ISettingsRegistry(_registry);
     }
 

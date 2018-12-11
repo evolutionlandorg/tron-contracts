@@ -14,17 +14,6 @@ contract UserRoles is DSAuth, RBAC {
     string public constant ROLE_TESTER = "tester";
     string public constant ROLE_DEVELOPER = "developer";
 
-    bool private singletonLock = false;
-
-    /*
-     * Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
     /**
      * @dev add an address to the tester
      * @param _operator address
@@ -39,12 +28,6 @@ contract UserRoles is DSAuth, RBAC {
 
     constructor() public {
         // initializeContract
-    }
-
-    function initializeContract() public singletonLockCall {
-        owner = msg.sender;
-
-        emit LogSetOwner(msg.sender);
     }
 
     /**

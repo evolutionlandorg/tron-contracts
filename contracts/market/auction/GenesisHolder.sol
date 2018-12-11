@@ -11,8 +11,6 @@ import "./AuctionSettingIds.sol";
 
 contract GenesisHolder is Ownable, AuctionSettingIds {
 
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
     // the account who creates auctions
@@ -22,22 +20,8 @@ contract GenesisHolder is Ownable, AuctionSettingIds {
     event ClaimedTokens(address indexed token, address indexed owner, uint amount);
     event ClaimedERC721Token(address indexed owner, uint256 tokenId);
 
-    /*
-     * Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    constructor() public {
+    constructor(ISettingsRegistry _registry) public {
         // initializeContract
-    }
-
-    function initializeContract(ISettingsRegistry _registry) public singletonLockCall {
-        owner = msg.sender;
-
         registry = _registry;
     }
 
