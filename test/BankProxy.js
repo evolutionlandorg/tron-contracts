@@ -24,5 +24,6 @@ contract('TrxToken', accounts => {
         let registry = await bank.registry().call();
         console.log(registry);
         assert.equal(registry, settingsRegistry.address);
+    
     });
 });

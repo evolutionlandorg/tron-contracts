@@ -1,20 +1,3 @@
-// const TronWeb = require('tronweb')
-
-// const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
-// const fullNode = new HttpProvider('http://127.0.0.1:8090'); // Full node http endpoint
-// const solidityNode = new HttpProvider('http://127.0.0.1:8091'); // Solidity node http endpoint
-// const eventServer = 'http://127.0.0.1:8092'; // Contract events http endpoint
-
-// const privateKey = '163ef951a884410357f40646069f68d084576f4e10786f74c373643f44ebdaaa';
-
-// const tronWeb = new TronWeb(
-//     fullNode,
-//     solidityNode,
-//     eventServer,
-//     privateKey
-// );
-
-
 const LocationCoder = artifacts.require("LocationCoder");
 const TokenLocation = artifacts.require("TokenLocation.sol");
 const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");

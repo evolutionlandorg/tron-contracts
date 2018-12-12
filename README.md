@@ -11,11 +11,11 @@ https://www.jianshu.com/p/9fce6e583669
 After install docker:
 
 ```
-docker pull trontools/quickstart:1.2.4
+docker pull trontools/quickstart:1.2.5
 ```
 
 ```
-docker run -it   -p 9090:9090   --rm   --name tron   trontools/quickstart:1.2.4
+MacBookPro:gitlab.com denny$ docker run -it   -p 9090:9090 -p 8090:8090 -p 8091:8091 -p 8092:8092 --rm --name tron   trontools/quickstart:1.2.5
 ```
 
 当前波场测试网合约部署
