@@ -103,7 +103,7 @@ contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
     /**
         @dev deposit ether in the account
     */
-    function() public payable {
-        deposit();
-    }
+    // function() public payable {
+    //     deposit();
+    // }
 }
