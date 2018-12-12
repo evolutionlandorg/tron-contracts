@@ -20,7 +20,13 @@ MacBookPro:gitlab.com denny$ docker run -it   -p 9090:9090 -p 8090:8090 -p 8091:
 
 deployed contracts on shasta testnet:
 
-script/address_shasta.js
-  
+script/auto_generated_address_shasta.json.js
 
-    
+
+copy contract deploy log to contract_log_shasta.txt and use
+
+```
+node script/generate_address_shasta.js
+```
+
+to generete the above config

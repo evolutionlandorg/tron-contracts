@@ -1,16 +1,17 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
-var obj = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
+var key = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
 
-console.log(obj);
+console.log(key);
 
 const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
 const fullNode = 'https://api.shasta.trongrid.io'; // Full node http endpoint
 const solidityNode = 'https://api.shasta.trongrid.io'; // Solidity node http endpoint
 const eventServer = 'https://api.shasta.trongrid.io'; // Contract events http endpoint
 
-const privateKey = obj.privateKey;
-const myAddress = obj.address;
+const privateKey = key.privateKey;
+const myAddress = key.address;
 
 console.log(myAddress);
 
@@ -35,7 +36,7 @@ const app = async () => {
     if (!connected)
         return;
 
-    const trxTokenAddress = "415794ce7ae85efe01ba94fee10ddefe1d48a96ae6";
+    const trxTokenAddress = contracts["TrxToken"].hex;
     // const goldContract = 
 
     let trxTokenContract = await tronWeb.contract().at(trxTokenAddress);
