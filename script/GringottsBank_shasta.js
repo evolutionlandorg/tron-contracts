@@ -1,7 +1,7 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
-var key = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
-var contracts = JSON.parse(fs.readFileSync('./script/myContractAddrs.json', 'utf8'));
+var key = JSON.parse(fs.readFileSync('./script/key2.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/temp_contracts.json', 'utf8'));
 
 console.log(key);
 
