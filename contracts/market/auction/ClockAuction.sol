@@ -58,21 +58,10 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         address lastReferer;
     }
 
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
     // Map from token ID to their corresponding auction.
     mapping(uint256 => Auction) public tokenIdToAuction;
-
-    /*
-    *  Modifiers
-    */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
 
     modifier isHuman() {
         require(msg.sender == tx.origin, "robot is not permitted");
@@ -99,24 +88,10 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     ///////////////////////
     // Constructor
     ///////////////////////
-    constructor() public {
+    constructor(ISettingsRegistry _registry) public {
         // initializeContract
-    }
-
-    /// @dev Constructor creates a reference to the NFT ownership contract
-    ///  and verifies the owner cut is in the valid range.
-    ///  bidWaitingMinutes - biggest waiting time from a bid's starting to ending(in minutes)
-    function initializeContract(
-        ISettingsRegistry _registry) public singletonLockCall {
-
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
         registry = _registry;
     }
-
-    /// @dev DON'T give me your money.
-    function() external {}
 
     ///////////////////////
     // Auction Create and Cancel

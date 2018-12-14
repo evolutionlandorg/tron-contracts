@@ -23,8 +23,6 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
         uint256 mask;
     }
 
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
     /**
@@ -44,15 +42,6 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
 
     uint256 public lastLandObjectId;
 
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
     modifier xAtlantisRangeLimit(int _x) {
         require(_x >= -112 && _x <= -68, "Invalid range.");
         _;
@@ -63,14 +52,7 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
         _;
     }
 
-    /**
-     * @dev Same with constructor, but is used and called by storage proxy as logic contract.
-     */
-    function initializeContract(address _registry) public singletonLockCall {
-        // Ownable constructor
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
+    constructor (address _registry) public {
         registry = ISettingsRegistry(_registry);
 
          // update attributes.

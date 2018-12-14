@@ -1,7 +1,7 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
 var key = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
-var contracts = JSON.parse(fs.readFileSync('./script/myContractAddrs.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
 
 console.log(key);
 
@@ -46,42 +46,42 @@ const app = async () => {
     let RingContract = await tronWeb.contract().at(ringContractAddress);
     let TrxTokenConverter = await tronWeb.contract().at(trxTokenAddress);
 
-    let myRingBalance = await RingContract.balanceOf(myAddress).call();
-    console.log("my ring balance: ", myRingBalance.toString());
+    // let myRingBalance = await RingContract.balanceOf(myAddress).call();
+    // console.log("my ring balance: ", myRingBalance.toString());
 
-    let mytrx = await tronWeb.trx.getBalance(myAddress);
-    console.log("my trx balance: ", mytrx.toString());
+    // let mytrx = await tronWeb.trx.getBalance(myAddress);
+    // console.log("my trx balance: ", mytrx.toString());
 
-    let bconverBalance = await TrxTokenConverter.balanceOf(bancorConverterAddress).call();
-    console.log("bconvert trxtoken: ", bconverBalance.toString());
+    // let bconverBalance = await TrxTokenConverter.balanceOf(bancorConverterAddress).call();
+    // console.log("bconvert trxtoken: ", bconverBalance.toString());
 
-    await RingContract.approve(bancorExchangeAddress,'996269672863996501787244').send({
-           feeLimit:1000000000,
-           callValue:0,
-           shouldPollResponse:true
-        });
+    // await RingContract.approve(bancorExchangeAddress,'996269672863996501787244').send({
+    //        feeLimit:1000000000,
+    //        callValue:0,
+    //        shouldPollResponse:true
+    //     });
 
-    let allownance = await RingContract.allowance(myAddress,bancorExchangeAddress).call();
-    console.log("allownance to bancorEx: ", allownance.toString());
+    // let allownance = await RingContract.allowance(myAddress,bancorExchangeAddress).call();
+    // console.log("allownance to bancorEx: ", allownance.toString());
 
-    let buyRingamount = await BacorExContract.buyRING(1).send({
-        feeLimit:1000000000,
-        callValue:10000000,
-        shouldPollResponse:true
-    });
-    console.log("buyRingamount: ", buyRingamount.toString());
+    // let buyRingamount = await BacorExContract.buyRING(1).send({
+    //     feeLimit:1000000000,
+    //     callValue:10000000,
+    //     shouldPollResponse:true
+    // });
+    // console.log("buyRingamount: ", buyRingamount.toString());
 
-    myRingBalance = await RingContract.balanceOf(myAddress).call();
-    console.log("my ring current balance: ", myRingBalance.toString());
+    // myRingBalance = await RingContract.balanceOf(myAddress).call();
+    // console.log("my ring current balance: ", myRingBalance.toString());
 
-    bconverBalance = await TrxTokenConverter.balanceOf(bancorConverterAddress).call();
-    console.log("bconvert current trxtoken: ", bconverBalance.toString());
+    // bconverBalance = await TrxTokenConverter.balanceOf(bancorConverterAddress).call();
+    // console.log("bconvert current trxtoken: ", bconverBalance.toString());
 
-    mytrx = await tronWeb.trx.getBalance(myAddress);
-    console.log("my trx current balance: ", mytrx.toString());
+    // mytrx = await tronWeb.trx.getBalance(myAddress);
+    // console.log("my trx current balance: ", mytrx.toString());
 
 
-    await BacorExContract.sellRING('996269672863996501787244',1).send({
+    await BacorExContract.sellRING('994040104691599927440539',1).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true

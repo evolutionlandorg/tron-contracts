@@ -9,8 +9,6 @@ import "./interfaces/IMysteriousTreasure.sol";
 
 contract MysteriousTreasure is DSAuth, SettingIds, IMysteriousTreasure {
     using SafeMath for *;
-    
-    bool private singletonLock = false;
 
     ISettingsRegistry public registry;
 
@@ -24,23 +22,9 @@ contract MysteriousTreasure is DSAuth, SettingIds, IMysteriousTreasure {
     // event unbox
     event Unbox(uint indexed tokenId, uint goldRate, uint woodRate, uint waterRate, uint fireRate, uint soilRate);
 
-    /*
-  *  Modifiers
-  */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
     // this need to be created in ClockAuction cotnract
-    constructor() public {
-
-      // initializeContract
-    }
-
-    function initializeContract(ISettingsRegistry _registry, uint256[5] _resources) public singletonLockCall {
-        owner = msg.sender;
+    constructor(ISettingsRegistry _registry, uint256[5] _resources) public {
+        // initializeContract
 
         registry = _registry;
 
