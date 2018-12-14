@@ -1,0 +1,30 @@
+{
+  "RING": {
+    "base58": "TES6QDLHNC4CX4rjF42bXR85KwYSK6qbA4",
+    "hex": "4130f6395b0759f55918cd6dc35d84837734dd032c"
+  },
+  "KTON": {
+    "base58": "TMLYhjwFTbvoVsU1m4Njkv6cw8zpCSv8jc",
+    "hex": "417cb290924c3c9fc4636022a032a5acd62ee8d892"
+  },
+  "TakeBack": {
+    "base58": "TDatpzpMLxZV6vqs9mrQyieTk3jCbb2YXa",
+    "hex": "4127a82e7877d394ea8b9cada6e2d0c6e691c4447f"
+  },
+  "SettingIds": {
+    "base58": "TTY9SYpwVVjcPQuoQwTX2Gz4f9oQ4JKEhY",
+    "hex": "41c0b4e4952a3a630d65846295054c0b50ba2ca0c7"
+  },
+  "SettingsRegistry": {
+    "base58": "TSUmXQB3zoeoM7NfRQQuw9ZywuCA69Upmj",
+    "hex": "41b5193970679af7697fd57ba14db0ca3b49b34ca5"
+  },
+  "GringottsBank": {
+    "base58": "TTiCWCTcfbY2VWBdPGUCve1cfo6cnGmGk1",
+    "hex": "41c29b9bfba00ec2a2fb0b9d881c7924b89299cbf4"
+  },
+  "MintAndBurnAuthority": {
+    "base58": "TUd1FDSp9Za5rdqpqjKj1by32Zi8jJX7FC",
+    "hex": "41cc9841deb5adc57f3ae1cfb21ab46a255de58eac"
+  }
+}

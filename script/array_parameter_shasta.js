@@ -1,11 +1,19 @@
 const TronWeb = require('tronweb')
+var fs = require('fs');
+var key = JSON.parse(fs.readFileSync('./script/key2.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
+
+console.log(key);
 
 const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
-const fullNode = 'http://127.0.0.1:8090'; // Full node http endpoint
-const solidityNode = 'http://127.0.0.1:8091'; // Solidity node http endpoint
-const eventServer = 'http://127.0.0.1:8092'; // Contract events http endpoint
+const fullNode = 'https://api.shasta.trongrid.io'; // Full node http endpoint
+const solidityNode = 'https://api.shasta.trongrid.io'; // Solidity node http endpoint
+const eventServer = 'https://api.shasta.trongrid.io'; // Contract events http endpoint
 
-const privateKey = '0a1b00ce3c9c93e5830f96df7f699e3ac854ab4a7c7ccd1771e695c40433772e';
+const privateKey = key.privateKey;
+const myAddress = key.address;
+
+console.log(myAddress);
 
 const tronWeb = new TronWeb(
     fullNode,
@@ -28,7 +36,10 @@ const app = async () => {
     if (!connected)
         return;
 
-    let BacorExContract = await tronWeb.contract().at("4104413be625a8685b3f94cb6686f9adf371f203dc");
+    const bancorExchangeAddress = contracts["BancorExchange"].hex;
+    // const goldContract = 
+
+    let BacorExContract = await tronWeb.contract().at(bancorExchangeAddress);
 
     await BacorExContract.setQuickBuyPath(['415794ce7ae85efe01ba94fee10ddefe1d48a96ae6','4174ca9d500f00601b8e1db69734c05e04b7b67be9','4174ca9d500f00601b8e1db69734c05e04b7b67be9'])
         .send({
@@ -37,9 +48,8 @@ const app = async () => {
             shouldPollResponse:true
         });
 
-    let quickBuyPath = await BacorExContract.quickBuyPath().call();
-
-    // console.log;
+    let quickBuyPath = await BacorExContract.quickBuyPath(1).call();
+    console.log(quickBuyPath);
 }
 
 app();
