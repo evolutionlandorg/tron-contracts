@@ -88,8 +88,8 @@ contract MultiSigWallet {
         _;
     }
 
-    /// @dev Fallback function allows to deposit ether.
-    function()
+    /// @dev Deposit(Original is Fallback) function allows to deposit trx, triggering the Deposit event.
+    function deposit() public
         payable
     {
         if (msg.value > 0)
