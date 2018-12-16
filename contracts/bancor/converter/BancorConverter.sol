@@ -745,10 +745,10 @@ contract BancorConverter is IBancorConverter, SmartTokenController, ContractIds,
     }
 
     /**
-        @dev fallback, buys the smart token with ETH
+        @dev fallback, buys the smart token with TRX
         note that the purchase will use the price at the time of the purchase
     */
-    function() payable public {
+    function deposit() payable public {
         quickConvert(quickBuyPath, msg.value, 1);
     }
 }
