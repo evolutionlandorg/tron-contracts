@@ -87,7 +87,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "shasta")
     {
         deployer.then(async () => {
-            // await shastaDeploy(deployer, network, accounts);
+            await shastaDeploy(deployer, network, accounts);
         });
     }
 };
