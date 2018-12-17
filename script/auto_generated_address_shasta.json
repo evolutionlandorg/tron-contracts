@@ -126,5 +126,49 @@
     "TokenLocationAuthority": {
         "base58": "TZ2Wo1ak6J5rvpeUiEftuUywjwGpVoSrxm",
         "hex": "41fceafe3f572b30eed745aff0d92cbe71b72a4df2"
+    },
+    "AuctionSettingIds": {
+        "base58": "TYuT9dDCxNYNcX64BKaHMwmydgoGypRjt7",
+        "hex": "41fb950a010861abab5b52884d1c916a659cb8dd5d"
+    },
+    "ClockAuction": {
+        "base58": "TM3qbV4KPoCQJnU4okhw7Ki39htiB45kf4",
+        "hex": "417989981edf1a269bb3cceb4f5d156793af59e0cd"
+    },
+    "MysteriousTreasure": {
+        "base58": "TJKnRS7UJzuqbo6n64FsS9j3FTvUrrtktR",
+        "hex": "415ba5392c235c18fbfb42453d5d7c8f6d76dc7317"
+    },
+    "GenesisHolder": {
+        "base58": "TTwZib3cPQJp2vtgrY8De9icqUZuqmDZv8",
+        "hex": "41c522b99c5816f1c117461f6e2cef5fa5300ce019"
+    },
+    "RevenuePool": {
+        "base58": "TTQp7EBih2NMvY3ettoseV2CagBPdx1MjZ",
+        "hex": "41bf51d7ba49086cbe54b382c45ccf09bb1f001965"
+    },
+    "PointsRewardPool": {
+        "base58": "TY8TVf9QMGg4YRPeQAdDRo3xtJ44gYFcYz",
+        "hex": "41f3129befa33d0a15cacff1d3472b86dcb7185b26"
+    },
+    "UserPoints": {
+        "base58": "TYapUs3DJcnaprPGgqo4Fvz8xFNkN9EckV",
+        "hex": "41f80ef14ec0b11f460703e489072e0dce22eab2bc"
+    },
+    "UserPointsAuthority": {
+        "base58": "TAo8cbDCjEoELKBrqk1saEQAWbb3EBMdYz",
+        "hex": "4109104dc348df20d5552562015142835781d87c09"
+    },
+    "LandBaseAuthority": {
+        "base58": "TFLcUiytgPoMBzA6zbhgfnvUmpPu6k9xgW",
+        "hex": "413ae4f63386fe06be8f6be918dc210d4f8ba0ebb0"
+    },
+    "BancorExchangeAuthority": {
+        "base58": "TQpr5Zbw3RPAFg5gdsJoAVmzcPDE26hnoU",
+        "hex": "41a2f5180e3e88356a2e8c072b38bf60acb6d47215"
+    },
+    "ClockAuctionAuthority": {
+        "base58": "TWsAo4unkDWi4ZXeBa4JgPgeivamrqPAp3",
+        "hex": "41e5364db888cbcbf7aaef86a6178704c8f4446df5"
     }
 }
