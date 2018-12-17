@@ -11,7 +11,6 @@ const RINGAuthority = artifacts.require("RINGAuthority");
 
 
 const LocationCoder = artifacts.require("LocationCoder");
-const TokenLocation = artifacts.require("TokenLocation");
 const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");
 const GringottsBank = artifacts.require("GringottsBank");
 const SettingIds = artifacts.require("SettingIds");
@@ -29,7 +28,13 @@ const UserPointsAuthority = artifacts.require('UserPointsAuthority');
 const PointsRewardPool = artifacts.require('PointsRewardPool');
 const TakeBack = artifacts.require('TakeBack');
 
-const Proxy = artifacts.require("OwnedUpgradeabilityProxy");
+// const Proxy = artifacts.require("OwnedUpgradeabilityProxy");
+const LandBase = artifacts.require("LandBase");
+const TokenLocation = artifacts.require("TokenLocation");
+const ObjectOwnership = artifacts.require("ObjectOwnership");
+const ObjectOwnershipAuthority = artifacts.require("ObjectOwnershipAuthority");
+const TokenLocationAuthority = artifacts.require("TokenLocationAuthority");
+
 
 const BancorConverter = artifacts.require('BancorConverter');
 const BancorFormula = artifacts.require('BancorFormula');
@@ -95,7 +100,7 @@ module.exports = function(deployer, network, accounts) {
 async function baseContractsDeploy(deployer, network, accounts){
     console.log("=======start to deploy some base contracts===========\n");
 
-    // await deployer.deploy(LocationCoder);
+
     await deployer.deploy(InterstellarEncoder);
     await deployer.deploy(SettingIds);
     await deployer.deploy(SettingsRegistry);
@@ -278,12 +283,62 @@ async function bancorContractsDeploy(deployer, network, accounts) {
 
 }
 
+async function landDeploy(deployer, network, accounts){
+
+    console.log("=======start to deploy land contracts===========\n");
+
+    const setRegistryAddress = '412083207a6e0212a7755f8a49a184ccf0ec1f165a';
+    await deployer.deploy(LandBase, setRegistryAddress);
+    await deployer.deploy(ObjectOwnership);
+    await deployer.deploy(TokenLocation);
+
+    // let landBase = await LandBase.deployed();
+    // await deployer.deploy(ObjectOwnershipAuthority, landBase.address);
+    // await deployer.deploy(TokenLocationAuthority, landBase.address);
+    // await deployer.deploy(InterstellarEncoder);
+
+
+    // let interstellarEncoder = await InterstellarEncoder.deployed();
+    // let interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
+    // await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
+    //
+    // let landBase = await LandBase.deployed();
+    // let objectOwnership = await ObjectOwnership.deployed();
+    // let tokenLocation = await TokenLocation.deployed();
+    //
+    // // register in registry
+    // let objectOwnershipId = await settingIds.CONTRACT_OBJECT_OWNERSHIP.call();
+    // let landBaseId = await settingIds.CONTRACT_LAND_BASE.call();
+    // let tokenLocationId = await settingIds.CONTRACT_TOKEN_LOCATION.call();
+    // await settingsRegistry.setAddressProperty(landBaseId,landBaseProxy_address);
+    // await settingsRegistry.setAddressProperty(objectOwnershipId, objectOwnershipProxy_address);
+    // await settingsRegistry.setAddressProperty(tokenLocationId, tokenLocationProxy_address);
+
+    // await ObjectOwnership.at(objectOwnershipProxy_address).setAuthority(ObjectOwnershipAuthority.address);
+    //
+    //
+    // await interstellarEncoder.registerNewTokenContract(objectOwnershipProxy_address);
+    // await interstellarEncoder.registerNewObjectClass(landBaseProxy_address, conf.land_objectClass);
+
+
+    console.log("=======end to deploy land contracts===========\n");
+
+}
+
+async function testDeploy(deployer, network, accounts){
+
+    let hRing  = await deployer.tronWeb.Contract(RING.abi).at('0x74ca9d500f00601b8e1db69734c05e04b7b67be9');
+    console.log("ring address", hRing.address);
+
+}
 
 async function shastaDeploy(deployer, network, accounts) {
 
-    await baseContractsDeploy(deployer, network, accounts);
-    await tokenContractsDeploy(deployer, network, accounts);
-    await idContractsDeploy(deployer, network, accounts);
-    await bankContractsDeploy(deployer, network, accounts);
-    await bancorContractsDeploy(deployer, network, accounts);
+    // await baseContractsDeploy(deployer, network, accounts);
+    // await tokenContractsDeploy(deployer, network, accounts);
+    // await idContractsDeploy(deployer, network, accounts);
+    // await bankContractsDeploy(deployer, network, accounts);
+    // await bancorContractsDeploy(deployer, network, accounts);
+
+    landDeploy(deployer, network, accounts);
 }

@@ -41,24 +41,93 @@ const app = async () => {
     if (!connected)
         return;
 
-    // const settingidsAddress = contracts["SettingIds"].hex;
-    // const registrysAddress = contracts["SettingsRegistry"].hex;
-    const landBaseAddress = contracts["LandBase"].hex;
-    console.log("landBaseAddress: ",landBaseAddress);
 
+    const settingidsAddress = contracts["SettingIds"].hex;
+    const registrysAddress = contracts["SettingsRegistry"].hex;
+    const interstellarEncoderAddr = contracts["InterstellarEncoderV2"].hex;
+    const objectOwnershipAddress = contracts["ObjectOwnership"].hex;
+    const tokenLocationIdAddress = contracts["TokenLocation"].hex;
 
-    let ObjectOwnershipAuthorit = await tronWeb.contract().new({
+    const landBaseAddressTrx = contracts["LandBase"].hex;
+    let landBaseAddressEth = '0x' + landBaseAddressTrx.substring(2);
+    console.log("landBaseAddress: ",landBaseAddressEth);
+
+    let SettingIDs = await tronWeb.contract().at(settingidsAddress);
+    let SettingRegistry = await tronWeb.contract().at(registrysAddress);
+    let ObjectOwnership = await tronWeb.contract().at(objectOwnershipAddress);
+    let InterstellarEncoder = await tronWeb.contract().at(interstellarEncoderAddr);
+
+    let ObjectOwnershipAuthority= await tronWeb.contract().new({
         abi:jObjectOwnershipAuthority.abi,
         bytecode:jObjectOwnershipAuthority.bytecode,
         feeLimit:1000000000,
         callValue:0,
         userFeePercentage:100,
-        parameters:[['0x545b80c341af24b982dceeaa80151c118678fc3a']]
+        parameters:[[landBaseAddressEth]]
+    });
+    console.log("deployed ObjectOwnershipAuthorit: ", ObjectOwnershipAuthority.address);
+
+    let TokenLocationAuthority = await tronWeb.contract().new({
+        abi:jTokenLocationAuthority.abi,
+        bytecode:jTokenLocationAuthority.bytecode,
+        feeLimit:1000000000,
+        callValue:0,
+        userFeePercentage:100,
+        parameters:[[landBaseAddressEth]]
+    });
+    console.log("deployed TokenLocationAuthority: ", TokenLocationAuthority.address);
+
+    let interstellarEncoderId = await SettingIDs.CONTRACT_INTERSTELLAR_ENCODER().call();
+    console.log("interstellarEncoderId in settingids: ", interstellarEncoderId);
+    await SettingRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoderAddr).send({
+           feeLimit:1000000000,
+           callValue:0,
+           shouldPollResponse:true
     });
 
-    console.log("ObjectOwnershipAuthorit: ", ObjectOwnershipAuthorit.address);
 
+    let landBaseId = await SettingIDs.CONTRACT_LAND_BASE().call();
+    let objectOwnershipId = await SettingIDs.CONTRACT_OBJECT_OWNERSHIP().call();
+    let tokenLocationId = await SettingIDs.CONTRACT_TOKEN_LOCATION().call();
+    await SettingRegistry.setAddressProperty(landBaseId,landBaseAddressTrx).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
 
+    await SettingRegistry.setAddressProperty(objectOwnershipId,objectOwnershipAddress).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+    await SettingRegistry.setAddressProperty(tokenLocationId,tokenLocationIdAddress).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
+    await ObjectOwnership.setAuthority(ObjectOwnershipAuthority.address).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
+    let ret = await InterstellarEncoder.contractId2Address(1).call();
+    console.log("objectOwnershipAddress: ",objectOwnershipAddress);
+    console.log("index 1 in InterstellarEncoder : ",ret);
+
+    // await InterstellarEncoder.registerNewTokenContract(objectOwnershipAddress).send({
+    //     feeLimit:1000000000,
+    //     callValue:0,
+    //     shouldPollResponse:true
+    // });
+    // console.log("test3");
+    await InterstellarEncoder.registerNewObjectClass(landBaseAddressTrx,1).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+    console.log("deploy finish");
 
 };
 
