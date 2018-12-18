@@ -1,17 +1,17 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
 var key = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
-var contracts = JSON.parse(fs.readFileSync('./script/myContractAddrs.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
 
 console.log(key);
 
-const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
+//const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
 const fullNode = 'https://api.shasta.trongrid.io'; // Full node http endpoint
 const solidityNode = 'https://api.shasta.trongrid.io'; // Solidity node http endpoint
 const eventServer = 'https://api.shasta.trongrid.io'; // Contract events http endpoint
 
 const privateKey = key.privateKey;
-const myAddress = key.hex;
+const myAddress = key.address;
 
 console.log(myAddress);
 
@@ -38,16 +38,16 @@ const app = async () => {
 
     const ringAddress = contracts["RING"].hex;
     const bankAddress = contracts["GringottsBank"].hex;
-    // const goldContract = 
+
+    console.log(bankAddress);
 
     let ringContract = await tronWeb.contract().at(ringAddress);
 
     let value = await ringContract.balanceOf(myAddress).call();
 
-    console.log(value.toString());
+    console.log("my ring balance:", value.toString());
 
-    // "0000000000000000000000000000000000000000000000000000000000000001"
-    await ringContract['transfer(address,uint256,bytes)']('41c29b9bfba00ec2a2fb0b9d881c7924b89299cbf4', "1000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000001")
+    await ringContract['transfer(address,uint256,bytes)'](bankAddress,"1000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000001")
         .send({
             feeLimit:1000000000,
             callValue: 0,

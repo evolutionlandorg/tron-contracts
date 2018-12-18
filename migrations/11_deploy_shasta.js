@@ -92,7 +92,7 @@ let prodEnv = ["production","tron"];
 let ethEnv = ["development","production"];
 let tronEnv = ["shasta","tron"];
 
-let ring,kton,settingIds,settingsRegistry,interstellarEncoder,interstellarEncoderId;
+let ring,kton,settingIds,settingsRegistry,interstellarEncoder,interstellarEncoderId,landBase;
 
 module.exports = function(deployer, network, accounts) {
 
@@ -104,6 +104,10 @@ module.exports = function(deployer, network, accounts) {
         });
     }
 };
+
+async function baseContractsTronDeploy(deployer, network, accounts){
+    await baseContractsDeploy(deployer, network, accounts);
+}
 
 async function baseContractsDeploy(deployer, network, accounts){
     console.log("=======start to deploy some base contracts===========\n");
@@ -122,6 +126,9 @@ async function baseContractsDeploy(deployer, network, accounts){
     console.log("=======end to deploy some base contracts===========\n");
 }
 
+async function tokenContractsTronDeploy(deployer, network, accounts){
+    await tokenContractsDeploy(deployer, network, accounts);
+}
 async function tokenContractsDeploy(deployer, network, accounts){
 
     console.log("=======start to deploy token contracts===========\n");
@@ -166,6 +173,9 @@ async function tokenContractsDeploy(deployer, network, accounts){
 
 }
 
+async function idContractsTronDeploy(deployer, network, accounts){
+    await idContractsDeploy(deployer, network, accounts);
+}
 async function idContractsDeploy(deployer, network, accounts) {
     console.log("=======start to deploy id contracts===========\n");
 
@@ -205,6 +215,10 @@ async function idContractsDeploy(deployer, network, accounts) {
 
 }
 
+async function bankContractsTronDeploy(deployer, network, accounts) {
+    await bankContractsDeploy(deployer, network, accounts);
+}
+
 async function bankContractsDeploy(deployer, network, accounts) {
     console.log("=======start to deploy bank contracts===========\n");
     await deployer.deploy(GringottsBank, settingsRegistry.address);
@@ -218,14 +232,17 @@ async function bankContractsDeploy(deployer, network, accounts) {
     await settingsRegistry.setUintProperty(bank_penalty_multiplier, conf.bank_penalty_multiplier);
 
 
-    // // kton.setAuthority will be done in market's migration
-    // let interest = await bankProxy.computeInterest.call(10000, 12, conf.bank_unit_interest);
-    // console.log("Current annual interest for 10000 RING is: ... " + interest + " KTON");
+    await deployer.deploy(MintAndBurnAuthority, bank.address);
+    let mintAndBurnAuthority = await MintAndBurnAuthority.deployed();
+    await kton.setAuthority(mintAndBurnAuthority.address);
 
     console.log("=======end to deploy bank contracts===========\n");
 
 }
 
+async function bancorContractsTronDeploy(deployer, network, accounts){
+    await bancorContractsDeploy(deployer, network, accounts);
+}
 
 async function bancorContractsDeploy(deployer, network, accounts) {
 
@@ -291,6 +308,50 @@ async function bancorContractsDeploy(deployer, network, accounts) {
 
 }
 
+async function landTronDeploy(deployer, network, accounts){
+
+    console.log("=======start to deploy land contracts===========\n");
+
+    // const setRegistryAddress = '412083207a6e0212a7755f8a49a184ccf0ec1f165a';
+    let setRegistryAddress = settingsRegistry.address;
+    await deployer.deploy(LandBase, setRegistryAddress);
+    await deployer.deploy(ObjectOwnership);
+    await deployer.deploy(TokenLocation);
+
+    let objectOwnership = await ObjectOwnership.deployed();
+    await objectOwnership.initializeContract(setRegistryAddress);
+
+    landBase = await LandBase.deployed();
+    let landBaseAddr = landBase.address;
+    let landBaseEthAddr = '0x' + landBaseAddr.substring(2);
+    await deployer.deploy(ObjectOwnershipAuthority, [landBaseEthAddr]);
+    await deployer.deploy(TokenLocationAuthority, [landBaseEthAddr]);
+
+    //
+    // // register in registry and initialization
+    let objectOwnershipId = await settingIds.CONTRACT_OBJECT_OWNERSHIP.call();
+    let landBaseId = await settingIds.CONTRACT_LAND_BASE.call();
+    let tokenLocationId = await settingIds.CONTRACT_TOKEN_LOCATION.call();
+    await settingsRegistry.setAddressProperty(landBaseId,landBaseAddr);
+    await settingsRegistry.setAddressProperty(objectOwnershipId, objectOwnership.address);
+
+    let tokenLocation = await TokenLocation.deployed();
+    await tokenLocation.initializeContract();
+    await settingsRegistry.setAddressProperty(tokenLocationId, tokenLocation.address);
+    let tokenLocationAuthority = await TokenLocationAuthority.deployed();
+    await tokenLocation.setAuthority(tokenLocationAuthority.address);
+
+    let objectOwnershipAuthority = await ObjectOwnershipAuthority.deployed();
+    await objectOwnership.setAuthority(objectOwnershipAuthority.address);
+
+    await interstellarEncoder.registerNewTokenContract(objectOwnership.address);
+    await interstellarEncoder.registerNewObjectClass(landBaseAddr, conf.land_objectClass);
+
+
+    console.log("=======end to deploy land contracts===========\n");
+
+}
+
 async function landDeploy(deployer, network, accounts){
 
     console.log("=======start to deploy land contracts===========\n");
@@ -300,7 +361,12 @@ async function landDeploy(deployer, network, accounts){
     await deployer.deploy(ObjectOwnership);
     await deployer.deploy(TokenLocation);
 
-    // let landBase = await LandBase.deployed();
+    let tokenLocation = await TokenLocation.deployed();
+    await tokenLocation.initializeContract();
+
+    let objectOwnership = await ObjectOwnership.deployed();
+    await objectOwnership.initializeContract(setRegistryAddress);
+
     // await deployer.deploy(ObjectOwnershipAuthority, landBase.address);
     // await deployer.deploy(TokenLocationAuthority, landBase.address);
     // await deployer.deploy(InterstellarEncoder);
@@ -330,6 +396,109 @@ async function landDeploy(deployer, network, accounts){
 
 
     console.log("=======end to deploy land contracts===========\n");
+
+}
+
+async function marketTronDeploy(deployer, network, accounts){
+
+    console.log("=======start to deploy market contracts===========\n");
+
+    // const setRegistryAddress = '412083207a6e0212a7755f8a49a184ccf0ec1f165a';
+    let setRegistryAddress = settingsRegistry.address;
+    await deployer.deploy(AuctionSettingIds);
+    await deployer.deploy(ClockAuction,setRegistryAddress);
+    await deployer.deploy(MysteriousTreasure,setRegistryAddress,[10439, 419, 5258, 12200, 12200]);
+    await deployer.deploy(GenesisHolder,setRegistryAddress);
+    await deployer.deploy(RevenuePool,setRegistryAddress);
+    await deployer.deploy(PointsRewardPool,setRegistryAddress);
+    await deployer.deploy(UserPoints);
+
+    let revenuePool = await RevenuePool.deployed();
+    let revenuePoolAddrEth = '0x' + revenuePool.address.substring(2);
+
+    let pointsRewardPool = await PointsRewardPool.deployed();
+    let pointsRewardPoolAddrEth = '0x' + pointsRewardPool.address.substring(2);
+
+    let mysteriousTreasure = await MysteriousTreasure.deployed();
+    let mysteriousTreasureAddrEth = '0x' + mysteriousTreasure.address.substring(2);
+
+    let clockAuction = await ClockAuction.deployed();
+    let clockAuctionAddrEth = '0x' + clockAuction.address.substring(2);
+
+    let genesisHolder = await GenesisHolder.deployed();
+    let genesisHolderAddrEth = '0x' + genesisHolder.address.substring(2);
+
+
+    await deployer.deploy(UserPointsAuthority, [revenuePoolAddrEth, pointsRewardPoolAddrEth]);
+    await deployer.deploy(LandBaseAuthority, [mysteriousTreasureAddrEth]);
+    await deployer.deploy(BancorExchangeAuthority, [clockAuctionAddrEth]);
+    await deployer.deploy(ClockAuctionAuthority, [genesisHolderAddrEth]);
+
+    let userPoint = await UserPoints.deployed();
+    await userPoint.initializeContract();
+
+    //
+    // //register to registry
+    let settingIds = await AuctionSettingIds.deployed();
+    let revenueId = await settingIds.CONTRACT_REVENUE_POOL.call();
+    await settingsRegistry.setAddressProperty(revenueId, revenuePool.address);
+    //
+    let pointsRewardId = await settingIds.CONTRACT_POINTS_REWARD_POOL.call();
+    await settingsRegistry.setAddressProperty(pointsRewardId, pointsRewardPool.address);
+    //
+    let userPointsId = await settingIds.CONTRACT_USER_POINTS.call();
+    await settingsRegistry.setAddressProperty(userPointsId, userPoint.address);
+    //
+    let contributionId = await settingIds.CONTRACT_CONTRIBUTION_INCENTIVE_POOL.call();
+    await settingsRegistry.setAddressProperty(contributionId, conf.contribution_incentive_address);
+    //
+    let dividendsId = await settingIds.CONTRACT_DIVIDENDS_POOL.call();
+    await settingsRegistry.setAddressProperty(dividendsId, conf.supervisor_address);
+    //
+    let devId = await settingIds.CONTRACT_DEV_POOL.call();
+    await settingsRegistry.setAddressProperty(devId, conf.dev_pool_address);
+    //
+    let auctionId = await settingIds.CONTRACT_CLOCK_AUCTION.call();
+    await settingsRegistry.setAddressProperty(auctionId, clockAuction.address);
+
+    let auctionCutId = await settingIds.UINT_AUCTION_CUT.call();
+    await settingsRegistry.setUintProperty(auctionCutId, conf.uint_auction_cut);
+
+    let waitingTimeId = await settingIds.UINT_AUCTION_BID_WAITING_TIME.call();
+    await settingsRegistry.setUintProperty(waitingTimeId, conf.uint_bid_waiting_time);
+
+    let treasureId = await settingIds.CONTRACT_MYSTERIOUS_TREASURE.call();
+    await settingsRegistry.setAddressProperty(treasureId, mysteriousTreasure.address);
+
+    let bancorExchangeId = await settingIds.CONTRACT_BANCOR_EXCHANGE.call();
+    let bancorEx = await BancorExchange.deployed();
+    await settingsRegistry.setAddressProperty(bancorExchangeId, bancorEx.address);
+
+    let refererCutId = await settingIds.UINT_REFERER_CUT.call();
+    await settingsRegistry.setUintProperty(refererCutId, conf.uint_referer_cut);
+
+    let errorSpaceId = await settingIds.UINT_EXCHANGE_ERROR_SPACE.call();
+    await settingsRegistry.setUintProperty(errorSpaceId, conf.uint_error_space);
+
+
+
+    // allow treasure to modify data in landbase
+    let landBaseAuthority = LandBaseAuthority.deployed();
+    await landBase.setAuthority(landBaseAuthority.address);
+
+    // transfer treasure's owner to clockAuction
+    await mysteriousTreasure.setOwner(clockAuction.address);
+
+    // set authority
+    let userPointsAuthority = await UserPointsAuthority.deployed();
+    await userPoint.setAuthority(userPointsAuthority.address);
+    let bancorExchangeAuthority = await BancorExchangeAuthority.deployed();
+    await bancorEx.setAuthority(bancorExchangeAuthority.address);
+
+    await clockAuction.setAuthority(ClockAuctionAuthority.address);
+
+
+    console.log("=======end to deploy market contracts===========\n");
 
 }
 
@@ -436,8 +605,10 @@ async function marketDeploy(deployer, network, accounts){
 
 async function testDeploy(deployer, network, accounts){
 
-    let hRing  = await deployer.tronWeb.Contract(RING.abi).at('0x74ca9d500f00601b8e1db69734c05e04b7b67be9');
-    console.log("ring address", hRing.address);
+    await deployer.deploy(InterstellarEncoder);
+    const setRegistryAddress = '412083207a6e0212a7755f8a49a184ccf0ec1f165a';
+    await deployer.deploy(LandBase, setRegistryAddress);
+
 
 }
 
@@ -450,6 +621,6 @@ async function shastaDeploy(deployer, network, accounts) {
     // await bancorContractsDeploy(deployer, network, accounts);
 
     // landDeploy(deployer, network, accounts);
-
-    marketDeploy(deployer, network, accounts);
+    await deployer.deploy(MintAndBurnAuthority, '4195c1e5cf929945595b25fa9ede5e12fdc518d45f');
+    // testDeploy(deployer, network, accounts);
 }
