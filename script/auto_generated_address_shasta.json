@@ -170,5 +170,9 @@
     "ClockAuctionAuthority": {
         "base58": "TWsAo4unkDWi4ZXeBa4JgPgeivamrqPAp3",
         "hex": "41e5364db888cbcbf7aaef86a6178704c8f4446df5"
+    },
+    "MintAndBurnAuthority": {
+        "base58": "TThyLtJeaqgQfQBEP7jUJNRiYS9VHWZLSD",
+        "hex": "41c2909f9858a670bf3be8a241359f3a967476d765"
     }
 }
