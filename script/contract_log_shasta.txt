@@ -1,6 +1,6 @@
 InterstellarEncoderV2:
-(base58) TQBwf2fu8eKguENSaMGGnaJKzdtQgpRhgC
-(hex) 419bfa5bdcb2894fcf5f6f259467cb2d4c57a46e1b
+(base58) TKwTaBT8Qwe3erezXHtyC9UCcipqxpQnrG
+(hex) 416d5c96d7c6fc7588202d9ecdabf112139cde677a
 
 SettingIds:
 (base58) TKkkqiFV5E56VLupHAExfCTYZHM34KXJGE
@@ -107,24 +107,24 @@ BancorExchange:
 (hex) 4110f886f8e9bf28ca6d3c7b7ab0599549a66f8563
 
 LandBase:
-(base58) THfFNuobirvPXqyBuJxq4xZjvTkL28kcaM
-(hex) 41545b80c341af24b982dceeaa80151c118678fc3a
+(base58) TTEj3Rp2ZWuBbikHAoJMLdWjuo8T9BqJGG
+(hex) 41bd69746044e063c10b92e0e6515440dc3f73dd8a
 
 ObjectOwnership:
-(base58) TK68SqybxMPiiSHekFe7qm2Bjx1EyM7D7W
-(hex) 4164083dba2a12f170c3eca00b8552085706a4a80d
+(base58) TU47hSn2CZDitAKFW2RzP1fwVu2gNca3Lw
+(hex) 41c65feaa7d0ae57b3331ba0f7ace2a45277a9f8b0
 
 TokenLocation:
-(base58) TQf5fLE2Wtz8QHo4vvjXCLU2bKGdWYxdgd
-(hex) 41a11c45b07cd89fd1f476184e5e575d612c38f707
+(base58) TGwyAKKBYVbnzxNYyyujwLdQNNdHegZcqp
+(hex) 414c8ce9413b22072915e447d8ae182000fcdbcb42
 
 ObjectOwnershipAuthority:
-(base58) TPvmFTLba1dcQeDnnoSwz1ATZb5aLWBFJ8
-(hex) 41991b6eba891b22867dc00505176b5777646c3ff7
+(base58) TAn64GXnwGQhwEegSWEkJVxrXjsLRhbupo
+(hex) 4108ddc0caa36d033ca0911d06d390846556f03b7a
 
 TokenLocationAuthority:
-(base58) TZ2Wo1ak6J5rvpeUiEftuUywjwGpVoSrxm
-(hex) 41fceafe3f572b30eed745aff0d92cbe71b72a4df2
+(base58) TASu7gtAzEGpMVFMM8xPMQue63UqwyRT3q
+(hex) 41053cb779aaab30d6d6cbf2c210dfadba53d9f801
 
 AuctionSettingIds:
 (base58) TYuT9dDCxNYNcX64BKaHMwmydgoGypRjt7
