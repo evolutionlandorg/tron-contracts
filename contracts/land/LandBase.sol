@@ -1,7 +1,7 @@
 pragma solidity ^0.4.0;
 
 import "./interfaces/ILandBase.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "../ERC721/ERC721.sol";
 import "../common/interfaces/IObjectOwnership.sol";
 import "../common/interfaces/ITokenLocation.sol";
 import "../common/interfaces/ISettingsRegistry.sol";

@@ -36,12 +36,13 @@ const app = async () => {
     if (!connected)
         return;
 
-    const objectOwnershipAddress = "4164083dba2a12f170c3eca00b8552085706a4a80d";
+    // const objectOwnershipAddress = "41c65feaa7d0ae57b3331ba0f7ace2a45277a9f8b0";
+    const objectOwnershipAddress = contracts["ObjectOwnership"].hex;
     // const bankAddress = contracts["GringottsBank"].hex;
 
     let objectOwnershipContract = await tronWeb.contract().at(objectOwnershipAddress);
 
-    let value = await objectOwnershipContract.ownerOf("18998906514627227268043541001230492221534399580350777576391476909546099703809").call();
+    let value = await objectOwnershipContract.ownerOf("19000673361797317944041681485429153168074179863487486754213522234433471512578").call();
 
     console.log(value);
 }

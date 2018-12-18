@@ -1,8 +1,8 @@
 pragma solidity ^0.4.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721Basic.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../../ERC721/ERC721Basic.sol";
 import "../../common/interfaces/ISettingsRegistry.sol";
 import "../../common/interfaces/ERC223.sol";
 import "../../land/interfaces/ILandBase.sol";
