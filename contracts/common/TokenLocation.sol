@@ -6,25 +6,9 @@ import "./LocationCoder.sol";
 
 contract TokenLocation is DSAuth, ITokenLocation {
     using LocationCoder for *;
-    
-    bool private singletonLock = false;
 
     // token id => encode(x,y) postiion in map, the location is in micron.
     mapping (uint256 => uint256) public tokenId2LocationId;
-
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    function initializeContract() public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-    }
 
     function hasLocation(uint256 _tokenId) public view returns (bool) {
         return tokenId2LocationId[_tokenId] != 0;

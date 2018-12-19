@@ -76,4 +76,8 @@ contract DividendPool is DSAuth, IDSettingIds {
 
         emit ClaimedTokens(_token, owner, balance);
     }
+
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }

@@ -126,4 +126,8 @@ contract FrozenDividend is Ownable, SettingIds{
         return ktonSupply;
     }
 
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
+
 }

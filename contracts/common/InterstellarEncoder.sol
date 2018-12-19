@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./interfaces/IInterstellarEncoder.sol";
 
 // TODO: upgrade.
-contract InterstellarEncoderV2 is IInterstellarEncoder, Ownable {
+contract InterstellarEncoder is IInterstellarEncoder, Ownable {
     // [magic_number, chain_id, contract_id <2>, origin_chain_id, origin_contract_id<2>, object_class, convert_type, <6>, land, <128>]
     mapping(uint16 => address) public contractId2Address;
     mapping(address => uint16) public contractAddress2Id;

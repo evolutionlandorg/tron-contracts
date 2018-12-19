@@ -603,4 +603,8 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         b = new bytes(32);
         assembly { mstore(add(b, 32), x) }
     }
+
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }

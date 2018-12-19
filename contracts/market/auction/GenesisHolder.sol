@@ -100,4 +100,7 @@ contract GenesisHolder is Ownable, AuctionSettingIds {
         return bytes4(0x150b7a02);
     }
 
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }
