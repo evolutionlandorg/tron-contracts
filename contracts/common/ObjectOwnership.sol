@@ -1,92 +1,44 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "../ERC721/ERC721Token.sol";
+import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "./interfaces/IInterstellarEncoder.sol";
 import "./interfaces/ISettingsRegistry.sol";
 import "./DSAuth.sol";
 import "./SettingIds.sol";
+import "./StringUtil.sol";
 
 contract ObjectOwnership is ERC721Token("Evolution Land Objects","EVO"), DSAuth, SettingIds {
-    bytes4 internal constant InterfaceId_ERC721 = 0x80ac58cd;
-    /*
-    * 0x80ac58cd ===
-    *   bytes4(keccak256('balanceOf(address)')) ^
-    *   bytes4(keccak256('ownerOf(uint256)')) ^
-    *   bytes4(keccak256('approve(address,uint256)')) ^
-    *   bytes4(keccak256('getApproved(uint256)')) ^
-    *   bytes4(keccak256('setApprovalForAll(address,bool)')) ^
-    *   bytes4(keccak256('isApprovedForAll(address,address)')) ^
-    *   bytes4(keccak256('transferFrom(address,address,uint256)')) ^
-    *   bytes4(keccak256('safeTransferFrom(address,address,uint256)')) ^
-    *   bytes4(keccak256('safeTransferFrom(address,address,uint256,bytes)'))
-    */
+    using StringUtil for *;
 
-    bytes4 internal constant InterfaceId_ERC721Exists = 0x4f558e79;
-    /*
-    * 0x4f558e79 ===
-    *   bytes4(keccak256('exists(uint256)'))
-    */
-
-    bytes4 internal constant InterfaceId_ERC721Enumerable = 0x780e9d63;
-    /**
-    * 0x780e9d63 ===
-    *   bytes4(keccak256('totalSupply()')) ^
-    *   bytes4(keccak256('tokenOfOwnerByIndex(address,uint256)')) ^
-    *   bytes4(keccak256('tokenByIndex(uint256)'))
-    */
-
-    bytes4 internal constant InterfaceId_ERC721Metadata = 0x5b5e139f;
-    /**
-    * 0x5b5e139f ===
-    *   bytes4(keccak256('name()')) ^
-    *   bytes4(keccak256('symbol()')) ^
-    *   bytes4(keccak256('tokenURI(uint256)'))
-    */
-    
     ISettingsRegistry public registry;
 
-    bool private singletonLock = false;
-
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
+    // https://docs.opensea.io/docs/2-adding-metadata
+    string public baseTokenURI;
 
     /**
-     * @dev Atlantis's constructor 
+     * @dev Byzantine's ObjectOwnership constructor 
      */
-    constructor () public {
-        // initializeContract();
-    }
-
-    /**
-     * @dev Same with constructor, but is used and called by storage proxy as logic contract.
-     */
-    function initializeContract(address _registry) public singletonLockCall {
-        // Ownable constructor
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
-        // SupportsInterfaceWithLookup constructor
-        _registerInterface(InterfaceId_ERC165);
-
-        // ERC721BasicToken constructor
-        _registerInterface(InterfaceId_ERC721);
-        _registerInterface(InterfaceId_ERC721Exists);
-
-        // ERC721Token constructor
+    constructor (address _registry) public {
         name_ = "Evolution Land Objects";
         symbol_ = "EVO";    // Evolution Land Objects
-        // register the supported interfaces to conform to ERC721 via ERC165
-        _registerInterface(InterfaceId_ERC721Enumerable);
-        _registerInterface(InterfaceId_ERC721Metadata);
-
         registry = ISettingsRegistry(_registry);
+    }
+
+    function tokenURI(uint256 _tokenId) public view returns (string) {
+        if (super.tokenURI(_tokenId).toSlice().empty()) {
+            return baseTokenURI.toSlice().concat(StringUtil.uint2str(_tokenId).toSlice());
+        }
+
+        return super.tokenURI(_tokenId);
+    }
+
+    function setTokenURI(uint256 _tokenId, string _uri) public auth {
+        _setTokenURI(_tokenId, _uri);
+    }
+
+    function setBaseTokenURI(string _newBaseTokenURI) public auth  {
+        baseTokenURI = _newBaseTokenURI;
     }
 
     function mintObject(address _to, uint128 _objectId) public auth returns (uint256 _tokenId) {
