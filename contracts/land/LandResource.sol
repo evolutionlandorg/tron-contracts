@@ -2,15 +2,15 @@ pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
-import "openzeppelin-solidity/contracts/introspection/SupportsInterfaceWithLookup.sol";
-import "@evolutionland/common/contracts/interfaces/IMintableERC20.sol";
-import "@evolutionland/common/contracts/interfaces/ISettingsRegistry.sol";
-import "@evolutionland/common/contracts/DSAuth.sol";
-import "@evolutionland/common/contracts/SettingIds.sol";
-import "@evolutionland/common/contracts/interfaces/IInterstellarEncoder.sol";
-import "@evolutionland/common/contracts/interfaces/ITokenUse.sol";
-import "@evolutionland/common/contracts/interfaces/IActivity.sol";
-import "@evolutionland/common/contracts/interfaces/IMinerObject.sol";
+import "../ERC721/SupportsInterfaceWithLookup.sol";
+import "../common/interfaces/IMintableERC20.sol";
+import "../common/interfaces/ISettingsRegistry.sol";
+import "../common/DSAuth.sol";
+import "../common/SettingIds.sol";
+import "../common/interfaces/IInterstellarEncoder.sol";
+import "../common/interfaces/ITokenUse.sol";
+import "../common/interfaces/IActivity.sol";
+import "../common/interfaces/IMinerObject.sol";
 import "./interfaces/ILandBase.sol";
 import "./LandSettingIds.sol";
 
@@ -134,7 +134,7 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
             _tokenId, _resourceToken, (_currentTime + _lastUpdateTime) / 2);
 
         // calculate the area of trapezoid
-        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime).mul(1 ether).div(1 days);
+        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime).mul(1 ** 18).div(1 days);
     }
 
     function _getMaxMineBalance(uint256 _tokenId, address _resourceToken, uint256 _currentTime, uint256 _lastUpdateTime) internal view returns (uint256) {

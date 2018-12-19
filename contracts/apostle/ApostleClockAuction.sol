@@ -4,11 +4,11 @@ import "../ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../common/interfaces/ISettingsRegistry.sol";
-import "../common/contracts/interfaces/ERC223.sol";
-import "../common/contracts/PausableDSAuth.sol";
+import "../common/interfaces/ERC223.sol";
+import "../common/PausableDSAuth.sol";
 import "./ApostleSettingIds.sol";
 import "./interfaces/IApostleBase.sol";
-import "../common/contracts/interfaces/ITokenUse.sol";
+import "../common/interfaces/ITokenUse.sol";
 
 contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
     using SafeMath for *;

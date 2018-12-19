@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.23;
 
 
 /// @title defined the interface that will be referenced in main Kitty contract

@@ -1,6 +1,6 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.23;
 
-contract IClockAuction {
+contract IApostleAuction {
     function createAuction(
         uint256 _tokenId,
         uint256 _startingPriceInToken,

@@ -1,9 +1,9 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "@evolutionland/common/contracts/interfaces/ISettingsRegistry.sol";
-import "@evolutionland/common/contracts/interfaces/ERC223.sol";
-import "@evolutionland/common/contracts/interfaces/ITokenUse.sol";
+import "../common/interfaces/ISettingsRegistry.sol";
+import "../common/interfaces/ERC223.sol";
+import "../common/interfaces/ITokenUse.sol";
 import "./interfaces/IApostleBase.sol";
 import "./SiringAuctionBase.sol";
 

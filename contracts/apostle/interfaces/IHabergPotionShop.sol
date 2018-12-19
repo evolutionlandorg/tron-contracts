@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.23;
 
 contract IHabergPotionShop {
     function tryKillApostle(uint256 _tokenId, address _killer) public;

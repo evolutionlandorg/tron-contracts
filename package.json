@@ -1,6 +1,6 @@
 {
   "name": "@evolutionland/tron",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Evolution Land contracts on TRON network",
   "main": "tronbox.js",
   "directories": {
