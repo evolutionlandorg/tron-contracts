@@ -18,6 +18,10 @@ contract  HarbergerPotionShop is DSAuth, ApostleSettingIds {
      */
     event ClaimedTokens(address indexed _token, address indexed _owner, uint _amount);
 
+    /*
+     *  Storages
+     */
+
     ISettingsRegistry public registry;
 
     /*
@@ -34,6 +38,10 @@ contract  HarbergerPotionShop is DSAuth, ApostleSettingIds {
 
     mapping (uint256 => PotionState) public tokenId2PotionState;
 
+    /**
+     * @dev Same with constructor, but is used and called by storage proxy as logic contract.
+     * @param _registry - address of SettingsRegistry
+     */
     constructor(address _registry) public {
         registry = ISettingsRegistry(_registry);
     }

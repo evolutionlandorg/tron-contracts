@@ -9,7 +9,6 @@ import "./SiringAuctionBase.sol";
 
 /// @title Clock auction for non-fungible tokens.
 contract SiringClockAuction is SiringAuctionBase {
-
     constructor(ISettingsRegistry _registry) public {
         registry = _registry;
     }
@@ -134,6 +133,7 @@ contract SiringClockAuction is SiringAuctionBase {
 
         _removeAuction(sireId);
         uint refund = _valueInToken - priceInToken - autoBirthFee;
+        
         if (refund > 0) {
             ERC20(msg.sender).transfer(_from, refund);
         }
@@ -144,9 +144,10 @@ contract SiringClockAuction is SiringAuctionBase {
     }
 
 
-    function _bidWithToken(address _auctionToken, address _from, address _seller, uint256 _sireId, uint256 _matronId, uint256 _priceInToken, uint256 _autoBirthFee) internal {
+    function _bidWithToken(
+        address _auctionToken, address _from, address _seller, uint256 _sireId, uint256 _matronId, uint256 _priceInToken, uint256 _autoBirthFee) internal {
         //uint256 ownerCutAmount = _computeCut(priceInToken);
-        uint cut =  _computeCut(_priceInToken);
+        uint cut = _computeCut(_priceInToken);
         ERC223(_auctionToken).transfer(_seller, (_priceInToken - cut), toBytes(_from));
         ERC223(_auctionToken).transfer(registry.addressOf(CONTRACT_REVENUE_POOL), (cut + _autoBirthFee), toBytes(_from));
 
@@ -172,17 +173,12 @@ contract SiringClockAuction is SiringAuctionBase {
     function onERC721Received(
         address, //_operator,
         address, //_from,
-        uint256 _tokenId,
+        uint256, // _tokenId,
         bytes //_data
     )
     public
     returns (bytes4) {
-
-        // owner can put apostle onto siring market
-        // after coolDownEndTime
-        if (IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE)).isReadyToBreed(_tokenId)) {
-            return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
-        }
+        return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
 
     }
 

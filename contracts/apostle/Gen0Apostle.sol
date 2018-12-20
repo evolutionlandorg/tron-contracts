@@ -9,6 +9,9 @@ import "../common/interfaces/ERC223.sol";
 import "../common/PausableDSAuth.sol";
 
 contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
+    // claimedToken event
+    event ClaimedTokens(address indexed token, address indexed owner, uint amount);
+    event ClaimedERC721Token(address indexed owner, uint256 tokenId);
 
     uint256 public gen0CreationLimit;
 
@@ -17,23 +20,19 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
     address public operator;
 
     uint256 public gen0Count;
-
-    // claimedToken event
-    event ClaimedTokens(address indexed token, address indexed owner, uint amount);
-    event ClaimedERC721Token(address indexed owner, uint256 tokenId);
-
-
-    constructor(ISettingsRegistry _registry, uint _gen0Limit) {
+    /*
+     * Modifiers
+     */
+    constructor(ISettingsRegistry _registry, uint _gen0Limit) public {
         registry = _registry;
         gen0CreationLimit = _gen0Limit;
     }
 
-
-    function createGen0Apostle(uint256 _genes, uint256 _talents) public {
+    function createGen0Apostle(uint256 _genes, uint256 _talents, address _owner) public {
         require(operator == msg.sender, "you have no rights");
-        require(gen0Count + 1 <= gen0CreationLimit, 'enough');
+        require(gen0Count + 1 <= gen0CreationLimit, "Exceed Generation Limit");
         IApostleBase apostleBase = IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE));
-        apostleBase.createApostle(0, 0, 0, _genes, _talents, address(this));
+        apostleBase.createApostle(0, 0, 0, _genes, _talents, _owner);
         gen0Count++;
     }
 
@@ -62,12 +61,11 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
     }
 
 
-    function setOperator(address _operator) onlyOwner {
+    function setOperator(address _operator) public onlyOwner {
         operator = _operator;
     }
 
     function tokenFallback(address _from, uint256 _value, bytes _data) public {
-
         address ring = registry.addressOf(CONTRACT_RING_ERC20_TOKEN);
         address kton = registry.addressOf(CONTRACT_KTON_ERC20_TOKEN);
         address revenuePool = registry.addressOf(CONTRACT_REVENUE_POOL);
