@@ -10,22 +10,7 @@ import "./SiringAuctionBase.sol";
 /// @title Clock auction for non-fungible tokens.
 contract SiringClockAuction is SiringAuctionBase {
 
-
-    bool private singletonLock = false;
-
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    function initializeContract(ISettingsRegistry _registry) public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
+    constructor(ISettingsRegistry _registry) public {
         registry = _registry;
     }
 
@@ -201,5 +186,7 @@ contract SiringClockAuction is SiringAuctionBase {
 
     }
 
-
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }

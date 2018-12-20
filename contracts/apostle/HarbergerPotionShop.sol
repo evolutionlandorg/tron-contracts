@@ -18,12 +18,6 @@ contract  HarbergerPotionShop is DSAuth, ApostleSettingIds {
      */
     event ClaimedTokens(address indexed _token, address indexed _owner, uint _amount);
 
-    /*
-     *  Storages
-     */
-
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
     /*
@@ -40,33 +34,7 @@ contract  HarbergerPotionShop is DSAuth, ApostleSettingIds {
 
     mapping (uint256 => PotionState) public tokenId2PotionState;
 
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-
-    /**
-     * @dev Bank's constructor which set the token address and unitInterest_
-     */
-    constructor () public {
-        // initializeContract(_registry);
-    }
-
-    /**
-     * @dev Same with constructor, but is used and called by storage proxy as logic contract.
-     * @param _registry - address of SettingsRegistry
-     */
-    function initializeContract(address _registry) public singletonLockCall {
-        // call Ownable's constructor
-        owner = msg.sender;
-
-        emit LogSetOwner(msg.sender);
-
+    constructor(address _registry) public {
         registry = ISettingsRegistry(_registry);
     }
 
@@ -216,4 +184,7 @@ contract  HarbergerPotionShop is DSAuth, ApostleSettingIds {
         emit ClaimedTokens(_token, owner, balance);
     }
 
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }

@@ -40,9 +40,6 @@ contract SiringAuctionBase is ApostleSettingIds, PausableDSAuth {
     // Map from token ID to their corresponding auction.
     mapping (uint256 => Auction) public tokenIdToAuction;
 
-    /// @dev DON'T give me your money.
-    function() external {}
-
     // Modifiers to check that inputs can be safely stored with a certain
     // number of bits. We use constants and multiple modifiers to save gas.
     modifier canBeStoredWith48Bits(uint256 _value) {

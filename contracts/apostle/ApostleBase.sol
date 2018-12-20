@@ -75,20 +75,6 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         uint32(7 days)
     ];
 
-
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-
-    /*** STORAGE ***/
-    bool private singletonLock = false;
-
     uint128 public lastApostleObjectId;
 
     ISettingsRegistry public registry;
@@ -97,11 +83,7 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
     mapping(uint256 => address) public sireAllowedToAddress;
 
-    function initializeContract(address _registry) public singletonLockCall {
-        // Ownable constructor
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
+    constructor(address _registry) {
         registry = ISettingsRegistry(_registry);
 
         _registerInterface(InterfaceId_IActivity);
@@ -528,6 +510,10 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
     function toBytes(address x) public pure returns (bytes b) {
         b = new bytes(32);
         assembly {mstore(add(b, 32), x)}
+    }
+
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
     }
 }
 

@@ -54,21 +54,10 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         address lastReferer;
     }
 
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
     // Map from token ID to their corresponding auction.
     mapping(uint256 => Auction) public tokenIdToAuction;
-
-    /*
-    *  Modifiers
-    */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
 
     modifier isHuman() {
         require(msg.sender == tx.origin, "robot is not permitted");
@@ -92,27 +81,12 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         _;
     }
 
-    ///////////////////////
-    // Constructor
-    ///////////////////////
-    constructor() public {
-        // initializeContract
-    }
-
     /// @dev Constructor creates a reference to the NFT ownership contract
     ///  and verifies the owner cut is in the valid range.
     ///  bidWaitingMinutes - biggest waiting time from a bid's starting to ending(in minutes)
-    function initializeContract(
-        ISettingsRegistry _registry) public singletonLockCall {
-
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
+    constructor(ISettingsRegistry _registry) public {
         registry = _registry;
     }
-
-    /// @dev DON'T give me your money.
-    function() external {}
 
     ///////////////////////
     // Auction Create and Cancel
@@ -573,5 +547,9 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
     function toBytes(address x) public pure returns (bytes b) {
         b = new bytes(32);
         assembly { mstore(add(b, 32), x) }
+    }
+
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
     }
 }

@@ -81,4 +81,8 @@ contract ObjectOwnership is ERC721Token("Evolution Land Objects","EVO"), DSAuth,
             revert();
         }
     }
+
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }

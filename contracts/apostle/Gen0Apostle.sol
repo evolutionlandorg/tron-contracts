@@ -10,8 +10,6 @@ import "../common/PausableDSAuth.sol";
 
 contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
 
-    bool private singletonLock = false;
-
     uint256 public gen0CreationLimit;
 
     ISettingsRegistry public registry;
@@ -25,21 +23,7 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
     event ClaimedERC721Token(address indexed owner, uint256 tokenId);
 
 
-    /*
-     * Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-
-
-    function initializeContract(ISettingsRegistry _registry, uint _gen0Limit) singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-
+    constructor(ISettingsRegistry _registry, uint _gen0Limit) {
         registry = _registry;
         gen0CreationLimit = _gen0Limit;
     }
@@ -127,4 +111,7 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
         emit ClaimedERC721Token(owner, _tokenId);
     }
 
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
 }
