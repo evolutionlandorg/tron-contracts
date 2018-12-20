@@ -1,171 +1,175 @@
 InterstellarEncoderV2:
-(base58) TYdvUJRtmtdraxGkAXZoo6xxGsSWsuMKAG
-(hex) 41f8a530e20e1f5caf75605fb152853cc031cd7875
+(base58) TKreMaRny9NUpTPUqrXuuy2t9tds1WVoHi
+(hex) 416c7382a6e894d1c67b4298945d3ae1ec47f92f75
 
 SettingIds:
-(base58) TFnmUdwCsLUPgWGBPg9nCjQdNdqfYadNSJ
-(hex) 413fd749ce0273b0ce52fd5be53782d897801c8e33
+(base58) TVbJUjyX7cGcGTJdyEwja4j4oUmFAthqNG
+(hex) 41d73defcd525857e1e210f1aba8dd2a382aa33faf
 
 SettingsRegistry:
-(base58) TLwJTzPjCV8FmhFr7UBrtDWt3YN7jbfBM1
-(hex) 41784d1cf3b5a3eb49b15f108710f1710aab060dcc
+(base58) T9zKmtYzeaxoycVm8vbcuiNreJbsJZYFez
+(hex) 41003611d9c3df142da48add4a63afbdf0689e14c6
 
 RING:
-(base58) TQzKq6gvkT8ESS7HiFni9CF6XEStikHagb
-(hex) 41a4c000af47967ae465c94a87603c412c0f7d96a2
+(base58) TDR7RcbPqF1FNKaA8jBvZvNLLjLkSYR3SZ
+(hex) 4125ce8987614ea36e477276fbd764cadaa481ad06
 
 KTON:
-(base58) TWk86tcVDKDYWXCULPVLKC755QDbynEmNx
-(hex) 41e3e124e39a8948d98ecd7baa80a106dcc4742564
+(base58) TBvr2QZeSoFfMMV6Nc4eZ4g8mNaDYub59m
+(hex) 41157de8bca992f8c6b64179a7acc54c96a8a5ceec
+
+GOLD:
+(base58) TW89BgsvWCSvBYDEUSRLfRjmSZ25T9SjL4
+(hex) 41dd1312c296fe730cc11bc4ce36d8c069ad58e169
+
+FIRE:
+(base58) TREYGu44A7neqQWB9Q8wva4HdaUJ8VPMmN
+(hex) 41a77036ecb9d55f438d30e9a130486bbc95db7ce4
 
 WOOD:
-(base58) TE1REFehERQZZJKVJcL5msV73qgUAmXa37
-(hex) 412c4b8ac3fd3102534b6e4a28743e83381ef4c864
-SIOO:
-(base58) TVymqJUdGyU7Gj2qWXzZLqFC96PwTGB3wA
-(hex) 41db7dec197a6e651eb8bf73e8866c75f587d76e38
-GOLD:
-(base58) TEd8E81Db4vcLWnEFFTzbnSWBjzHJBXTHw
-(hex) 41330c52eac479c0f9ad6f15a2cfa84d5aa026d417
-FIRE:
-(base58) TYMvXjZL7SBqzrjN2FiYE6GvTe9MUCMniu
-(hex) 41f59e95c0ced0d2f0fdefbd45ecf3b27b0c273282
+(base58) TZDbpcCMFK9RfuhFET9coTmTqWDn4V67G3
+(hex) 41ff03c3f824b0c3e3512a3fc1ef63348970b19cf5
+
 HHO:
-(base58) TAKNxnRbQuXzNS7TppkK5cPixKYZr6u5r5
-(hex) 4103d0a25294f77c022471191d295ef079d20d3a84
+(base58) TJKDC24TXLch1RpSnTD4Lruxs7VkT7qNSf
+(hex) 415b897bb61f5f2398c059cec6594f85428364d7d0
+
+SIOO:
+(base58) TWE3PrvvBQzcptVPi2jYnoaRjWpheZxZjj
+(hex) 41de30bc57531e7d7b41b82d5d67339b519fc3a437
 
 RINGAuthority:
-(base58) TNQ2hxdW5UoFhxLSkS8AB2EQc24ktf84Zn
-(hex) 41885350950d48ea73717a8b6fd4524a08b6c321b8
+(base58) TGC6V2zkMXqEBZjEu6F7oKz7qfDN1TZVxT
+(hex) 414440b8b725dfc902329725fab82ab2010c615168
 
 IDSettingIds:
-(base58) TEUy8QQQ7jYeRGrWSs1grcELbbN2WjM8Qy
-(hex) 41318166ae18eb427587b8ed47ca1149d5b12c653f
+(base58) TFVYo5j7AqdjR5kGyKhyvxTpK1manva1Ff
+(hex) 413c95a16c49c3080775dd96ade782fd8448501c0f
 
 UserRoles:
-(base58) TKi9S4gp5GoBWFGPxVHnjr44RjzKqYUTwR
-(hex) 416ad80a0d54fad7fa994c342cb9afdce48b4f5167
+(base58) TEQiCLkdBMuo6jPFKFSp24GfhpYP8DAK85
+(hex) 4130b345c53d7dda4d3ce3ebb85ed2bb703c81e3ae
 
 FrozenDividend:
-(base58) TG4xbkGCz7TzKEQDuDWx5R6csvUzB9XHn8
-(hex) 4142e73a74ab4f3c12e644d8ec8ee8fee2594c47aa
+(base58) TYagAZyZgL1xGxczSGJt7N9dziUJhkcytj
+(hex) 41f8080051bef489894042d9129f46122c5d8864e6
 
 DividendPool:
-(base58) TNHHcXdoYiShfX197Mr4MGyWkpEHsXFHSB
-(hex) 41870cd8a3a55b67d4619bf31a18821eefaaa190ac
+(base58) TRyMDSCyZ3PTAt2XsRBcYbworFuBkM5amV
+(hex) 41af88de65192ab2ca8f2613c3bc26948de4d8f560
 
 RolesUpdater:
-(base58) TVyMF8eXTzUmAftFUit5gfU4sHpPAxG5D7
-(hex) 41db696573708802ab901c264ee70541cf0ca8e017
+(base58) TD391uDjwm19j8PXhvRLkRtsiZrYSc3PGL
+(hex) 4121a6b6db87e300dcc331e92bf30c7c5b1f45267a
 
 TakeBack:
-(base58) TMjSkPCP75MmSfeyXAPAJuNFEbb7dZsxuD
-(hex) 418107294d5a2938234ed60750235de9a4cf996b61
+(base58) TCtS8itMRKiEHceaRR3hgiB3dpkdhsFuu8
+(hex) 412001427b9e810805f81d8c2ebb0449a7730a4ad2
 
 GringottsBank:
-(base58) TMH57h6RGiJMKCYPPFAtD5UYYGQ1reSq4v
-(hex) 417c0a49d061d7a26aa056ebaf8b0168f1a944a5cc
+(base58) TTDasGnKkfKkXKQUx4UePkQUwQpdrjbNdP
+(hex) 41bd3236e32fb8d63b4d053d52e8b66afdafb84d94
 
 MintAndBurnAuthority:
-(base58) TLWH1Pt8Vq8Q7MxUEbRqTN8UhZpdiADsT4
-(hex) 4173917f1c4dbf4af6210350f8b28104fdb57889a2
+(base58) TVtK2jnEwPry8orZJctuK47Xr1AQfVRshi
+(hex) 41da7577f52f945c59dab46ab5f318d1f52a1a6c9f
 
 ContractIds:
-(base58) TFZaxhMdmu7GqAJqySMgejATgcBb8ENj4z
-(hex) 413d591a2ff78f53978e5d075622e308f12d5ae037
+(base58) TY7cWA7yCCgHuPFDLhoucnRAbsr4V19tNf
+(hex) 41f2e9b692a7458355a254a6a5eecc3e6a3eb0eba3
 
 ContractFeatures:
-(base58) TFvJQ3gEM8eqXN4Z56Sdx8EWdoYEkXh1Mq
-(hex) 41414402eef2b2037c844a382f57c09a095cdf1098
+(base58) TP5RA5ccinxnY2MgGabRTsHaDrkve6PSQY
+(hex) 418fc6472415bd97d6ca246c56e2bea3ddbfc508b2
 
 BancorFormula:
-(base58) TCVRJTHKHLwfSLn7oie6dGRRwuvo1ruwME
-(hex) 411ba6ff747fbc531b8c0081be5cd19981681eb185
+(base58) TRY3PAu4j3yCxw2a6u2jKa5DQv1gNpHtmz
+(hex) 41aabf958bf954aebdf88c5d58d87d9f55c63bb97a
 
 Whitelist:
-(base58) TPeRDTkYDKbMWNBM2r1yRKu931ZnyJJsbz
-(hex) 4196040da54e498e2c7b765faa08d3218fcbfef3c5
+(base58) TFEuTEsXjZm5WXZ41e18uDpqmU21cNwg6a
+(hex) 4139d0a2ae35913d99201e2cc1b3fd3a5c0eaacae7
 
 TrxToken:
-(base58) TW5HvEFdDk3cGuw14x8RMKXPkEai9mTEJ6
-(hex) 41dc891da02bbb0541603ba21a5182b29ab2db5bb6
+(base58) TJp6Gx2UT7ne2BcT6ypGvrNtcRqamgZRg2
+(hex) 4160ffc61768dbf5a9fa55513982b24419db2a4275
 
 BancorNetwork:
-(base58) TQKLDJRU7CzXqxMQa6Bsxuz6XGsKWHTwnX
-(hex) 419d60198682584903e14842275bd5982c9c6fcbcc
+(base58) TDR7Skr3b9ndUmjeWj6jBc9K9Hhkhau16w
+(hex) 4125ce8dbcce5e7213d63d15ed461578f4187b0d59
 
 SmartTokenAuthority:
-(base58) TGXcemZ3eVha96bRpBoV1FTPtnCQEwv27k
-(hex) 4147f1cec217d92d6b3e191af27b0281bc8e288db0
+(base58) TNn1r4MZWEsfvP5BRn8kJqwuTAvUgqR6SZ
+(hex) 418c7bbf6b9721abcd2ed8b29641cdfe0fce4c050a
 
 BancorConverter:
-(base58) TTCXaVTqMaxMBJw3bLfddFukcE6o4hkoVi
-(hex) 41bcff0d7a205952e6d89f45ecadba476c8e31b0d8
+(base58) TNQuyR6BxPer4fRWmefDk3rmanajTLopKf
+(hex) 41887e1c213a6ad185850678474bb8559f6efb2082
 
 BancorExchange:
-(base58) THGaTPpwcAzYBFf386BQJ6L1eZkRx8PztP
-(hex) 415011dc5c431174f00c96d02401e7eec1ba4ab4b4
+(base58) TWrmKrM1nbKgWge6vnXMFc8B3hG3AiXtJu
+(hex) 41e522b6633c574030ee1bf4611f834222cf38c15d
 
 LandBase:
-(base58) TBGmLKYeCsVsQR4PRM2btMJHNDb9yRpATU
-(hex) 410e4a2fc59765f9e5701c3d251705365c335eeaa3
+(base58) TFUaNs1cm7aRaogk4eZ9CDxs3E6EX4gU64
+(hex) 413c6689192cfc18f74a08e3a9cc9005aee24bc664
 
 ObjectOwnership:
-(base58) TBhWXXoLqvgjgVFnrUNeX1To7n8sTdvoEt
-(hex) 4112f839c3995156294ba35fd62e1d019d083f04c7
+(base58) TAzsRdbEfLQLSkwSkEjugPWSKxLynhJyvP
+(hex) 410b489dbfc62ac0a755d0f12e9078011cb7184aad
 
 TokenLocation:
-(base58) TSfXL1XDyAYYyZR6JfBC4xgtGb8sQGE83U
-(hex) 41b721f30c09cf54af150da7906f394869235f74be
+(base58) TBJk3ooH1pDAapi6G3chSRjvLyWzn5vhoE
+(hex) 410ea9f23490df3e7bb11448300ac8d87bf888d081
 
 ObjectOwnershipAuthority:
-(base58) TVSbdcUNiqf3tVPPcuiLgwcug3kZd8MtPf
-(hex) 41d59882f9e6461b27fb358414fa80f8ab7bc90978
+(base58) TRnWSyE99jU5cyXpxe1ztAtbZpG6LybQoc
+(hex) 41ad7c00327ed79ba03240cc1b51e981c5c2fad9e1
 
 TokenLocationAuthority:
-(base58) TQfskDekE4EPmHjLFMQRd3gicxMnzZvJ8v
-(hex) 41a142bdcdc658d95980fbf50be648c90e0625e743
+(base58) TGqawxf6YViCNxmMg8riNLQWW8f3DhTxHD
+(hex) 414b57df747eab29f9d3f1a7fa88640cfd37ed32d5
 
 AuctionSettingIds:
-(base58) TTbgjrsUstkCu9TtoTU2ZckJf428QiNQCk
-(hex) 41c16044765e89d91a602830c00efb93c1d36a97ad
+(base58) TXXLtWuxBmPgPhVN4x13zCB4nSbXzTAZVf
+(hex) 41ec6e8940676e9ca841e221e26909b703c9575e30
 
 ClockAuction:
-(base58) TDPvF9Pn7GCV9YwZzVL3eMBtTdctuq5ZTs
-(hex) 412594c9cab3a2c1dad159eb0b079dba6cc78b1b9f
+(base58) TAnSycnzgksaqj1mZRwBkeR3nsgg28CabT
+(hex) 4108ef3750b534aec9c56aaeedb9c39cda56e7217b
 
 MysteriousTreasure:
-(base58) TNzviZhkwBo4cYHaAf7K7ZCjqpJgoexzmG
-(hex) 418eecdfa3c190749d347df59f358c8394e70b4e28
+(base58) TNzXgpd1wU2hkC7VURxbbgkS2yWzFFJ3mN
+(hex) 418ed9a629e028b0a62e273dcb13d1caeb91b9a3d4
 
 GenesisHolder:
-(base58) TLCku9oEqGzEnyWTujwx18wp45o6aWf5Jy
-(hex) 4170414ae6fd99eba40a5b65eebb1cd62a63217d37
+(base58) TNWmhKb14zEsEex6tgdP4pidfhyU7ZFDoD
+(hex) 418999b2297a68d0c7981a722ace0fe855a6b52312
 
 RevenuePool:
-(base58) TPY8R77gfpVi917ehJfTQihEFzasdZkpVv
-(hex) 4194d388c3a8845097325e290fe66b0f80572bce14
+(base58) THisVoLJHyUbrGpyY2Nug29zqpWqUr4hX4
+(hex) 41550ae6bb188e6235f6455f7b3c9bbdf9d1a18f08
 
 PointsRewardPool:
-(base58) THs9Qa4qKSfjURJtvoZqzdLjJJsoEysh6H
-(hex) 41569b828631734a3cb12e815423d939daeab3d3df
+(base58) TKwB9fGjKHUSsNEomPCKwBL1tsZugEnSR6
+(hex) 416d4ee154922dd5d6c8ca200f0f9dbda50a2c7a9f
 
 UserPoints:
-(base58) TKGvH3MPDNCjQdZtHz9Wu1j9gHGGu6m4fR
-(hex) 416612a893c8ee1f753ea2bd7f3b0af2fe9be481a3
+(base58) THb2JM927JocjaaEDE49EHubxNDXzdNBwe
+(hex) 41538eebee35600a6e53854a34bf317168155e87f9
 
 UserPointsAuthority:
-(base58) TU2bVodxPmmgfnQHMVMP8rJt6CZnZgwYzY
-(hex) 41c6164a57080487cfe1f223a93de38c217e0d8d14
+(base58) TLxk6Xk5SiMMSwBtR63M5L5t7hT2Kt2tzz
+(hex) 417892ec8558eb387293d108ce5aa20e011777bafd
 
 LandBaseAuthority:
-(base58) TPjdU1fbeWpWACbZnaFqKWzLT58fLBLSPJ
-(hex) 4197005c101d5d32509cd79e5e8e1bd68cdc0eae17
+(base58) THJgAdR2NdgEUCvB9gv928hP5kkDgBWApa
+(hex) 41507775bfa34e36d29a796bff573c675f0058fc4d
 
 BancorExchangeAuthority:
-(base58) TQfREDXiNapts9YGzdRp7NMJVWHKNkJyxt
-(hex) 41a12c9b1d17bfbddcf7a91a6a4df35e987bff6799
+(base58) TNxsD5BGG1udeBhPTcG3VqZmFsCuE6PA4J
+(hex) 418e891ce97911b522f87a898c6b7d2bef8c1d82e2
 
 ClockAuctionAuthority:
-(base58) TVZBEAqrUxr9juwLEa1qJW9CTa8vz7bzhE
-(hex) 41d6d70d419eb8527e381183863027f8de289a47dd
+(base58) TComUdU4L6uCd3fN2jdfp1Zs1UjoJ5ppP9
+(hex) 411f1f53a8c5d2b83ae7aff0624b39fd51807665f5
