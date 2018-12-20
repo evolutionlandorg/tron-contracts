@@ -108,68 +108,68 @@
         "hex": "4110f886f8e9bf28ca6d3c7b7ab0599549a66f8563"
     },
     "LandBase": {
-        "base58": "TTMWedM6GmrLPR42Y79bN85Qe9sPcqtio5",
-        "hex": "41beb20564c25e1ece1de3916eaf31617a7d50eed5"
+        "base58": "TLHKcBy8EMmr3G59NDMQFTXd37sN4mbYzP",
+        "hex": "41711e42627ade7643ef5766b4fb14e8983cc684e7"
     },
     "ObjectOwnership": {
-        "base58": "TBiwAurngsZhozF6u1TjPgRsf1pVqs6Wc6",
-        "hex": "41133d36baa8230866470c9a5035c68d2a07ae54ec"
+        "base58": "TM94e222KmpveNrPMXrcWpEXRTKg1ue4xA",
+        "hex": "417a868ff63b0e8474d3ddb6810e14940b6fb5bf91"
     },
     "TokenLocation": {
-        "base58": "TC4CoesAm2SmGiW6FAMRLGjkFdN4Y4kGsL",
-        "hex": "4116e22acf5bfcf8c7c07b9f0ceff089cbf3dc6909"
+        "base58": "TRR8sTE5dutspAh4VyySf9k1ep5xAa62xa",
+        "hex": "41a97140d5d1f7789f26048b13e9abe6f8bbf87299"
     },
     "ObjectOwnershipAuthority": {
-        "base58": "TWbTop1Q2vrL8JnjLLfd1ZSo7ofQSQsUN4",
-        "hex": "41e23dd98bb402a52eee923b9b3ad3974d59ecefd0"
+        "base58": "TUnM9wi183QC2ADSeN6qCRA1gVZ2qxWYXv",
+        "hex": "41ce5c9ec8e0b4b38ef023341c8ed8225a663809df"
     },
     "TokenLocationAuthority": {
-        "base58": "TBW1evUgiWHA3GoaRzyUeKBf72xFx6H2UG",
-        "hex": "4110cb8c67825f13c85e3a703717e7cb82411b2a5f"
+        "base58": "TMaxxHrhAJDQCeMHnqDE1CRA2jfwRMnzbV",
+        "hex": "417f6ca1bdd58efe254c535d71c06d89fa1fcab7db"
     },
     "AuctionSettingIds": {
-        "base58": "TEx4yL8XVZ37TgMu8itXAd7fBaa2uqeuXQ",
-        "hex": "4136a182908d853b0a5cf3930061a5fe82dffad0cf"
+        "base58": "TRntiwRiKHcYfC3VaZpLgcWGXrcXstMWYJ",
+        "hex": "41ad8e986411c96d737b3e22b0a0e89f0c9ed017db"
     },
     "ClockAuction": {
-        "base58": "TXpvkyRYSbQLiYr6PLzGysqMtjy32siamk",
-        "hex": "41efc1e175847bdf978e77cde9c3c00bb405e8725a"
+        "base58": "TQaybqtRD4ZJMZiofru2b4Ugs9PvPiugPg",
+        "hex": "41a0558cb3e96a8aec65849e59b13dea4d131564f3"
     },
     "MysteriousTreasure": {
-        "base58": "TPZqhyzw5LVnAKAbgz2u2GpxySRyHPENXN",
-        "hex": "4195266b0dbb3e28bebebba68d9fd971a0281e9681"
+        "base58": "TD39rZ1SQG2o8HteDsm4pEN1VP5YnJuVnF",
+        "hex": "4121a76a1c8f9763214178e2b04815672cc73ba696"
     },
     "GenesisHolder": {
-        "base58": "TQVenqhZ62xyDvYBNjzUYBv9ptkzH7GDjD",
-        "hex": "419f53c486a81de3c88d20b8a85debc1eda3094d23"
+        "base58": "TRmntpicH2EkrdHi1m1NWX44Vz4ByrwGLc",
+        "hex": "41ad595022803419f0022b07fe9522cedbcb0fcf4e"
     },
     "RevenuePool": {
-        "base58": "TVnu15oASrkFLRQGdhw4n78Jb89LW76xWf",
-        "hex": "41d96f54ad2604d0fbdface585101ca233b1860cc6"
+        "base58": "TBK8MUX8MJrhYGRtg93psT5FvE7xQGfBzY",
+        "hex": "410ebc90a8582b2595752a60b2a6f2ac21a290798d"
     },
     "PointsRewardPool": {
-        "base58": "TJuud95p5nbC86osAYL8LaZuYymcbkp8db",
-        "hex": "41621960b8c40bf1c0ba903874c0b95b58d9fe8215"
+        "base58": "TBeLNyogV91MhdaEvTEa9ZveuLdavmwXgs",
+        "hex": "41125e81d12704b7eef0c5a86766ccf202325dc2b1"
     },
     "UserPoints": {
-        "base58": "TWYzjZ91tXkPmtUEgGn4obGtrAqTu5gwz8",
-        "hex": "41e1c66b0b3e5bc909c73257ce95a3971cafa54309"
+        "base58": "TLc3wkytNx55rrashXiv76WKAZGDG7b4V5",
+        "hex": "4174a9168e4fe03104abc7b8e002e13cff33c7aa36"
     },
     "UserPointsAuthority": {
-        "base58": "TNUzEcZMoAFXArJ3774DRsgjek7FbaQDij",
-        "hex": "41894354dcb1e4bfcc7650dc801b203912cf8142e4"
+        "base58": "TDqdSwivjiHiCzr9oWKgFwRumU7t5koGjW",
+        "hex": "412a719509f43da9ad18d97a0af39861a0ef4c2c7a"
     },
     "LandBaseAuthority": {
-        "base58": "TYVfV2pqVAaTt8pvcPBx9VGCp1ZZVYSzrv",
-        "hex": "41f7155a37446fbcc3c9aafabbd3f8da8ea13b85a7"
+        "base58": "TWV3MoYK1v21zqwMUJ2Dcs858KMyHw7tfx",
+        "hex": "41e106f20cd6a6b8cde9bec12a4b802c2c346f47b7"
     },
     "BancorExchangeAuthority": {
-        "base58": "TJRTnaTCoyH2sTsAbECtXbhmcq7KNhmb5v",
-        "hex": "415cb829baf0c2aa2ad0cd71348c4dcd5b7ebb6372"
+        "base58": "TEh6AsJNEMkZFf85AwWdWT5heP25iBjmVv",
+        "hex": "4133cc457a798e06e06c7a47dfc170dcbb37b64b28"
     },
     "ClockAuctionAuthority": {
-        "base58": "TYaQjgmEs9KoogpJ6dWjfXwkab2qAv4meq",
-        "hex": "41f7fb1f2b2fe3a83b22a6f6dda9ee272a73fd314a"
+        "base58": "TCUtUicmQMWYJbZ3iEZb6vgrUaiJYZSjHL",
+        "hex": "411b8d44a272402316ef94925602e9871b96decd50"
     },
     "MintAndBurnAuthority": {
         "base58": "TThyLtJeaqgQfQBEP7jUJNRiYS9VHWZLSD",
