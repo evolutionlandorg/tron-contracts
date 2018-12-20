@@ -11,26 +11,10 @@ contract UserPoints is DSAuth, IUserPoints {
     // claimedToken event
     event ClaimedTokens(address indexed token, address indexed owner, uint amount);
 
-    bool private singletonLock = false;
-
     // points
     mapping (address => uint256) public points;
 
     uint256 public allUserPoints;
-
-    /*
-     *  Modifiers
-     */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    function initializeContract() public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-    }
 
     function pointsSupply() public view returns (uint256) {
         return allUserPoints;

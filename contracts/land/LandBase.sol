@@ -42,12 +42,12 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
 
     uint256 public lastLandObjectId;
 
-    modifier xAtlantisRangeLimit(int _x) {
+    modifier xByzantineRangeLimit(int _x) {
         require(_x >= 68 && _x <= 112, "Invalid range.");
         _;
     }
 
-    modifier yAtlantisRangeLimit(int _y) {
+    modifier yByzantineRangeLimit(int _y) {
         require(_y >= -22 && _y <= 22, "Invalid range.");
         _;
     }
@@ -68,7 +68,7 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
      */
     function assignNewLand(
         int _x, int _y, address _beneficiary, uint256 _resourceRateAttr, uint256 _mask
-        ) public auth xAtlantisRangeLimit(_x) yAtlantisRangeLimit(_y) returns (uint _tokenId) {
+        ) public auth xByzantineRangeLimit(_x) yByzantineRangeLimit(_y) returns (uint _tokenId) {
 
         // auto increase object id, start from 1
         lastLandObjectId += 1;
@@ -210,5 +210,9 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
         tokenId2LandAttr[_landTokenId].resourceRateAttr &= (~(CLEAR_RATE_HIGH << moveLeft));
         tokenId2LandAttr[_landTokenId].resourceRateAttr |= (uint256(_newResouceRate) << moveLeft);
         emit ModifiedResourceRate(_landTokenId, _resourceToken, _newResouceRate);
+    }
+
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
     }
 }

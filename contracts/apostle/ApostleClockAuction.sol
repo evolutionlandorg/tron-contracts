@@ -1,20 +1,19 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
+import "../ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "../../ERC721/ERC721Basic.sol";
-import "../../common/interfaces/ISettingsRegistry.sol";
-import "../../common/interfaces/ERC223.sol";
-import "../../common/PausableDSAuth.sol";
-import "../../land/interfaces/ILandBase.sol";
-import "../../land/interfaces/IMysteriousTreasure.sol";
-import "./AuctionSettingIds.sol";
-import "./interfaces/IBancorExchange.sol";
+import "../common/interfaces/ISettingsRegistry.sol";
+import "../common/interfaces/ERC223.sol";
+import "../common/PausableDSAuth.sol";
+import "./ApostleSettingIds.sol";
+import "./interfaces/IApostleBase.sol";
+import "../common/interfaces/ITokenUse.sol";
 
-contract ClockAuction is PausableDSAuth, AuctionSettingIds {
+contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
     using SafeMath for *;
     event AuctionCreated(
-        uint256 tokenId, address seller, uint256 startingPriceInToken, uint256 endingPriceInToken, uint256 duration, address token
+        uint256 tokenId, address seller, uint256 startingPriceInToken, uint256 endingPriceInToken, uint256 duration, address token, uint256 startedAt
     );
 
     event AuctionSuccessful(uint256 tokenId, uint256 totalPrice, address winner);
@@ -27,9 +26,6 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     event NewBid(
         uint256 indexed tokenId, address lastBidder, address lastReferer, uint256 lastRecord, address tokenAddress, uint256 bidStartAt, uint256 returnToLastBidder
     );
-
-    // new bid event with eth
-    event NewBidWithETH(uint256 indexed tokenId, address lastBidder, address lastReferer, uint256 ethRequired, uint256 lastRecord, address tokenAddress, uint256 bidStartAt, uint256 returnToLastBidder);
 
     // Represents an auction on an NFT
     struct Auction {
@@ -46,7 +42,7 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         uint128 endingPriceInToken;
         // bid the auction through which token
         address token;
-
+        
         // it saves gas in this order
         // highest offered price (in RING)
         uint128 lastRecord;
@@ -68,7 +64,7 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         _;
     }
 
-    // Modifiers to check that inputs can be safely stored with a certain
+        // Modifiers to check that inputs can be safely stored with a certain
     // number of bits. We use constants and multiple modifiers to save gas.
     modifier canBeStoredWith48Bits(uint256 _value) {
         require(_value <= 281474976710656);
@@ -85,11 +81,10 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         _;
     }
 
-    ///////////////////////
-    // Constructor
-    ///////////////////////
+    /// @dev Constructor creates a reference to the NFT ownership contract
+    ///  and verifies the owner cut is in the valid range.
+    ///  bidWaitingMinutes - biggest waiting time from a bid's starting to ending(in minutes)
     constructor(ISettingsRegistry _registry) public {
-        // initializeContract
         registry = _registry;
     }
 
@@ -125,7 +120,7 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
 
         delete tokenIdToAuction[_tokenId];
 
-        ERC721Basic(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(this, seller, _tokenId);
+        ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(this, seller, _tokenId);
         emit AuctionCancelled(_tokenId);
     }
 
@@ -163,57 +158,6 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     ///////////////////////
     // Bid With Auction
     ///////////////////////
-
-    /// @dev Bids on an open auction, completing the auction and transferring
-    ///  ownership of the NFT if enough Ether is supplied.
-    /// @param _tokenId - ID of token to bid on.
-    /// @dev bid with eth(in wei). Computes the price and transfers winnings.
-    /// Does NOT transfer ownership of token.
-    function bidWithETH(uint256 _tokenId, address _referer)
-    public
-    payable
-    whenNotPaused
-    isHuman
-    isOnAuction(_tokenId)
-    returns (uint256)
-    {
-        require(msg.value > 0);
-        // Get a reference to the auction struct
-        Auction storage auction = tokenIdToAuction[_tokenId];
-        // can only bid the auction that allows ring
-        require(auction.token == registry.addressOf(SettingIds.CONTRACT_RING_ERC20_TOKEN));
-
-        // Check that the incoming bid is higher than the current
-        // price
-        uint256 priceInRING = getCurrentPriceInToken(_tokenId);
-        // assure msg.value larger than current price in ring
-        // priceInRING represents minimum return
-        // if return is smaller than priceInRING
-        // it will be reverted in bancorprotocol
-        // so dont worry
-        IBancorExchange bancorExchange = IBancorExchange(registry.addressOf(AuctionSettingIds.CONTRACT_BANCOR_EXCHANGE));
-        uint errorSpace = registry.uintOf(AuctionSettingIds.UINT_EXCHANGE_ERROR_SPACE);
-        (uint256 ringFromETH, uint256 ethRequired) = bancorExchange.buyRINGInMinRequiedETH.value(msg.value)(priceInRING, msg.sender, errorSpace);
-
-        // double check
-        uint refund = ringFromETH.sub(priceInRING);
-        if (refund > 0) {
-            // if there is surplus RING
-            // then give it back to the msg.sender
-            ERC20(registry.addressOf(SettingIds.CONTRACT_RING_ERC20_TOKEN)).transfer(msg.sender, refund);
-        }
-
-        uint bidMoment;
-        uint returnToLastBidder;
-        (bidMoment, returnToLastBidder) = _bidProcess(msg.sender, auction, priceInRING, _referer);
-
-        // Tell the world!
-        // 0x0 refers to ETH
-        // NOTE: priceInRING, not priceInETH
-        emit NewBidWithETH(_tokenId, msg.sender, _referer, ethRequired, priceInRING, 0x0, bidMoment, returnToLastBidder);
-
-        return priceInRING;
-    }
 
     // @dev bid with RING. Computes the price and transfers winnings.
     function _bidWithToken(address _from, uint256 _tokenId, uint256 _valueInToken, address _referer) internal returns (uint256){
@@ -264,25 +208,22 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
 
     // TODO: advice: offer some reward for the person who claimed
     // @dev claim _tokenId for auction's lastBidder
-    function claimLandAsset(uint _tokenId) public isHuman isOnAuction(_tokenId) {
+    function claimApostleAsset(uint _tokenId) public isHuman isOnAuction(_tokenId) {
         // Get a reference to the auction struct
         Auction storage auction = tokenIdToAuction[_tokenId];
 
         // at least bidWaitingTime after last bidder's bid moment,
         // and no one else has bidden during this bidWaitingTime,
         // then any one can claim this token(land) for lastBidder.
-        require(auction.lastBidder != 0x0 && now >= auction.lastBidStartAt + registry.uintOf(AuctionSettingIds.UINT_AUCTION_BID_WAITING_TIME),
+        require(auction.lastBidder != 0x0 && now >= auction.lastBidStartAt + registry.uintOf(ApostleSettingIds.UINT_APOSTLE_BID_WAITING_TIME),
             "this auction has not finished yet, try again later");
-
-        IMysteriousTreasure mysteriousTreasure = IMysteriousTreasure(registry.addressOf(AuctionSettingIds.CONTRACT_MYSTERIOUS_TREASURE));
-        mysteriousTreasure.unbox(_tokenId);
 
         address lastBidder = auction.lastBidder;
         uint lastRecord = auction.lastRecord;
 
         delete tokenIdToAuction[_tokenId];
 
-        ERC721Basic(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(this, lastBidder, _tokenId);
+        ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(this, lastBidder, _tokenId);
 
         emit AuctionSuccessful(_tokenId, lastRecord, lastBidder);
     }
@@ -319,7 +260,7 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     function _secondPartBid(uint _auctionCut, uint _refererCut, address _pool, address _buyer, Auction storage _auction, uint _priceInToken, address _referer) internal returns (uint, uint){
         // TODO: repair bug of first bid's time limitation
         // if this the first bid, there is no time limitation
-        require(now <= _auction.lastBidStartAt + registry.uintOf(AuctionSettingIds.UINT_AUCTION_BID_WAITING_TIME), "It's too late.");
+        require(now <= _auction.lastBidStartAt + registry.uintOf(ApostleSettingIds.UINT_APOSTLE_BID_WAITING_TIME), "It's too late.");
 
         // _priceInToken that is larger than lastRecord
         // was assured in _currentPriceInRING(_auction)
@@ -327,12 +268,12 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         // 1.1*price + bounty - (price + bounty) = 0.1 * price
         uint surplus = _priceInToken.sub(uint256(_auction.lastRecord));
         uint poolCutAmount = computeCut(surplus, _auctionCut);
-        uint realReturnForEach = (surplus - poolCutAmount) / 2;
-        uint returnToLastBidder = realReturnForEach + uint256(_auction.lastRecord);
+        uint extractFromGap = surplus - poolCutAmount;
+        uint realReturnForEach = extractFromGap / 2;
 
         // here use transfer(address,uint256) for safety
         ERC223(_auction.token).transfer(_auction.seller, realReturnForEach, toBytes(_buyer));
-        ERC20(_auction.token).transfer(_auction.lastBidder, returnToLastBidder);
+        ERC20(_auction.token).transfer(_auction.lastBidder, (realReturnForEach + uint256(_auction.lastRecord)));
 
         if (_referer != 0x0) {
             uint refererBounty = computeCut(poolCutAmount, _refererCut);
@@ -348,7 +289,7 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         _auction.lastBidStartAt = uint48(now);
         _auction.lastReferer = _referer;
 
-        return (_auction.lastBidStartAt, returnToLastBidder);
+        return (_auction.lastBidStartAt, (realReturnForEach + uint256(_auction.lastRecord)));
     }
 
     // TODO: add _token to compatible backwards with ring and eth
@@ -414,10 +355,10 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     returns
     (
         address seller,
+        uint256 startedAt,
+        uint256 duration,
         uint256 startingPrice,
         uint256 endingPrice,
-        uint256 duration,
-        uint256 startedAt,
         address token,
         uint128 lastRecord,
         address lastBidder,
@@ -426,16 +367,16 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     ) {
         Auction storage auction = tokenIdToAuction[_tokenId];
         return (
-        auction.seller,
-        auction.startingPriceInToken,
-        auction.endingPriceInToken,
-        auction.duration,
-        auction.startedAt,
-        auction.token,
-        auction.lastRecord,
-        auction.lastBidder,
-        auction.lastBidStartAt,
-        auction.lastReferer
+            auction.seller,
+            auction.startingPriceInToken,
+            auction.endingPriceInToken,
+            auction.duration,
+            auction.startedAt,
+            auction.token,
+            auction.lastRecord,
+            auction.lastBidder,
+            auction.lastBidStartAt,
+            auction.lastReferer
         );
     }
 
@@ -479,12 +420,16 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
     function onERC721Received(
         address, //_operator,
         address, //_from,
-        uint256, // _tokenId,
+        uint256 _tokenId,
         bytes //_data
     )
     public
     returns (bytes4) {
-        return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
+        // owner can put apostle on market
+        // after coolDownEndTime
+        if(IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE)).isReadyToBreed(_tokenId)) {
+            return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
+        }
     }
 
     // get auction's price of last bidder offered
@@ -535,9 +480,9 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
         // at least one minute. (Keeps our math from getting hairy!)
         require(_duration >= 1 minutes, "duration must be at least 1 minutes");
         require(_duration <= 1000 days);
-
+        require(ITokenUse(registry.addressOf(SettingIds.CONTRACT_TOKEN_USE)).isObjectReadyToUse(_tokenId), "it is still in use.");
         // escrow
-        ERC721Basic(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(_from, this, _tokenId);
+        ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(_from, this, _tokenId);
 
         tokenIdToAuction[_tokenId] = Auction({
             seller: _seller,
@@ -552,9 +497,9 @@ contract ClockAuction is PausableDSAuth, AuctionSettingIds {
             lastBidder: address(0),
             lastBidStartAt: 0,
             lastReferer: address(0)
-            });
+        });
 
-        emit AuctionCreated(_tokenId, _seller, _startingPriceInToken, _endingPriceInToken, _duration, _token);
+        emit AuctionCreated(_tokenId, _seller, _startingPriceInToken, _endingPriceInToken, _duration, _token, _startAt);
     }
 
     /// @dev Computes the current price of an auction. Factored out

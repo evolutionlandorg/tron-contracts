@@ -90,4 +90,8 @@ contract RevenuePool is DSAuth, ERC223ReceivingContract, AuctionSettingIds {
         return address(out);
     }
 
+    function setRegistry(address _registry) public onlyOwner {
+        registry = ISettingsRegistry(_registry);
+    }
+
 }
