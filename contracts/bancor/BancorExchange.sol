@@ -88,7 +88,7 @@ contract BancorExchange is PausableDSAuth, SettingIds {
             // cant replace address(this) with _from
             // because of whitelist mechanism in bancor protocol
             uint amount = bancorNetwork.convertForPrioritized2(quickSellPath, _value, minReturn, address(this), 0, 0, 0x0, 0x0);
-            _from.transfer(amount);
+            _from.transfer(amount/10**12);
         }
     }
 
@@ -102,7 +102,7 @@ contract BancorExchange is PausableDSAuth, SettingIds {
         // cant replace address(this) with msg.sender
         // because of whitelist mechanism in bancor protocol
         uint amount = bancorNetwork.convertForPrioritized2(quickSellPath, _sellAmount, _minReturn, address(this), 0, 0, 0x0, 0x0);
-        msg.sender.transfer(amount);
+        msg.sender.transfer(amount/10**12);
     }
 
 
