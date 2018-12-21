@@ -19,8 +19,12 @@ import "./interfaces/IHabergPotionShop.sol";
 // this is CONTRACT_APOSTLE_BASE
 contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject, IMinerObject, PausableDSAuth, ApostleSettingIds {
 
-    event Birth(address indexed owner, uint256 apostleTokenId, uint256 matronId, uint256 sireId, uint256 genes, uint256 talents, uint256 coolDownIndex, uint256 generation, uint256 birthTime);
-    event Pregnant(uint256 matronId,uint256 matronCoolDownEndTime, uint256 matronCoolDownIndex, uint256 sireId, uint256 sireCoolDownEndTime, uint256 sireCoolDownIndex);
+    event Birth(
+        address indexed owner, uint256 apostleTokenId, uint256 matronId, uint256 sireId, uint256 genes, uint256 talents, uint256 coolDownIndex, uint256 generation, uint256 birthTime
+    );
+    event Pregnant(
+        uint256 matronId,uint256 matronCoolDownEndTime, uint256 matronCoolDownIndex, uint256 sireId, uint256 sireCoolDownEndTime, uint256 sireCoolDownIndex
+    );
 
     /// @dev The AutoBirth event is fired when a cat becomes pregant via the breedWithAuto()
     ///  function. This is used to notify the auto-birth daemon that this breeding action
@@ -75,6 +79,16 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         uint32(7 days)
     ];
 
+
+    /*
+     *  Modifiers
+     */
+    modifier isHuman() {
+        require(msg.sender == tx.origin, "robot is not permitted");
+        _;
+    }
+    /*** STORAGE ***/
+
     uint128 public lastApostleObjectId;
 
     ISettingsRegistry public registry;
@@ -83,18 +97,12 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
     mapping(uint256 => address) public sireAllowedToAddress;
 
-    constructor(address _registry) {
+    constructor(address _registry) public {
         registry = ISettingsRegistry(_registry);
 
         _registerInterface(InterfaceId_IActivity);
         _registerInterface(InterfaceId_IActivityObject);
         _registerInterface(InterfaceId_IMinerObject);
-    }
-
-    function getCooldownDuration(uint256 _tokenId) public view returns (uint256){
-        uint256 cooldownIndex = tokenId2Apostle[_tokenId].cooldownIndex;
-        return cooldowns[cooldownIndex];
-
     }
 
     // called by gen0Apostle
@@ -137,12 +145,9 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         return tokenId;
     }
 
-
-    function _isReadyToBreed(Apostle storage _aps) internal view returns (bool) {
-        // In addition to checking the cooldownEndTime, we also need to check to see if
-        // the cat has a pending birth; there can be some period of time between the end
-        // of the pregnacy timer and the birth event.
-        return (_aps.siringWithId == 0) && (_aps.cooldownEndTime <= now);
+    function getCooldownDuration(uint256 _tokenId) public view returns (uint256){
+        uint256 cooldownIndex = tokenId2Apostle[_tokenId].cooldownIndex;
+        return cooldowns[cooldownIndex];
     }
 
     // @dev Checks to see if a apostle is able to breed.
@@ -152,9 +157,14 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
     view
     returns (bool)
     {
-        require(_apostleId > 0);
-        Apostle storage aps = tokenId2Apostle[_apostleId];
-        return _isReadyToBreed(aps);
+        require(tokenId2Apostle[_apostleId].birthTime > 0, "Apostle should exist");
+
+        require(ITokenUse(registry.addressOf(CONTRACT_TOKEN_USE)).isObjectReadyToUse(_apostleId), "Object ready to do activity");
+
+        // In addition to checking the cooldownEndTime, we also need to check to see if
+        // the cat has a pending birth; there can be some period of time between the end
+        // of the pregnacy timer and the birth event.
+        return (tokenId2Apostle[_apostleId].siringWithId == 0) && (tokenId2Apostle[_apostleId].cooldownEndTime <= now);
     }
 
     function approveSiring(address _addr, uint256 _sireId)
@@ -163,6 +173,7 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
     {
         ERC721 objectOwnership = ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP));
         require(objectOwnership.ownerOf(_sireId) == msg.sender);
+
         sireAllowedToAddress[_sireId] = _addr;
     }
 
@@ -334,12 +345,12 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
     ///  are willing to pay the gas!), but the new Apostles always goes to the mother's owner.
     function giveBirth(uint256 _matronId, address _resourceToken, uint256 _level)
     public
+    isHuman
     whenNotPaused
     {
 
         Apostle storage matron = tokenId2Apostle[_matronId];
         uint256 sireId = matron.siringWithId;
-        Apostle storage sire = tokenId2Apostle[sireId];
 
         if (_resourceToken != address(0)) {
             // users must approve enough resourceToken to this contract
@@ -349,23 +360,24 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         }
 
 
-        require(_payAndMix(_matronId, sire, _resourceToken, _level));
+        require(_payAndMix(_matronId, sireId, _resourceToken, _level));
 
     }
 
 
     function _payAndMix(
         uint256 _matronId,
-        Apostle storage _sire,
+        uint256 _sireId,
         address _resourceToken,
         uint256 _level)
     internal returns (bool) {
-
         // Grab a reference to the matron in storage.
         Apostle storage matron = tokenId2Apostle[_matronId];
+        Apostle storage sire = tokenId2Apostle[_sireId];
 
-        // Check that the matron is a valid cat.
-        require(matron.birthTime != 0);
+        // Check that the matron is a valid apostle.
+        require(matron.birthTime > 0);
+        require(sire.birthTime > 0);
 
         // Check that the matron is pregnant, and that its time has come!
         require(_isReadyToGiveBirth(matron));
@@ -377,12 +389,12 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
         // Determine the higher generation number of the two parents
         uint16 parentGen = matron.generation;
-        if (_sire.generation > matron.generation) {
-            parentGen = _sire.generation;
+        if (sire.generation > matron.generation) {
+            parentGen = sire.generation;
         }
 
         // Call the sooper-sekret, sooper-expensive, gene mixing operation.
-        (uint256 childGenes, uint256 childTalents) = IGeneScience(registry.addressOf(CONTRACT_GENE_SCIENCE)).mixGenesAndTalents(matron.genes, _sire.genes, matron.talents, _sire.talents, _resourceToken, _level);
+        (uint256 childGenes, uint256 childTalents) = IGeneScience(registry.addressOf(CONTRACT_GENE_SCIENCE)).mixGenesAndTalents(matron.genes, sire.genes, matron.talents, sire.talents, _resourceToken, _level);
 
         address owner = ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).ownerOf(_matronId);
         // Make the new Apostle!
@@ -401,7 +413,6 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         uint matronId;
         uint sireId;
         uint level;
-        Apostle storage matron;
 
         if (msg.sender == registry.addressOf(CONTRACT_RING_ERC20_TOKEN)) {
             require(_value >= autoBirthFee, 'not enough to breed.');
@@ -416,9 +427,7 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
             // All checks passed, apostle gets pregnant!
             _breedWith(matronId, sireId);
-
-            matron = tokenId2Apostle[matronId];
-            emit AutoBirth(matronId, uint48(matron.cooldownEndTime));
+            emit AutoBirth(matronId, uint48(tokenId2Apostle[matronId].cooldownEndTime));
 
         } else {
 
@@ -431,11 +440,11 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
             require(level > 0 && _value >= level * registry.uintOf(UINT_MIX_TALENT), 'resource for mixing is not enough.');
 
-            matron = tokenId2Apostle[matronId];
-            sireId = matron.siringWithId;
-            Apostle storage sire = tokenId2Apostle[sireId];
+            sireId = tokenId2Apostle[matronId].siringWithId;
 
-            require(_payAndMix(matronId, sire, msg.sender, level));
+            // TODO: msg.sender must be valid resource tokens, this is now checked in the implement of IGeneScience.
+            // better to check add a API in IGeneScience for checking valid msg.sender is one of the resource.
+            require(_payAndMix(matronId, sireId, msg.sender, level));
 
         }
 
@@ -467,8 +476,8 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
     /// IMinerObject
     function strengthOf(uint256 _tokenId, address _resourceToken) public view returns (uint256) {
         uint talents = tokenId2Apostle[_tokenId].talents;
-        uint strength = IGeneScience(registry.addressOf(CONTRACT_GENE_SCIENCE)).getStrength(talents, _resourceToken);
-        return strength;
+        return IGeneScience(registry.addressOf(CONTRACT_GENE_SCIENCE))
+            .getStrength(talents, _resourceToken);
     }
 
     /// IActivityObject
@@ -511,10 +520,8 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         b = new bytes(32);
         assembly {mstore(add(b, 32), x)}
     }
-
+    
     function setRegistry(address _registry) public onlyOwner {
         registry = ISettingsRegistry(_registry);
     }
 }
-
-

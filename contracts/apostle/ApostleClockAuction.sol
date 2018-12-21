@@ -42,7 +42,7 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         uint128 endingPriceInToken;
         // bid the auction through which token
         address token;
-        
+
         // it saves gas in this order
         // highest offered price (in RING)
         uint128 lastRecord;
@@ -59,12 +59,15 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
     // Map from token ID to their corresponding auction.
     mapping(uint256 => Auction) public tokenIdToAuction;
 
+    /*
+    *  Modifiers
+    */
     modifier isHuman() {
         require(msg.sender == tx.origin, "robot is not permitted");
         _;
     }
 
-        // Modifiers to check that inputs can be safely stored with a certain
+    // Modifiers to check that inputs can be safely stored with a certain
     // number of bits. We use constants and multiple modifiers to save gas.
     modifier canBeStoredWith48Bits(uint256 _value) {
         require(_value <= 281474976710656);
@@ -80,6 +83,10 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         require(tokenIdToAuction[_tokenId].startedAt > 0);
         _;
     }
+
+    ///////////////////////
+    // Constructor
+    ///////////////////////
 
     /// @dev Constructor creates a reference to the NFT ownership contract
     ///  and verifies the owner cut is in the valid range.
@@ -200,7 +207,7 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         }
 
         // safer for users
-        require (msg.sender == tokenIdToAuction[tokenId].token);
+        require(msg.sender == tokenIdToAuction[tokenId].token);
         require(tokenIdToAuction[tokenId].startedAt > 0);
 
         _bidWithToken(_from, tokenId, _valueInToken, referer);
@@ -367,16 +374,16 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
     ) {
         Auction storage auction = tokenIdToAuction[_tokenId];
         return (
-            auction.seller,
-            auction.startingPriceInToken,
-            auction.endingPriceInToken,
-            auction.duration,
-            auction.startedAt,
-            auction.token,
-            auction.lastRecord,
-            auction.lastBidder,
-            auction.lastBidStartAt,
-            auction.lastReferer
+        auction.seller,
+        auction.startingPriceInToken,
+        auction.endingPriceInToken,
+        auction.duration,
+        auction.startedAt,
+        auction.token,
+        auction.lastRecord,
+        auction.lastBidder,
+        auction.lastBidStartAt,
+        auction.lastReferer
         );
     }
 
@@ -427,9 +434,7 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
     returns (bytes4) {
         // owner can put apostle on market
         // after coolDownEndTime
-        if(IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE)).isReadyToBreed(_tokenId)) {
-            return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
-        }
+        return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
     }
 
     // get auction's price of last bidder offered
@@ -480,24 +485,24 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         // at least one minute. (Keeps our math from getting hairy!)
         require(_duration >= 1 minutes, "duration must be at least 1 minutes");
         require(_duration <= 1000 days);
-        require(ITokenUse(registry.addressOf(SettingIds.CONTRACT_TOKEN_USE)).isObjectReadyToUse(_tokenId), "it is still in use.");
+        require(IApostleBase(registry.addressOf(ApostleSettingIds.CONTRACT_APOSTLE_BASE)).isReadyToBreed(_tokenId), "it is still in use or have a baby to give birth.");
         // escrow
         ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).safeTransferFrom(_from, this, _tokenId);
 
         tokenIdToAuction[_tokenId] = Auction({
-            seller: _seller,
-            startedAt: uint48(_startAt),
-            duration: uint48(_duration),
-            startingPriceInToken: uint128(_startingPriceInToken),
-            endingPriceInToken: uint128(_endingPriceInToken),
-            lastRecord: 0,
-            token: _token,
+            seller : _seller,
+            startedAt : uint48(_startAt),
+            duration : uint48(_duration),
+            startingPriceInToken : uint128(_startingPriceInToken),
+            endingPriceInToken : uint128(_endingPriceInToken),
+            lastRecord : 0,
+            token : _token,
             // which refer to lastRecord, lastBidder, lastBidStartAt,lastReferer
             // all set to zero when initialized
-            lastBidder: address(0),
-            lastBidStartAt: 0,
-            lastReferer: address(0)
-        });
+            lastBidder : address(0),
+            lastBidStartAt : 0,
+            lastReferer : address(0)
+            });
 
         emit AuctionCreated(_tokenId, _seller, _startingPriceInToken, _endingPriceInToken, _duration, _token, _startAt);
     }
@@ -546,7 +551,7 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
 
     function toBytes(address x) public pure returns (bytes b) {
         b = new bytes(32);
-        assembly { mstore(add(b, 32), x) }
+        assembly {mstore(add(b, 32), x)}
     }
 
     function setRegistry(address _registry) public onlyOwner {

@@ -115,7 +115,8 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
 
         // recovering the signing address and comparing it to the trusted signer
         // address that was set in the contract
-        bytes32 prefixedHash = keccak256("\x19Ethereum Signed Message:\n32", hash);
+        // https://github.com/TronWatch/TronWeb/blob/fb8d19aaf47ef5eaed8bbfbaadea2b3efccc6d31/src/lib/trx.js#L483
+        bytes32 prefixedHash = keccak256("\x19TRON Signed Message:\n32", hash);
         bool verified = ecrecover(prefixedHash, _v, _r, _s) == signerAddress;
 
         // if the signer is the trusted signer - mark the hash so that it can't
