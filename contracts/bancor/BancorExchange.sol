@@ -31,6 +31,12 @@ contract BancorExchange is PausableDSAuth, SettingIds {
         registry = ISettingsRegistry(_registry);
     }
 
+    function() public payable {
+        // this is necessary!
+        // this is used in sell ring back to trx!
+    }
+
+
     function setBancorNetwork(address _bn) public onlyOwner {
         bancorNetwork = IBancorNetwork(_bn);
     }
