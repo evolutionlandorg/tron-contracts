@@ -41,7 +41,8 @@ const app = async () => {
 
     let BacorExContract = await tronWeb.contract().at(bancorExchangeAddress);
 
-    await BacorExContract.setQuickBuyPath(['415794ce7ae85efe01ba94fee10ddefe1d48a96ae6','4174ca9d500f00601b8e1db69734c05e04b7b67be9','4174ca9d500f00601b8e1db69734c05e04b7b67be9'])
+    await BacorExContract.setQuickBuyPath(['415794ce7ae85efe01ba94fee10ddefe1d48a96ae6','4174ca9d500f006bb' +
+    '01b8e1db69734c05e04b7b67be9','4174ca9d500f00601b8e1db69734c05e04b7b67be9'])
         .send({
             feeLimit:1000000000,
             callValue:0,

@@ -165,7 +165,7 @@ contract BancorNetwork is IBancorNetwork, TokenHolder, ContractIds, FeatureIds {
     {
         // if ETH is provided, ensure that the amount is identical to _amount and verify that the source token is an ether token
         IERC20Token fromToken = _path[0];
-        require(msg.value == 0 || (_amount == msg.value && trxTokens[fromToken]));
+        require(msg.value == 0 || (_amount == msg.value * 10**12 && trxTokens[fromToken]));
 
         // if ETH was sent with the call, the source is an ether token - deposit the ETH in it
         // otherwise, we assume we already have the tokens

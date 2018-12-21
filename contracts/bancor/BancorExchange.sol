@@ -56,7 +56,7 @@ contract BancorExchange is PausableDSAuth, SettingIds {
     }
 
     function buyRING(uint _minReturn) public payable whenNotPaused returns (uint) {
-        uint amount = bancorConverter.quickConvert.value(msg.value)(quickBuyPath, msg.value, _minReturn);
+        uint amount = bancorConverter.quickConvert.value(msg.value)(quickBuyPath, msg.value * 10**12, _minReturn);
         ISmartToken smartToken = ISmartToken(registry.addressOf(SettingIds.CONTRACT_RING_ERC20_TOKEN));
         smartToken.transfer(msg.sender, amount);
         return amount;
