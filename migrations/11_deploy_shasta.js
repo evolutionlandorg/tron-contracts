@@ -65,7 +65,7 @@ const conf = {
     land_objectClass: 1,
     supervisor_address: '41ab4866d8833f1da588a87fecff71c00416732a9c',
 
-    networkId: 42,
+    networkId: 200001,  // TRON shasta
     ringAmountLimit: 500000 * 10**18,
     bagCountLimit: 50,
     perMinAmount: 20 ** 10**18,
