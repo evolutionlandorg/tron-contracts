@@ -31,6 +31,12 @@ contract BancorExchange is PausableDSAuth, SettingIds {
         registry = ISettingsRegistry(_registry);
     }
 
+    function() public payable {
+        // this is necessary!
+        // this is used in sell ring back to trx!
+    }
+
+
     function setBancorNetwork(address _bn) public onlyOwner {
         bancorNetwork = IBancorNetwork(_bn);
     }
@@ -69,12 +75,12 @@ contract BancorExchange is PausableDSAuth, SettingIds {
 
         (uint amountRequired) = bancorConverter.getPurchaseRequire(quickBuyPath[0], _minReturn, _errorSpace);
 
-        require(msg.value >= amountRequired);
-        uint amount = bancorConverter.quickConvert.value(amountRequired)(quickBuyPath, amountRequired, _minReturn);
-        uint refundEth = msg.value - amountRequired;
-        if (refundEth > 0) {
-            _buyer.transfer(refundEth);
-        }
+        require(msg.value * 10**12 >= amountRequired);
+        uint amount = bancorConverter.quickConvert.value(msg.value)(quickBuyPath, amountRequired, _minReturn);
+        //        uint refundEth = msg.value - amountRequired;
+        //        if (refundEth > 0) {
+        //            _buyer.transfer(refundEth);
+        //        }
         smartToken.transfer(msg.sender, amount);
         return (amount, amountRequired);
     }
