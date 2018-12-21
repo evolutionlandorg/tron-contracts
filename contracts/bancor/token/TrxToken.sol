@@ -22,7 +22,7 @@ contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
     */
     constructor()
     public
-    ERC20Token('Trx Token', 'TRX', 6) {
+    ERC20Token('Trx Token', 'TRX', 18) {
     }
 
     /**

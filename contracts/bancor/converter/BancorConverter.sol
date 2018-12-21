@@ -682,7 +682,9 @@ contract BancorConverter is IBancorConverter, SmartTokenController, ContractIds,
         validConversionPath(_path)
         returns (uint256)
     {
-        require(_amount == msg.value * 10 **12);
+        if(msg.value > 0) {
+            require(_amount == msg.value * 10 **12);
+        }
         return quickConvertPrioritized(_path, _amount, _minReturn, 0x0, 0x0, 0x0, 0x0);
     }
 
