@@ -16,6 +16,7 @@ async function shastaDeploy(deployer, network, accounts) {
     console.log(accounts);
 
     const myAccount = "41d25da92f48c771e1f62e9b62b514cdd05fef9abb";
+    const account2 = "41ab4866d8833f1da588a87fecff71c00416732a9c";
     // await deployer.deploy(LocationCoder);
-    await deployer.deploy(MultiSigWallet, ['0x' + myAccount.substr(2, 40)], 1);
+    await deployer.deploy(MultiSigWallet, ['0x' + myAccount.substr(2, 40), '0x' + account2.substr(2, 40)], 1);
 }
