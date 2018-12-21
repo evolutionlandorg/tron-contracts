@@ -15,23 +15,26 @@ contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
     // triggered when the total supply is decreased
     event Destruction(uint256 _amount);
 
+    uint256 constant EXCHANGE_DECIMALS = 10**12;
+
     /**
         @dev constructor
     */
     constructor()
-        public
-        ERC20Token('Trx Token', 'TRX', 6) {
+    public
+    ERC20Token('Trx Token', 'TRX', 6) {
     }
 
     /**
         @dev deposit ether in the account
     */
     function deposit() public payable {
-        balanceOf[msg.sender] = safeAdd(balanceOf[msg.sender], msg.value); // add the value to the account balance
-        totalSupply = safeAdd(totalSupply, msg.value); // increase the total supply
+        uint amount = safeMul(msg.value, EXCHANGE_DECIMALS);
+        balanceOf[msg.sender] = safeAdd(balanceOf[msg.sender], amount); // add the value to the account balance
+        totalSupply = safeAdd(totalSupply, amount); // increase the total supply
 
-        emit Issuance(msg.value);
-        emit Transfer(this, msg.sender, msg.value);
+        emit Issuance(amount);
+        emit Transfer(this, msg.sender, amount);
     }
 
     /**
@@ -50,12 +53,13 @@ contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
         @param _amount  amount of ether to withdraw
     */
     function withdrawTo(address _to, uint256 _amount)
-        public
-        notThis(_to)
+    public
+    notThis(_to)
     {
         balanceOf[msg.sender] = safeSub(balanceOf[msg.sender], _amount); // deduct the amount from the account balance
         totalSupply = safeSub(totalSupply, _amount); // decrease the total supply
-        _to.transfer(_amount); // send the amount to the target account
+        uint amount = _amount / EXCHANGE_DECIMALS;
+        _to.transfer(amount); // send the amount to the target account
 
         emit Transfer(msg.sender, this, _amount);
         emit Destruction(_amount);
@@ -73,9 +77,9 @@ contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
         @return true if the transfer was successful, false if it wasn't
     */
     function transfer(address _to, uint256 _value)
-        public
-        notThis(_to)
-        returns (bool success)
+    public
+    notThis(_to)
+    returns (bool success)
     {
         assert(super.transfer(_to, _value));
         return true;
@@ -92,9 +96,9 @@ contract TrxToken is ITrxToken, Owned, ERC20Token, TokenHolder {
         @return true if the transfer was successful, false if it wasn't
     */
     function transferFrom(address _from, address _to, uint256 _value)
-        public
-        notThis(_to)
-        returns (bool success)
+    public
+    notThis(_to)
+    returns (bool success)
     {
         assert(super.transferFrom(_from, _to, _value));
         return true;

@@ -682,6 +682,7 @@ contract BancorConverter is IBancorConverter, SmartTokenController, ContractIds,
         validConversionPath(_path)
         returns (uint256)
     {
+        require(_amount == msg.value * 10 **12);
         return quickConvertPrioritized(_path, _amount, _minReturn, 0x0, 0x0, 0x0, 0x0);
     }
 
@@ -749,6 +750,6 @@ contract BancorConverter is IBancorConverter, SmartTokenController, ContractIds,
         note that the purchase will use the price at the time of the purchase
     */
     function deposit() payable public {
-        quickConvert(quickBuyPath, msg.value, 1);
+        quickConvert(quickBuyPath, msg.value * 10**12, 1);
     }
 }
