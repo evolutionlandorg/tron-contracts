@@ -6,9 +6,9 @@ var jObjectOwnershipAuthority = JSON.parse(fs.readFileSync('./build/contracts/Ob
 var jTokenLocationAuthority = JSON.parse(fs.readFileSync('./build/contracts/TokenLocationAuthority.json', 'utf8'));
 
 
-console.log(key);
-console.log("ObjectOwnershipAuthority abi: ", jObjectOwnershipAuthority.abi);
-console.log("TokenLocationAuthority abi: ", jTokenLocationAuthority.abi);
+// console.log(key);
+// console.log("ObjectOwnershipAuthority abi: ", jObjectOwnershipAuthority.abi);
+// console.log("TokenLocationAuthority abi: ", jTokenLocationAuthority.abi);
 
 // HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
 const fullNode = 'https://api.shasta.trongrid.io'; // Full node http endpoint
@@ -44,7 +44,7 @@ const app = async () => {
 
     const settingidsAddress = contracts["SettingIds"].hex;
     const registrysAddress = contracts["SettingsRegistry"].hex;
-    const interstellarEncoderAddr = contracts["InterstellarEncoderV2"].hex;
+    const interstellarEncoderAddr = contracts["InterstellarEncoder"].hex;
     const objectOwnershipAddress = contracts["ObjectOwnership"].hex;
     const tokenLocationIdAddress = contracts["TokenLocation"].hex;
 
@@ -121,20 +121,23 @@ const app = async () => {
         callValue:0,
         shouldPollResponse:true
     });
+    console.log("test1");
 
     await InterstellarEncoder.registerNewObjectClass(landBaseAddressTrx,1).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true
     });
+    console.log("test2");
 
-
-    let TokenLocation = await tronWeb.contract().at(tokenLocationIdAddress);
-    await TokenLocation.setAuthority(TokenLocationAuthority.address).send({
+    console.log("TokenLocationAuthority address: ", TokenLocationAuthority.address);
+    let tokenLocation = await tronWeb.contract().at(tokenLocationIdAddress);
+    await tokenLocation.setAuthority(TokenLocationAuthority.address).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true
     });
+
 
     console.log("deploy finish");
 };
