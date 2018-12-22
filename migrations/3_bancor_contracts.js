@@ -1,7 +1,5 @@
 const SettingsRegistry = artifacts.require("SettingsRegistry");
 const RING = artifacts.require("RING");
-const KTON = artifacts.require("KTON");
-
 
 const BancorConverter = artifacts.require('BancorConverter');
 const BancorFormula = artifacts.require('BancorFormula');
@@ -11,12 +9,10 @@ const WhiteList = artifacts.require('Whitelist');
 const BancorNetwork = artifacts.require('BancorNetwork');
 const BancorExchange = artifacts.require('BancorExchange');
 const ContractIds = artifacts.require('ContractIds');
-const FeatureIds = artifacts.require('FeatureIds');
 
-const BancorExchangeAuthority = artifacts.require('BancorExchangeAuthority');
 
 const conf = {
-    from: "TV9X71qbEFBAUSKrdq3tetKz2hwHnoDvVe",
+    from: "41ab4866d8833f1da588a87fecff71c00416732a9c",
     bank_unit_interest: 1000,
     bank_penalty_multiplier: 3,
     networkId: 200001,  // TRON shasta
@@ -35,8 +31,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "development")
     {
         deployer.then(async () => {
-            // await deployer.deploy(TrxToken);
-            await developmentDeploy(deployer, network, accounts);
+            // await developmentDeploy(deployer, network, accounts);
         });
     }
 };
@@ -78,17 +73,14 @@ async function developmentDeploy(deployer, network, accounts) {
     //do this to make SmartToken.totalSupply > 0
     // await ring.changeCap(20 * 10**8 * 10 ** 18);
     await ring.changeCap("2000000000000000000000000000");
-    // await ring.issue(conf.from, 12 * 10 **8 * 10 ** 18);
-    await ring.issue(conf.from, "1200000000000000000000000000");
+    await ring.issue(conf.from, "400000000000000000000000000");
 
     await ring.transferOwnership(bancorConverter.address);
     await bancorConverter.acceptTokenOwnership();
 
-    await trxToken.deposit({callValue: 10 ** 6});
-    await trxToken.transfer(BancorConverter.address, 1 * 10 ** 6);
-    
-    // let COIN = 1000000;
-    await bancorConverter.updateConnector(trxToken.address, 100000, true, 1200 * 10 ** 6);
+    await trxToken.deposit({callValue: '200000000000'});
+    await trxToken.transfer(bancorConverter.address, '200000000000000000000000');
+    await bancorConverter.updateConnector(trxToken.address, 100000, true, '200000000000000000000000');
 
     await whiteList.addAddress(bancorExchange.address);
     await bancorConverter.setConversionWhitelist(whiteList.address);
