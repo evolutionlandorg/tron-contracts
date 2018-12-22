@@ -11,7 +11,7 @@ const RINGAuthority = artifacts.require("RINGAuthority");
 
 
 const LocationCoder = artifacts.require("LocationCoder");
-const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");
+const InterstellarEncoder = artifacts.require("InterstellarEncoder");
 const GringottsBank = artifacts.require("GringottsBank");
 const SettingIds = artifacts.require("SettingIds");
 
@@ -100,7 +100,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "shasta")
     {
         deployer.then(async () => {
-            await shastaDeploy(deployer, network, accounts);
+            // await shastaDeploy(deployer, network, accounts);
         });
     }
 };

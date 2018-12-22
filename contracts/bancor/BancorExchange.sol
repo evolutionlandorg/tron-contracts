@@ -10,9 +10,8 @@ import "./IBancorNetwork.sol";
 
 contract BancorExchange is PausableDSAuth, SettingIds {
 
-    ISettingsRegistry registry;
+    ISettingsRegistry public registry;
 
-    ISmartToken public smartToken;
     IBancorNetwork public bancorNetwork;
     IBancorConverter public bancorConverter;
 

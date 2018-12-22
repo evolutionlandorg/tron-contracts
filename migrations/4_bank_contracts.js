@@ -1,6 +1,6 @@
 const LocationCoder = artifacts.require("LocationCoder");
 const TokenLocation = artifacts.require("TokenLocation.sol");
-const InterstellarEncoder = artifacts.require("InterstellarEncoderV2");
+const InterstellarEncoder = artifacts.require("InterstellarEncoder");
 const GringottsBank = artifacts.require("GringottsBank");
 const SettingsRegistry = artifacts.require("SettingsRegistry");
 const RING = artifacts.require("RING");
