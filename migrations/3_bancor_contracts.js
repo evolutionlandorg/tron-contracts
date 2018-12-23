@@ -38,6 +38,11 @@ async function developmentDeploy(deployer, network, accounts) {
     await deployer.deploy(TrxToken);
     await deployer.deploy(BancorNetwork, settingsRegistry.address);
 
+    let bancorNetwork = await BancorNetwork.deployed();
+
+    let contractFeaturesId = await bancorNetwork.CONTRACT_FEATURES.call();
+    await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
+
     await deployer.deploy(BancorConverter, RING.address, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
     await deployer.deploy(BancorExchange, BancorNetwork.address, BancorConverter.address, settingsRegistry.address);
 
@@ -47,11 +52,8 @@ async function developmentDeploy(deployer, network, accounts) {
     let trxToken = await TrxToken.deployed();
     let bancorNetwork = await BancorNetwork.deployed();
     let bancorFormula = await BancorFormula.deployed();
-
+    
     let bancorConverter = await BancorConverter.deployed();
-
-    let contractFeaturesId = await bancorConverter.CONTRACT_FEATURES.call();
-    await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
 
     // register
     let formulaId = await bancorConverter.BANCOR_FORMULA.call();
