@@ -135,5 +135,24 @@ contract BancorExchange is PausableDSAuth, SettingIds {
         registry = ISettingsRegistry(_registry);
     }
 
+    function getPurchaseReturn(IERC20Token _connectorToken, uint256 _depositAmount) public view returns (uint256) {
+        uint amount = _depositAmount * 10**12;
+        return bancorConverter.getPurchaseReturn(_connectorToken, amount);
+    }
+
+    function getPurchaseRequire(IERC20Token _connectorToken, uint256 _smartAmountToBuy, uint256 _errorSpace) public view returns (uint256) {
+        uint amount = bancorConverter.getPurchaseRequire(_connectorToken, _smartAmountToBuy, _errorSpace);
+        return (amount / 10**12 + 1);
+    }
+
+    function getSaleReturn(IERC20Token _connectorToken, uint256 _sellAmount) public view returns (uint256) {
+        uint amount = bancorConverter.getSaleReturn(_connectorToken, _sellAmount);
+        return (amount / 10**12);
+    }
+
+    function getSaleRequire(IERC20Token _connectorToken, uint256 _connectorAmountToExchange, uint _errorSpace) public view returns (uint256) {
+        uint connectorTokenExpect = _connectorAmountToExchange * 10**12;
+        return bancorConverter.getSaleRequire(_connectorToken, connectorTokenExpect, _errorSpace);
+    }
 
 }
