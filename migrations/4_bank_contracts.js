@@ -24,6 +24,9 @@ async function developmentDeploy(deployer, network, accounts) {
     let settingsRegistry = await SettingsRegistry.deployed();
     let kton = await KTON.deployed();
 
+    console.log(settingsRegistry.address);
+    console.log(kton.address);
+
     await deployer.deploy(GringottsBank, settingsRegistry.address);
 
     let bank = await GringottsBank.deployed();

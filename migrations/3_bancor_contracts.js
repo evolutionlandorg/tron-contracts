@@ -15,36 +15,38 @@ const conf = {
     from: "TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ",
     bank_unit_interest: 1000,
     bank_penalty_multiplier: 3,
-    networkId: 200001,  // TRON shasta
     weight10Percent: 100000
 }
 
 module.exports = function(deployer, network, accounts) {
-    if (network == "shasta")
+    if (network == "production")
     {
         deployer.then(async () => {
-            await developmentDeploy(deployer, network, accounts);
+            // await developmentDeploy(deployer, network, accounts);
         });
     }
 };
 
 async function developmentDeploy(deployer, network, accounts) {
     let settingsRegistry = await SettingsRegistry.deployed();
+    console.log(settingsRegistry);
 
     ////////////    Bancor Contracts   /////////// 
-    await deployer.deploy(ContractFeatures);
-    await deployer.deploy(BancorFormula);
-    await deployer.deploy(WhiteList);
-    await deployer.deploy(TrxToken);
-    await deployer.deploy(BancorNetwork, settingsRegistry.address);
+    // await deployer.deploy(ContractFeatures);
+    // await deployer.deploy(BancorFormula);
+    // await deployer.deploy(WhiteList);
+    // await deployer.deploy(TrxToken);
+    // await deployer.deploy(BancorNetwork, settingsRegistry.address);
 
-    let bancorNetwork = await BancorNetwork.deployed();
+    let bancorNetworkAddress = "4159bbedfc43b1680626768d99d36fd680a72fab2b";
 
-    let contractFeaturesId = await bancorNetwork.CONTRACT_FEATURES.call();
-    await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
+    console.log(bancorNetworkAddress);
 
-    await deployer.deploy(BancorConverter, RING.address, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
-    await deployer.deploy(BancorExchange, BancorNetwork.address, BancorConverter.address, settingsRegistry.address);
+    // let contractFeaturesId = await bancorNetwork.CONTRACT_FEATURES.call();
+    // await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
+
+    // await deployer.deploy(BancorConverter, RING.address, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
+    // await deployer.deploy(BancorExchange, bancorNetworkAddress, BancorConverter.address, settingsRegistry.address);
 
     let bancorExchange = await BancorExchange.deployed();
 
@@ -59,7 +61,7 @@ async function developmentDeploy(deployer, network, accounts) {
     await settingsRegistry.setAddressProperty(formulaId, bancorFormula.address);
 
     let bancorNetworkId = await bancorConverter.BANCOR_NETWORK.call();
-    await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetwork.address);
+    await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetworkAddress);
 
     let ring = await RING.deployed();
     //do this to make SmartToken.totalSupply > 0

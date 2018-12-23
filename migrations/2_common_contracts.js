@@ -8,7 +8,7 @@ const TakeBack = artifacts.require('TakeBack');
 const conf = {
     ringOwner : "TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ",
     supervisor_address: '41536DeaCEdC6E972822b9e78571786B5a6dd10c8A',
-    networkId: 200001  // TRON shasta
+    networkId: 200000  // TRON mainet
 };
 
 let ring,kton,settingIds,settingsRegistry;
@@ -17,7 +17,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "shasta")
     {
         deployer.then(async () => {
-            await developmentDeploy(deployer, network, accounts);
+            // await developmentDeploy(deployer, network, accounts);
         });
     }
 };
