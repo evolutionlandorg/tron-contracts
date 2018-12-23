@@ -1,4 +1,3 @@
-const InterstellarEncoder = artifacts.require("InterstellarEncoder");
 const SettingIds = artifacts.require("SettingIds");
 const SettingsRegistry = artifacts.require("SettingsRegistry");
 const RING = artifacts.require("RING");
@@ -11,13 +10,13 @@ const WOOD = artifacts.require("WOOD");
 const RINGAuthority = artifacts.require("RINGAuthority");
 
 const conf = {
-    ringOwner : "41ab4866d8833f1da588a87fecff71c00416732a9c"
+    ringOwner : "TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ"
 };
 
-let ring,kton,settingIds,settingsRegistry,interstellarEncoder,interstellarEncoderId;
+let ring,kton,settingIds,settingsRegistry;
 
 module.exports = function(deployer, network, accounts) {
-    if (network == "development")
+    if (network == "shasta")
     {
         deployer.then(async () => {
             await developmentDeploy(deployer, network, accounts);
@@ -27,16 +26,10 @@ module.exports = function(deployer, network, accounts) {
 
 async function developmentDeploy(deployer, network, accounts) {
     console.log("=======start to deploy some base contracts===========\n");
-
-    await deployer.deploy(InterstellarEncoder);
     await deployer.deploy(SettingIds);
     await deployer.deploy(SettingsRegistry);
     settingIds = await SettingIds.deployed();
     settingsRegistry = await SettingsRegistry.deployed();
-
-    interstellarEncoder = await InterstellarEncoder.deployed();
-    interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
-    await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
 
     await deployer.deploy(RING);
     await deployer.deploy(KTON);
