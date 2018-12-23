@@ -64,7 +64,6 @@ async function developmentDeploy(deployer, network, accounts) {
     await settingsRegistry.setAddressProperty(fireId, fire.address);
     await settingsRegistry.setAddressProperty(soilId, soil.address);
 
-
     await deployer.deploy(RINGAuthority, conf.ringOwner);
     let ringAuthority = await RINGAuthority.deployed();
     await ring.setAuthority(ringAuthority.address);

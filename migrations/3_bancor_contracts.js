@@ -69,9 +69,9 @@ async function developmentDeploy(deployer, network, accounts) {
     await ring.transferOwnership(bancorConverter.address);
     await bancorConverter.acceptTokenOwnership();
 
-    // await trxToken.deposit({callValue: '1000000000000'});
-    // await trxToken.transfer(bancorConverter.address, '10000000000000000000000000');
-    // await bancorConverter.updateConnector(trxToken.address, conf.weight10Percent, true, '10000000000000000000000000');
+    // await trxToken.deposit({callValue: '3276110000000'});   3276110000000000000000000
+    // await trxToken.transfer(bancorConverter.address, '3276110000000000000000000');
+    await bancorConverter.updateConnector(trxToken.address, conf.weight10Percent, true, '3276110000000000000000000');
 
     await whiteList.addAddress(bancorExchange.address);
     await bancorConverter.setConversionWhitelist(whiteList.address);
