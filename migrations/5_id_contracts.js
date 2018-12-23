@@ -1,22 +1,12 @@
 const SettingsRegistry = artifacts.require("SettingsRegistry");
-const RING = artifacts.require("RING");
-const KTON = artifacts.require("KTON");
-
-
 const IDSettingIds = artifacts.require('IDSettingIds');
-const MintAndBurnAuthority = artifacts.require('MintAndBurnAuthority');
 const DividendPool = artifacts.require('DividendPool');
 const FrozenDividend = artifacts.require('FrozenDividend');
 const RolesUpdater = artifacts.require("RolesUpdater");
 const UserRoles = artifacts.require("UserRoles");
-const UserRolesAuthority = artifacts.require("UserRolesAuthority");
-const RevenuePool = artifacts.require('RevenuePool');
-const UserPoints = artifacts.require('UserPoints');
-const UserPointsAuthority = artifacts.require('UserPointsAuthority');
-const PointsRewardPool = artifacts.require('PointsRewardPool');
 const TakeBack = artifacts.require('TakeBack');
+const RING = artifacts.require("RING");
 
-const GringottsBank = artifacts.require("GringottsBank");
 
 const conf = {
     from: "TV9X71qbEFBAUSKrdq3tetKz2hwHnoDvVe",
@@ -44,51 +34,44 @@ module.exports = function(deployer, network, accounts) {
 };
 
 async function developmentDeploy(deployer, network, accounts) {
+    console.log("=======start to deploy id contracts===========\n");
+
     let settingsRegistry = await SettingsRegistry.deployed();
 
-    ////////////    ID Contracts   ///////////
-    await deployer.deploy(FrozenDividend, settingsRegistry.address);
-    await deployer.deploy(DividendPool, settingsRegistry.address);
-    // deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
-    await deployer.deploy(TakeBack, RING.address, conf.supervisor_address, conf.networkId);
+    await deployer.deploy(IDSettingIds);
 
+    await deployer.deploy(UserRoles);
+    let userRoles = await UserRoles.deployed();
+
+    await deployer.deploy(FrozenDividend, settingsRegistry.address);
+    let frozenDividend = await FrozenDividend.deployed();
+
+    await deployer.deploy(DividendPool, settingsRegistry.address);
     let dividendPool = await DividendPool.deployed();
 
-    // register
-    let dividendPoolId = await dividendPool.CONTRACT_DIVIDENDS_POOL.call();
-    await settingsRegistry.setAddressProperty(dividendPoolId, DividendPool.address);
-
-    let channelDivId = await dividendPool.CONTRACT_CHANNEL_DIVIDEND.call();
-    await settingsRegistry.setAddressProperty(channelDivId, TakeBack.address);
-
-    let frozenDivId = await dividendPool.CONTRACT_FROZEN_DIVIDEND.call();
-    await settingsRegistry.setAddressProperty(frozenDivId, FrozenDividend.address);
-    console.log("REGISTRATION DONE! ");
-
-
-    console.log('MIGRATION SUCCESS!');
-
-    let kton = await KTON.deployed();
-
-    await deployer.deploy(MintAndBurnAuthority, GringottsBank.address);
-    let mintAndBurnAuthority = await MintAndBurnAuthority.deployed();
-    await mintAndBurnAuthority.addWhiteList(dividendPool.address);
-    await kton.setAuthority(MintAndBurnAuthority.address);
-    
-    //     await deployer.deploy(ObjectOwnershipAuthority, [landBaseProxy.address]);
-    //     await deployer.deploy(TokenLocationAuthority, [landBaseProxy.address]);
-    //     // set authority
-    //     await tokenLocationProxy.setAuthority(TokenLocationAuthority.address);
-    //     await objectOwnershipProxy.setAuthority(ObjectOwnershipAuthority.address);
-
-    // await deployer.deploy(UserRoles);
-    // await deployer.deploy(RolesUpdater, UserRoles.address, conf.networkId, conf.supervisor_address);
+    await deployer.deploy(RolesUpdater, userRoles.address, conf.networkId, conf.supervisor_address);
     // await deployer.deploy(UserRolesAuthority, [RolesUpdater.address]);
+    let ring = await RING.deployed();
+    await deployer.deploy(TakeBack, ring.address, conf.supervisor_address, conf.networkId);
+    // deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
+
+
+    let idSettingIds = await IDSettingIds.deployed();
+
+    // register
+    let dividendPoolId = await idSettingIds.CONTRACT_DIVIDENDS_POOL.call();
+    await settingsRegistry.setAddressProperty(dividendPoolId, dividendPool.address);
+
+    let takeBack = await TakeBack.deployed();
+    let channelDivId = await idSettingIds.CONTRACT_CHANNEL_DIVIDEND.call();
+    await settingsRegistry.setAddressProperty(channelDivId, takeBack.address);
+
+    let frozenDivId = await idSettingIds.CONTRACT_FROZEN_DIVIDEND.call();
+    await settingsRegistry.setAddressProperty(frozenDivId, frozenDividend.address);
+
     // await userRoles.setAuthority(UserRolesAuthority.address);
-    // await deployer.deploy(InterstellarEncoder);
-    // let interstellarEncoder = await InterstellarEncoder.deployed();
-    // let interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
-    // await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
+
+    console.log("=======end to deploy id contracts===========\n");
     
     
 }
