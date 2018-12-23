@@ -2,15 +2,13 @@ const SettingIds = artifacts.require("SettingIds");
 const SettingsRegistry = artifacts.require("SettingsRegistry");
 const RING = artifacts.require("RING");
 const KTON = artifacts.require("KTON");
-const GOLD = artifacts.require("GOLD");
-const FIRE = artifacts.require("FIRE");
-const HHO = artifacts.require("HHO");
-const SIOO = artifacts.require("SIOO");
-const WOOD = artifacts.require("WOOD");
 const RINGAuthority = artifacts.require("RINGAuthority");
+const TakeBack = artifacts.require('TakeBack');
 
 const conf = {
-    ringOwner : "TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ"
+    ringOwner : "TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ",
+    supervisor_address: '41536DeaCEdC6E972822b9e78571786B5a6dd10c8A',
+    networkId: 200001  // TRON shasta
 };
 
 let ring,kton,settingIds,settingsRegistry;
@@ -37,36 +35,17 @@ async function developmentDeploy(deployer, network, accounts) {
     ring = await RING.deployed();
     kton = await KTON.deployed();
 
-    await deployer.deploy([GOLD,FIRE,HHO,SIOO,WOOD]);
-
-    let gold = await GOLD.deployed();
-    let fire = await FIRE.deployed();
-    let wood = await WOOD.deployed();
-    let water = await HHO.deployed();
-    let soil = await SIOO.deployed();
-
     let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
     await settingsRegistry.setAddressProperty(ring_settings, ring.address);
 
     let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
     await settingsRegistry.setAddressProperty(kton_settings, kton.address);
 
-    let goldId = await settingIds.CONTRACT_GOLD_ERC20_TOKEN.call();
-    let woodId = await settingIds.CONTRACT_WOOD_ERC20_TOKEN.call();
-    let waterId = await settingIds.CONTRACT_WATER_ERC20_TOKEN.call();
-    let fireId = await settingIds.CONTRACT_FIRE_ERC20_TOKEN.call();
-    let soilId = await settingIds.CONTRACT_SOIL_ERC20_TOKEN.call();
-
-    // register resouces to registry
-    await settingsRegistry.setAddressProperty(goldId, gold.address);
-    await settingsRegistry.setAddressProperty(woodId, wood.address);
-    await settingsRegistry.setAddressProperty(waterId, water.address);
-    await settingsRegistry.setAddressProperty(fireId, fire.address);
-    await settingsRegistry.setAddressProperty(soilId, soil.address);
-
     await deployer.deploy(RINGAuthority, conf.ringOwner);
     let ringAuthority = await RINGAuthority.deployed();
     await ring.setAuthority(ringAuthority.address);
+
+    await deployer.deploy(TakeBack, ring.address, conf.supervisor_address, conf.networkId);
 
     console.log("=======end to deploy some base contracts===========\n");
     

@@ -50,9 +50,8 @@ async function developmentDeploy(deployer, network, accounts) {
 
     let whiteList = await WhiteList.deployed();
     let trxToken = await TrxToken.deployed();
-    let bancorNetwork = await BancorNetwork.deployed();
     let bancorFormula = await BancorFormula.deployed();
-    
+
     let bancorConverter = await BancorConverter.deployed();
 
     // register
