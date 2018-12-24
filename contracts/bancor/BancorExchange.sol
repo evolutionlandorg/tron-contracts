@@ -7,17 +7,23 @@ import "./converter/interfaces/IBancorConverter.sol";
 import "./token/interfaces/ISmartToken.sol";
 import "./IBancorNetwork.sol";
 import "./converter/interfaces/IBancorFormula.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./ContractIds.sol";
 
+contract BancorExchange is PausableDSAuth, SettingIds, ContractIds {
 
-contract BancorExchange is PausableDSAuth, SettingIds {
+    using SafeMath for *;
 
-    ISettingsRegistry public registry;
+    ISettingsRegistry registry;
 
+    ISmartToken public smartToken;
     IBancorNetwork public bancorNetwork;
     IBancorConverter public bancorConverter;
 
     IERC20Token[] public quickSellPath;
     IERC20Token[] public quickBuyPath;
+
+    uint64 private constant MAX_ERROR_TOLERANT_BASE = 10000000;
 
     // validates a conversion path - verifies that the number of elements is odd and that maximum number of 'hops' is 10
     modifier validConversionPath(IERC20Token[] _path) {
@@ -151,10 +157,8 @@ contract BancorExchange is PausableDSAuth, SettingIds {
         return (amount / 10**12);
     }
 
-
     function getSaleRequire(IERC20Token _connectorToken, uint256 _connectorAmountToExchange, uint _errorSpace) public view returns (uint256) {
         uint connectorTokenExpect = _connectorAmountToExchange * 10**12;
-
         uint totalSupply = IERC20Token(registry.addressOf(SettingIds.CONTRACT_RING_ERC20_TOKEN)).totalSupply();
         uint connectorBalance = bancorConverter.getConnectorBalance(_connectorToken);
         uint32 weight;
