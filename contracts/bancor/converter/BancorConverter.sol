@@ -478,7 +478,7 @@ contract BancorConverter is IBancorConverter, SmartTokenController, ContractIds,
         uint256 tokenSupply = token.totalSupply();
         uint256 connectorBalance = getConnectorBalance(_connectorToken);
         IBancorFormula formula = IBancorFormula(registry.addressOf(ContractIds.BANCOR_FORMULA));
-        uint256 amount = formula.calculateSaleRequire(tokenSupply, connectorBalance, connector.weight, _connectorAmountToExchange);
+        uint256 amount = formula.calculateSaleRequire(connectorBalance, tokenSupply, connector.weight, _connectorAmountToExchange);
 
         // return the amount minus the conversion fee
         return getFinalAmount(safeMul(amount, (_errorSpace + MAX_ERROR_TOLERANT_BASE)) / MAX_ERROR_TOLERANT_BASE, 1);
