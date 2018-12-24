@@ -234,7 +234,7 @@ contract DSTokenBase is ERC20, DSMath {
 contract DSToken is DSTokenBase(0), DSStop {
 
     string  public  symbol;
-    uint256  public  decimals = 18; // standard token precision. override to customize
+    uint8  public  decimals = 18; // standard token precision. override to customize
 
     constructor(string symbol_) public {
         symbol = symbol_;

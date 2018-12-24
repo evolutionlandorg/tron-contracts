@@ -19,7 +19,7 @@ const conf = {
 }
 
 module.exports = function(deployer, network, accounts) {
-    if (network == "production")
+    if (network == "shasta")
     {
         deployer.then(async () => {
             // await developmentDeploy(deployer, network, accounts);
