@@ -14,9 +14,8 @@ contract BancorExchange is PausableDSAuth, SettingIds, ContractIds {
 
     using SafeMath for *;
 
-    ISettingsRegistry registry;
+    ISettingsRegistry public registry;
 
-    ISmartToken public smartToken;
     IBancorNetwork public bancorNetwork;
     IBancorConverter public bancorConverter;
 
@@ -156,6 +155,7 @@ contract BancorExchange is PausableDSAuth, SettingIds, ContractIds {
         uint amount = bancorConverter.getSaleReturn(_connectorToken, _sellAmount);
         return (amount / 10**12);
     }
+
 
     function getSaleRequire(IERC20Token _connectorToken, uint256 _connectorAmountToExchange, uint _errorSpace) public view returns (uint256) {
         uint connectorTokenExpect = _connectorAmountToExchange * 10**12;
