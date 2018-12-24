@@ -159,14 +159,8 @@ contract BancorExchange is PausableDSAuth, SettingIds, ContractIds {
 
     function getSaleRequire(IERC20Token _connectorToken, uint256 _connectorAmountToExchange, uint _errorSpace) public view returns (uint256) {
         uint connectorTokenExpect = _connectorAmountToExchange * 10**12;
-        uint totalSupply = IERC20Token(registry.addressOf(SettingIds.CONTRACT_RING_ERC20_TOKEN)).totalSupply();
-        uint connectorBalance = bancorConverter.getConnectorBalance(_connectorToken);
-        uint32 weight;
-        (, weight, , , ) = bancorConverter.connectors(_connectorToken);
-        IBancorFormula formula = IBancorFormula(registry.addressOf(ContractIds.BANCOR_FORMULA));
-        uint256 amount = formula.calculateSaleRequire(connectorBalance, totalSupply, weight, connectorTokenExpect);
         // return the amount minus the conversion fee
-        return bancorConverter.getFinalAmount(amount.mul(_errorSpace + MAX_ERROR_TOLERANT_BASE) / MAX_ERROR_TOLERANT_BASE, 1);
+        return bancorConverter.getSaleRequire(_connectorToken, connectorTokenExpect, _errorSpace);
     }
 
 }
