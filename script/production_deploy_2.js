@@ -37,12 +37,15 @@ const app = async () => {
         return;
 
     const ringAddress = contracts["RING"].hex;
+    const ktonAddress = contracts["KTON"].hex;
+    const settingsIdAddress = contracts["SettingIds"].hex;
     const bancorNetworkAddress = contracts["BancorNetwork"].hex;
     const settingsRegistryAddress = contracts["SettingsRegistry"].hex;
     const bancorConverterAddress = contracts["BancorConverter"].hex;
     const bancorFormulaAddress = contracts["BancorFormula"].hex;
     const trxTokenAddress = contracts["TrxToken"].hex;
     const bancorExchangeAddress = contracts["BancorExchange"].hex;
+    const ringAuthorityAddress = contracts["RINGAuthority"].hex;
 
     console.log(ringAddress);
     console.log(bancorNetworkAddress);
@@ -55,11 +58,36 @@ const app = async () => {
     let bancorConverter = await tronWeb.contract().at(bancorConverterAddress);
     let settingsRegistry = await tronWeb.contract().at(settingsRegistryAddress);
     let ring = await tronWeb.contract().at(ringAddress);
+    let settingIds = await tronWeb.contract().at(settingsIdAddress);
+
+
+    let ring_key = await settingIds.CONTRACT_RING_ERC20_TOKEN().call();
+    let kton_key = await settingIds.CONTRACT_KTON_ERC20_TOKEN().call();
 
     let bancorExchange = await tronWeb.contract().at(bancorExchangeAddress);
 
+    console.log(ringAddress);
+    console.log(ring_key);
+
+    console.log(kton_key);
+    console.log(ktonAddress);
+
+    console.log(ringAuthorityAddress);
+
     // let formulaId = await bancorConverter.BANCOR_FORMULA().call();
-    // await settingsRegistry.setAddressProperty(formulaId, bancorFormulaAddress).send({
+    // await settingsRegistry.setAddressProperty(ring_key, ringAddress).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
+
+    // await settingsRegistry.setAddressProperty(kton_key, ktonAddress).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
+
+    // await ring.setAuthority(ringAuthorityAddress).send({
     //     feeLimit:1000000000,
     //     callValue: 0,
     //     shouldPollResponse:true
@@ -119,11 +147,11 @@ const app = async () => {
 
     // await bancorNetwork.registerTrxToken(trxToken.address, true);
 
-    // await bancorExchange.setQuickBuyPath([trxTokenAddress, ringAddress, ringAddress]).send({
-    //     feeLimit:1000000000,
-    //     callValue: 0,
-    //     shouldPollResponse:true
-    // });
+    await bancorExchange.setQuickBuyPath([trxTokenAddress, ringAddress, ringAddress]).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
 
     await bancorExchange.setQuickSellPath([ringAddress, ringAddress, trxTokenAddress]).send({
         feeLimit:1000000000,

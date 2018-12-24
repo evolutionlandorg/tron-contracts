@@ -14,7 +14,7 @@ const conf = {
 let ring,kton,settingIds,settingsRegistry;
 
 module.exports = function(deployer, network, accounts) {
-    if (network == "shasta")
+    if (network == "production")
     {
         deployer.then(async () => {
             // await developmentDeploy(deployer, network, accounts);
@@ -24,26 +24,32 @@ module.exports = function(deployer, network, accounts) {
 
 async function developmentDeploy(deployer, network, accounts) {
     console.log("=======start to deploy some base contracts===========\n");
-    await deployer.deploy(SettingIds);
-    await deployer.deploy(SettingsRegistry);
-    settingIds = await SettingIds.deployed();
-    settingsRegistry = await SettingsRegistry.deployed();
+    // await deployer.deploy(SettingIds);
+    // await deployer.deploy(SettingsRegistry);
+    // settingIds = await SettingIds.deployed();
+    // settingsRegistry = await SettingsRegistry.deployed();
+
+    // let ringAuthority = await RINGAuthority.deployed();
+
+    // console.log(settingIds.address);
+    // console.log(settingsRegistry.address);
+    // console.log(ringAuthority.address);
 
     await deployer.deploy(RING);
     await deployer.deploy(KTON);
 
     ring = await RING.deployed();
-    kton = await KTON.deployed();
+    // kton = await KTON.deployed();
 
-    let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
-    await settingsRegistry.setAddressProperty(ring_settings, ring.address);
+    // let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
+    // await settingsRegistry.setAddressProperty(ring_settings, ring.address);
 
-    let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
-    await settingsRegistry.setAddressProperty(kton_settings, kton.address);
+    // let kton_settings = await settingIds.CONTRACT_KTON_ERC20_TOKEN.call();
+    // await settingsRegistry.setAddressProperty(kton_settings, kton.address);
 
-    await deployer.deploy(RINGAuthority, conf.ringOwner);
-    let ringAuthority = await RINGAuthority.deployed();
-    await ring.setAuthority(ringAuthority.address);
+    // // await deployer.deploy(RINGAuthority, conf.ringOwner);
+    
+    // await ring.setAuthority(ringAuthority.address);
 
     await deployer.deploy(TakeBack, ring.address, conf.supervisor_address, conf.networkId);
 
