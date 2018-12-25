@@ -28,8 +28,8 @@ module.exports = function(deployer, network, accounts) {
 };
 
 async function developmentDeploy(deployer, network, accounts) {
-    let settingsRegistry = await SettingsRegistry.deployed();
-    console.log(settingsRegistry);
+    // let settingsRegistry = await SettingsRegistry.deployed();
+    // console.log(settingsRegistry);
 
     ////////////    Bancor Contracts   /////////// 
     // await deployer.deploy(ContractFeatures);
@@ -45,44 +45,44 @@ async function developmentDeploy(deployer, network, accounts) {
     // let contractFeaturesId = await bancorNetwork.CONTRACT_FEATURES.call();
     // await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
 
-    // await deployer.deploy(BancorConverter, RING.address, settingsRegistry.address, 0, TrxToken.address, conf.weight10Percent);
-    // await deployer.deploy(BancorExchange, bancorNetworkAddress, BancorConverter.address, settingsRegistry.address);
+    await deployer.deploy(BancorConverter, "416c0fc7d9817a3f0b6681e126e48d05df9567a73e", "411cd4edbec62f4bc43ffa3c6a58779242e82282e7", 0, "41cd5ac730df2305dbcc65a74290ed9492a862b3fa", conf.weight10Percent);
+    await deployer.deploy(BancorExchange, bancorNetworkAddress, BancorConverter.address, "411cd4edbec62f4bc43ffa3c6a58779242e82282e7");
 
-    let bancorExchange = await BancorExchange.deployed();
+    // let bancorExchange = await BancorExchange.deployed();
 
-    let whiteList = await WhiteList.deployed();
-    let trxToken = await TrxToken.deployed();
-    let bancorFormula = await BancorFormula.deployed();
+    // let whiteList = await WhiteList.deployed();
+    // let trxToken = await TrxToken.deployed();
+    // let bancorFormula = await BancorFormula.deployed();
 
-    let bancorConverter = await BancorConverter.deployed();
+    // let bancorConverter = await BancorConverter.deployed();
 
     // register
-    let formulaId = await bancorConverter.BANCOR_FORMULA.call();
-    await settingsRegistry.setAddressProperty(formulaId, bancorFormula.address);
+    // let formulaId = await bancorConverter.BANCOR_FORMULA.call();
+    // await settingsRegistry.setAddressProperty(formulaId, bancorFormula.address);
 
-    let bancorNetworkId = await bancorConverter.BANCOR_NETWORK.call();
-    await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetworkAddress);
+    // let bancorNetworkId = await bancorConverter.BANCOR_NETWORK.call();
+    // await settingsRegistry.setAddressProperty(bancorNetworkId, bancorNetworkAddress);
 
-    let ring = await RING.deployed();
-    //do this to make SmartToken.totalSupply > 0
-    // await ring.changeCap(16 * 10**8 * 10 ** 18);
-    await ring.changeCap("1600000000000000000000000000");
-    await ring.issue(conf.from, "400000000000000000000000000");
+    // let ring = await RING.deployed();
+    // //do this to make SmartToken.totalSupply > 0
+    // // await ring.changeCap(16 * 10**8 * 10 ** 18);
+    // await ring.changeCap("1600000000000000000000000000");
+    // await ring.issue(conf.from, "400000000000000000000000000");
 
-    await ring.transferOwnership(bancorConverter.address);
-    await bancorConverter.acceptTokenOwnership();
+    // await ring.transferOwnership(bancorConverter.address);
+    // await bancorConverter.acceptTokenOwnership();
 
-    // await trxToken.deposit({callValue: '3276110000000'});   3276110000000000000000000
-    // await trxToken.transfer(bancorConverter.address, '3276110000000000000000000');
-    await bancorConverter.updateConnector(trxToken.address, conf.weight10Percent, true, '3276110000000000000000000');
+    // // await trxToken.deposit({callValue: '3276110000000'});   3276110000000000000000000
+    // // await trxToken.transfer(bancorConverter.address, '3276110000000000000000000');
+    // await bancorConverter.updateConnector(trxToken.address, conf.weight10Percent, true, '3276110000000000000000000');
 
-    await whiteList.addAddress(bancorExchange.address);
-    await bancorConverter.setConversionWhitelist(whiteList.address);
+    // await whiteList.addAddress(bancorExchange.address);
+    // await bancorConverter.setConversionWhitelist(whiteList.address);
 
-    await bancorNetwork.registerTrxToken(trxToken.address, true);
+    // await bancorNetwork.registerTrxToken(trxToken.address, true);
 
-    await bancorExchange.setQuickBuyPath([trxToken.address, RING.address, RING.address]);
-    await bancorExchange.setQuickSellPath([RING.address, RING.address, trxToken.address]);
+    // await bancorExchange.setQuickBuyPath([trxToken.address, RING.address, RING.address]);
+    // await bancorExchange.setQuickSellPath([RING.address, RING.address, trxToken.address]);
 
     console.log('SUCCESS!')
     

@@ -8,20 +8,20 @@
         "hex": "411cd4edbec62f4bc43ffa3c6a58779242e82282e7"
     },
     "RING": {
-        "base58": "THHPMesNjPy2sw5zxcS3HiGWL6cjEvsmJe",
-        "hex": "41503903045cdaae9c10a440432b97714da874fffd"
+        "base58": "TKpatEfKd6YoZCWTc6cgzx3QLVSw31VnFS",
+        "hex": "416c0fc7d9817a3f0b6681e126e48d05df9567a73e"
     },
     "KTON": {
-        "base58": "TNR6xFobEHLWSa7FnEP93jXuSGv6bWWyG9",
-        "hex": "4188874688ab5a3b2afc6fffb9fee237b1487c8b58"
+        "base58": "TQtpCzv7xzj6Psb3PqxUmQSTAaF1uhLAj1",
+        "hex": "41a3b53200ed98429f14fdb7c8a0bdb72400beb58e"
     },
     "RINGAuthority": {
         "base58": "THRoz4uj1q57SrpACqgyS3mhJwzndnWu6M",
         "hex": "4151d0e5d3b8d1706b4785cd02c3e36f8d9ac32ecf"
     },
     "TakeBack": {
-        "base58": "TGuCWBxvwMqWXJKGdSSd9seWyAhQchqk3K",
-        "hex": "414c06cd17c01006e01794ebbc64e1be4df359b175"
+        "base58": "TJ1vgPrtSWFekZFtYfDQX9YRUhU6jm4Ly4",
+        "hex": "415844a120e5cb3e53dccaa6ee1c01f47d6451850c"
     },
     "ContractFeatures": {
         "base58": "TVo5H7j6rEeacgLFcoGBwHSGcMXLpmTgiz",
@@ -44,12 +44,12 @@
         "hex": "4159bbedfc43b1680626768d99d36fd680a72fab2b"
     },
     "BancorConverter": {
-        "base58": "TCSSsmmi2BbQLi4nQVCL4bsHtQSqz3muyQ",
-        "hex": "411b171074b0935778473bad8b682d3510eb96b823"
+        "base58": "TAQejUMfQnuXyFT8QBdEUBgWk5VGYbKcw2",
+        "hex": "4104cfe0e06f2bb4da974ad677c2ff9dec99c66c8f"
     },
     "BancorExchange": {
-        "base58": "TMjXmo4qT2sxD96TTZs5K5AtpznpxtihaP",
-        "hex": "41810b5afe3de7fa5ccc41b70c2f255e8c242c9000"
+        "base58": "TYYzGAtmw6xKNbM8MVko4ruicHd1Lyd54w",
+        "hex": "41f7b6468d4c5c1d51e62efcccb0ba001413b2b97c"
     },
     "GringottsBank": {
         "base58": "TTW2Vpr9TCu6gxGZ1yjwqy7R79hEH8iscC",
