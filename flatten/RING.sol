@@ -235,9 +235,9 @@ interface ApproveAndCallFallBack {
 }
 
 interface TRC223 {
-    function transferAndCall(address to, uint amount, bytes data) public returns (bool ok);
+    function transferAndFallback(address to, uint amount, bytes data) public returns (bool ok);
 
-    function transferFromAndCall(address from, address to, uint256 amount, bytes data) public returns (bool ok);
+    function transferFromAndFallback(address from, address to, uint256 amount, bytes data) public returns (bool ok);
 
     event TRC223Transfer(address indexed from, address indexed to, uint amount, bytes data);
 }
@@ -347,8 +347,8 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
         return _allowed[owner][spender];
     }
 
-    function setName(string name) public auth {
-        _name = name;
+    function setName(string name_) public auth {
+        _name = name_;
     }
 
     /**
@@ -378,6 +378,12 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
      */
     function approve(address spender, uint256 value) public whenNotPaused returns (bool) {
         require(spender != address(0));
+
+        // Alerts the token controller of the approve function call
+        if (isContract(controller)) {
+            if (!TokenController(controller).onApprove(msg.sender, spender, value))
+                revert();
+        }
 
         _allowed[msg.sender][spender] = value;
         emit Approval(msg.sender, spender, value);
