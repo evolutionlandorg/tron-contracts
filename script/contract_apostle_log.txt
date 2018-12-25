@@ -1,0 +1,35 @@
+InterstellarEncoder:
+(base58) TSyULhtvkbCm7Hs8deyEwUFApPfxqrtCQQ
+(hex) 41ba86f14504d102ff4e3c82936d4ec149f133e206
+
+ApostleSettingIds:
+(base58) TSW3GpBDntbueFV4bCG5WuyKK3jxBsomfc
+(hex) 41b556c95a1a22f15732edb4ea0cb21d02663c24b7
+
+ApostleBase:
+(base58) TBxw6VujWLvrmT7etYt5a162zgjw3nRuz4
+(hex) 4115e2f946ea34c2aab33a1c88f5b90f34efa736bc
+
+ApostleClockAuction:
+(base58) TBadv4ChGPGBXAQN5g73yC1aJFg3wzWE8B
+(hex) 4111ab7b3c6aa291f7b20d9bf0a76a7b8cb4fd528f
+
+Gen0Apostle:
+(base58) TBe9vrYNoT63PKjEsFN5qQJp3mx35o8894
+(hex) 411255c8945ab6eaec0a8ecd1d0de3c616b28cf747
+
+SiringClockAuction:
+(base58) TDsQDNJ8R2cWAtAHk6sBNkcKYjenxneYsU
+(hex) 412ac75dea5e3e480ec5c9157b01713747c634e2cc
+
+ObjectOwnershipAuthority:
+(base58) TLhtaUnArA8CuY4hgxW3oacNFGhQQwbv7Z
+(hex) 4175c3c3c9c83228504754fda23debbf518b6d4b02
+
+ClockAuctionAuthority:
+(base58) TEkumRBQXobD3Uigt7j1kCiAhkWnXqgReq
+(hex) 413485400a93348e434600724ddec0531595cecbea
+
+ApostleBaseAuthority:
+(base58) TAjefFSRT1mcQgkQcrNxDW2VXsAcgD7gtp
+(hex) 410867b88e724b1236015342866f93d53578473edd
