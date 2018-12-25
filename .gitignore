@@ -4,6 +4,7 @@ node_modules
 package-lock.json
 .idea
 tronbox.js
+truffle.js
 **/script/key.json
 **/script/key2.json
 **/script/key3.json
