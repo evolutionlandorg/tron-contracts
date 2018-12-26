@@ -199,7 +199,7 @@ library SafeMath {
   }
 }
 
-// File: contracts/token/RING.sol
+// File: contracts/token/KTON.sol
 
 /// @title TRC223ReceivingContract - Standard contract implementation for compatibility with TRC223 tokens.
 interface TRC223ReceivingContract {
@@ -285,10 +285,10 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
     }
 
     constructor () public {
-        _symbol = "RING";
+        _symbol = "KTON";
         _decimals = 18;
 
-        _name = "Evolution Land Global Token";
+        _name = "Evolution Land Kryptonite";
 
         controller = msg.sender;
     }

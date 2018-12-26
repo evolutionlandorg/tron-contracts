@@ -237,8 +237,15 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
     {
         require(spender != address(0));
 
-        _allowed[msg.sender][spender] = (
-        _allowed[msg.sender][spender].add(addedValue));
+        uint256 newValue = _allowed[msg.sender][spender].add(addedValue);
+
+        // Alerts the token controller of the approve function call
+        if (isContract(controller)) {
+            if (!TokenController(controller).onApprove(msg.sender, spender, newValue))
+                revert();
+        }
+
+        _allowed[msg.sender][spender] = newValue;
         emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
         return true;
     }
@@ -261,8 +268,15 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
     {
         require(spender != address(0));
 
-        _allowed[msg.sender][spender] = (
-        _allowed[msg.sender][spender].sub(subtractedValue));
+        uint256 newValue = _allowed[msg.sender][spender].sub(subtractedValue);
+
+        // Alerts the token controller of the approve function call
+        if (isContract(controller)) {
+            if (!TokenController(controller).onApprove(msg.sender, spender, newValue))
+                revert();
+        }
+
+        _allowed[msg.sender][spender] = newValue;
         emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
         return true;
     }
