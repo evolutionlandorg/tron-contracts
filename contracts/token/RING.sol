@@ -360,7 +360,7 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
      * @param value uint256 The amount of token to be burned
      */
     function burn(address from, uint256 value) public auth whenNotPaused {
-        _burnFrom(from, value);
+        _burn(from, value);
     }
 
     /*
@@ -456,12 +456,7 @@ contract RING is PausableDSAuth, TRC223, ITRC20 {
     }
 
     function destroy(address _from, uint256 _amount) public auth whenNotPaused {
-        // do not require allowance
-
-        _balances[_from] = _balances[_from].sub(_amount);
-        _totalSupply = _totalSupply.sub(_amount);
-        emit Burn(_from, _amount);
-        emit Transfer(_from, 0, _amount);
+        _burn(_from, _amount);
     }
 
 //////////
