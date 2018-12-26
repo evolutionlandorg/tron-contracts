@@ -18,4 +18,5 @@ contract IBancorConverter {
     function getPurchaseReturn(IERC20Token _connectorToken, uint256 _depositAmount) public view returns (uint256);
     function getSaleReturn(IERC20Token _connectorToken, uint256 _sellAmount) public view returns (uint256);
     function getSaleRequire(IERC20Token _connectorToken, uint256 _connectorAmountToExchange, uint _errorSpace) public view returns (uint256);
+    function getFinalAmount(uint256 _amount, uint8 _magnitude) public view returns (uint256);
 }
