@@ -202,7 +202,7 @@ library SafeMath {
 // File: contracts/token/KTON.sol
 
 /// @title TRC223ReceivingContract - Standard contract implementation for compatibility with TRC223 tokens.
-interface TRC223ReceivingContract {
+contract TRC223ReceivingContract {
 
     /// @dev Function that is called when a user or another contract wants to transfer funds.
     /// @param _from Transaction initiator, analogue of msg.sender
@@ -230,11 +230,11 @@ contract TokenController {
     function onApprove(address _owner, address _spender, uint _amount) public returns (bool);
 }
 
-interface ApproveAndCallFallBack {
+contract ApproveAndCallFallBack {
     function receiveApproval(address from, uint256 _amount, address _token, bytes _data) public;
 }
 
-interface TRC223 {
+contract TRC223 {
     function transferAndFallback(address to, uint amount, bytes data) public returns (bool ok);
 
     function transferFromAndFallback(address from, address to, uint256 amount, bytes data) public returns (bool ok);
