@@ -62,7 +62,7 @@ contract ISmartToken {
  * @dev Implementation of the basic standard token.
  * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md
  */
-contract RING is PausableDSAuth, TRC223, ITRC20 {
+contract KTON is PausableDSAuth, TRC223, ITRC20 {
     using SafeMath for uint256;
 
     mapping (address => uint256) private _balances;

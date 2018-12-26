@@ -48,11 +48,8 @@ const app = async () => {
     const ringAuthorityAddress = contracts["RINGAuthority"].hex;
 
     console.log(ringAddress);
-    console.log(bancorNetworkAddress);
-    console.log(settingsRegistryAddress);
+
     console.log(bancorConverterAddress);
-    console.log(bancorFormulaAddress);
-    console.log(trxTokenAddress);
 
     let bancorNetwork = await tronWeb.contract().at(bancorNetworkAddress);
     let bancorConverter = await tronWeb.contract().at(bancorConverterAddress);
@@ -74,7 +71,7 @@ const app = async () => {
 
     console.log(ringAuthorityAddress);
 
-    // let formulaId = await bancorConverter.BANCOR_FORMULA().call();
+    let formulaId = await bancorConverter.BANCOR_FORMULA().call();
     // await settingsRegistry.setAddressProperty(ring_key, ringAddress).send({
     //     feeLimit:1000000000,
     //     callValue: 0,
@@ -82,6 +79,16 @@ const app = async () => {
     // });
 
     // await settingsRegistry.setAddressProperty(kton_key, ktonAddress).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
+
+    console.log(bancorFormulaAddress);
+
+    console.log(await settingsRegistry.addressOf(formulaId).call());
+
+    // await settingsRegistry.setAddressProperty(formulaId, bancorFormulaAddress).send({
     //     feeLimit:1000000000,
     //     callValue: 0,
     //     shouldPollResponse:true
@@ -145,7 +152,7 @@ const app = async () => {
     // await whiteList.addAddress(bancorExchange.address);
     // await bancorConverter.setConversionWhitelist(whiteList.address);
 
-    // await bancorNetwork.registerTrxToken(trxToken.address, true);
+    // // await bancorNetwork.registerTrxToken(trxToken.address, true);
 
     await bancorExchange.setQuickBuyPath([trxTokenAddress, ringAddress, ringAddress]).send({
         feeLimit:1000000000,

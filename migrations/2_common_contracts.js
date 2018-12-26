@@ -1,8 +1,8 @@
-const SettingIds = artifacts.require("SettingIds");
-const SettingsRegistry = artifacts.require("SettingsRegistry");
+// const SettingIds = artifacts.require("SettingIds");
+// const SettingsRegistry = artifacts.require("SettingsRegistry");
 const RING = artifacts.require("RING");
 const KTON = artifacts.require("KTON");
-const RINGAuthority = artifacts.require("RINGAuthority");
+// const RINGAuthority = artifacts.require("RINGAuthority");
 const TakeBack = artifacts.require('TakeBack');
 
 const conf = {
@@ -35,10 +35,10 @@ async function developmentDeploy(deployer, network, accounts) {
     // console.log(settingsRegistry.address);
     // console.log(ringAuthority.address);
 
-    await deployer.deploy(RING);
+    // await deployer.deploy(RING);
     await deployer.deploy(KTON);
 
-    ring = await RING.deployed();
+    // ring = await RING.deployed();
     // kton = await KTON.deployed();
 
     // let ring_settings = await settingIds.CONTRACT_RING_ERC20_TOKEN.call();
@@ -51,7 +51,7 @@ async function developmentDeploy(deployer, network, accounts) {
     
     // await ring.setAuthority(ringAuthority.address);
 
-    await deployer.deploy(TakeBack, ring.address, conf.supervisor_address, conf.networkId);
+    await deployer.deploy(TakeBack, "TL175uyihLqQD656aFx3uhHYe1tyGkmXaW", conf.supervisor_address, conf.networkId);
 
     console.log("=======end to deploy some base contracts===========\n");
     

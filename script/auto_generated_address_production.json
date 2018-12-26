@@ -8,28 +8,28 @@
         "hex": "411cd4edbec62f4bc43ffa3c6a58779242e82282e7"
     },
     "RING": {
-        "base58": "TKpatEfKd6YoZCWTc6cgzx3QLVSw31VnFS",
-        "hex": "416c0fc7d9817a3f0b6681e126e48d05df9567a73e"
+        "base58": "TL175uyihLqQD656aFx3uhHYe1tyGkmXaW",
+        "hex": "416e0d26adf5323f5b82d5714354dc3c6870adee7c"
     },
     "KTON": {
-        "base58": "TQtpCzv7xzj6Psb3PqxUmQSTAaF1uhLAj1",
-        "hex": "41a3b53200ed98429f14fdb7c8a0bdb72400beb58e"
+        "base58": "TW3kTpVtYYQ5Ka1awZvLb9Yy6ZTDEC93dC",
+        "hex": "41dc3e713213d0403f82addbfb66b8574b86851c19"
     },
     "RINGAuthority": {
         "base58": "THRoz4uj1q57SrpACqgyS3mhJwzndnWu6M",
         "hex": "4151d0e5d3b8d1706b4785cd02c3e36f8d9ac32ecf"
     },
     "TakeBack": {
-        "base58": "TJ1vgPrtSWFekZFtYfDQX9YRUhU6jm4Ly4",
-        "hex": "415844a120e5cb3e53dccaa6ee1c01f47d6451850c"
+        "base58": "TN6bV4u8ihdbmuzFXnFeB6kXFpksgGiZgW",
+        "hex": "418507305db28a11038a493821b84117cf9a9f08fe"
     },
     "ContractFeatures": {
         "base58": "TVo5H7j6rEeacgLFcoGBwHSGcMXLpmTgiz",
         "hex": "41d977e8bb03de15ffe33662bb6ed34f6bc929a603"
     },
     "BancorFormula": {
-        "base58": "TPCuio1uuZttxY9kKQPmZbzj9VZFg4cFs7",
-        "hex": "419131089f38bd7f264e43f2382fd386df0ec6b002"
+        "base58": "TG69Vty1A8M6DNHUoD48ewh4GmeLQC8L2P",
+        "hex": "414320be110a7b35b625b4bc4fb3330932df277fae"
     },
     "Whitelist": {
         "base58": "TEJYsE365Jh9Vt4hM1HZEhvTxmHaN5vfNy",
@@ -44,12 +44,12 @@
         "hex": "4159bbedfc43b1680626768d99d36fd680a72fab2b"
     },
     "BancorConverter": {
-        "base58": "TAQejUMfQnuXyFT8QBdEUBgWk5VGYbKcw2",
-        "hex": "4104cfe0e06f2bb4da974ad677c2ff9dec99c66c8f"
+        "base58": "TBsVKMjP9u55TrnGWb7diRNcRBrov4S96H",
+        "hex": "4114db601342034c29b55dae890094a5b9f3458366"
     },
     "BancorExchange": {
-        "base58": "TYYzGAtmw6xKNbM8MVko4ruicHd1Lyd54w",
-        "hex": "41f7b6468d4c5c1d51e62efcccb0ba001413b2b97c"
+        "base58": "TLuWvfRvdauzu4tK6q46JGPLXzQnwiLQgd",
+        "hex": "4177f6aea1ae52179f3390c9650b8829f361708055"
     },
     "GringottsBank": {
         "base58": "TTW2Vpr9TCu6gxGZ1yjwqy7R79hEH8iscC",

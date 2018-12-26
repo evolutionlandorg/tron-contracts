@@ -22,7 +22,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "production")
     {
         deployer.then(async () => {
-            // await developmentDeploy(deployer, network, accounts);
+            await developmentDeploy(deployer, network, accounts);
         });
     }
 };
@@ -33,7 +33,7 @@ async function developmentDeploy(deployer, network, accounts) {
 
     ////////////    Bancor Contracts   /////////// 
     // await deployer.deploy(ContractFeatures);
-    // await deployer.deploy(BancorFormula);
+    await deployer.deploy(BancorFormula);
     // await deployer.deploy(WhiteList);
     // await deployer.deploy(TrxToken);
     // await deployer.deploy(BancorNetwork, settingsRegistry.address);
@@ -45,7 +45,7 @@ async function developmentDeploy(deployer, network, accounts) {
     // let contractFeaturesId = await bancorNetwork.CONTRACT_FEATURES.call();
     // await settingsRegistry.setAddressProperty(contractFeaturesId, ContractFeatures.address);
 
-    await deployer.deploy(BancorConverter, "416c0fc7d9817a3f0b6681e126e48d05df9567a73e", "411cd4edbec62f4bc43ffa3c6a58779242e82282e7", 0, "41cd5ac730df2305dbcc65a74290ed9492a862b3fa", conf.weight10Percent);
+    await deployer.deploy(BancorConverter, "416e0d26adf5323f5b82d5714354dc3c6870adee7c", "411cd4edbec62f4bc43ffa3c6a58779242e82282e7", 0, "41cd5ac730df2305dbcc65a74290ed9492a862b3fa", conf.weight10Percent);
     await deployer.deploy(BancorExchange, bancorNetworkAddress, BancorConverter.address, "411cd4edbec62f4bc43ffa3c6a58779242e82282e7");
 
     // let bancorExchange = await BancorExchange.deployed();
