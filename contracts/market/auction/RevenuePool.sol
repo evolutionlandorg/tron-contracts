@@ -2,7 +2,7 @@ pragma solidity ^0.4.0;
 
 import "../../common/interfaces/ISettingsRegistry.sol";
 import "../../common/interfaces/ERC223ReceivingContract.sol";
-import "../../common/interfaces/ERC223.sol";
+import "../../common/interfaces/TRC223.sol";
 import "../../common/interfaces/IUserPoints.sol";
 import "../../common/DSAuth.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
@@ -56,10 +56,10 @@ contract RevenuePool is DSAuth, ERC223ReceivingContract, AuctionSettingIds {
 
             require(pointsRewardPool != 0x0 && contributionIncentivePool != 0x0 && dividendsPool != 0x0 && devPool != 0x0);
 
-            require(ERC223(_tokenAddress).transfer(pointsRewardPool, balance / 10, "0x0"));
-            require(ERC223(_tokenAddress).transfer(contributionIncentivePool, balance * 3 / 10, "0x0"));
-            require(ERC223(_tokenAddress).transfer(dividendsPool, balance * 3 / 10, "0x0"));
-            require(ERC223(_tokenAddress).transfer(devPool, balance * 3 / 10, "0x0"));
+            require(TRC223(_tokenAddress).transferAndFallback(pointsRewardPool, balance / 10, "0x0"));
+            require(TRC223(_tokenAddress).transferAndFallback(contributionIncentivePool, balance * 3 / 10, "0x0"));
+            require(TRC223(_tokenAddress).transferAndFallback(dividendsPool, balance * 3 / 10, "0x0"));
+            require(TRC223(_tokenAddress).transferAndFallback(devPool, balance * 3 / 10, "0x0"));
         }
 
     }

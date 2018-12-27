@@ -1,16 +1,16 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.23;
 
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "../ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "@evolutionland/common/contracts/interfaces/ISettingsRegistry.sol";
-import "@evolutionland/common/contracts/interfaces/IObjectOwnership.sol";
-import "@evolutionland/common/contracts/interfaces/ITokenUse.sol";
-import "@evolutionland/common/contracts/interfaces/IMinerObject.sol";
-import "@evolutionland/common/contracts/interfaces/IActivityObject.sol";
-import "@evolutionland/common/contracts/interfaces/IActivity.sol";
-import "@evolutionland/common/contracts/PausableDSAuth.sol";
-import "@evolutionland/common/contracts/interfaces/ERC223.sol";
-import "openzeppelin-solidity/contracts/introspection/SupportsInterfaceWithLookup.sol";
+import "../common/interfaces/ISettingsRegistry.sol";
+import "../common/interfaces/IObjectOwnership.sol";
+import "../common/interfaces/ITokenUse.sol";
+import "../common/interfaces/IMinerObject.sol";
+import "../common/interfaces/IActivityObject.sol";
+import "../common/interfaces/IActivity.sol";
+import "../common/PausableDSAuth.sol";
+import "../common/interfaces/TRC223.sol";
+import "../ERC721/SupportsInterfaceWithLookup.sol";
 import "./ApostleSettingIds.sol";
 import "./interfaces/IGeneScience.sol";
 import "./interfaces/IHabergPotionShop.sol";
@@ -413,7 +413,7 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
         if (msg.sender == registry.addressOf(CONTRACT_RING_ERC20_TOKEN)) {
             require(_value >= autoBirthFee, 'not enough to breed.');
-            ERC223(msg.sender).transfer(registry.addressOf(CONTRACT_REVENUE_POOL), _value, toBytes(_from));
+            TRC223(msg.sender).transferAndFallback(registry.addressOf(CONTRACT_REVENUE_POOL), _value, toBytes(_from));
 
             assembly {
                 let ptr := mload(0x40)

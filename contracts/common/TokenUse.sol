@@ -3,7 +3,7 @@ pragma solidity ^0.4.23;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../ERC721/ERC721.sol";
-import "./interfaces/ERC223.sol";
+import "./interfaces/TRC223.sol";
 import "./interfaces/ITokenUse.sol";
 import "./interfaces/IActivity.sol";
 import "./interfaces/ISettingsRegistry.sol";
@@ -151,7 +151,7 @@ contract TokenUse is DSAuth, ITokenUse, SettingIds {
         ERC20(ring).transferFrom(
             msg.sender, tokenId2UseOffer[_tokenId].owner, expense.sub(cut));
 
-        ERC223(ring).transferFrom(
+        TRC223(ring).transferFromAndFallback(
             msg.sender, registry.addressOf(CONTRACT_REVENUE_POOL), cut, toBytes(msg.sender));
 
         _takeTokenUseOffer(_tokenId, msg.sender);
@@ -195,7 +195,7 @@ contract TokenUse is DSAuth, ITokenUse, SettingIds {
 
             ERC20(ring).transfer(tokenId2UseOffer[tokenId].owner, expense.sub(cut));
 
-            ERC223(ring).transfer(
+            TRC223(ring).transferAndFallback(
                 registry.addressOf(CONTRACT_REVENUE_POOL), cut, toBytes(_from));
 
             _takeTokenUseOffer(tokenId, _from);

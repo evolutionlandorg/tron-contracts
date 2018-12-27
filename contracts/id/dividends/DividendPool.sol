@@ -3,7 +3,7 @@ pragma solidity ^0.4.23;
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../common/interfaces/ERC223.sol";
+import "../../common/interfaces/TRC223.sol";
 import "../../common/interfaces/IBurnableERC20.sol";
 import "../../common/interfaces/ISettingsRegistry.sol";
 import "../../common/DSAuth.sol";
@@ -54,7 +54,7 @@ contract DividendPool is DSAuth, IDSettingIds {
 
             uint256 frozenBalance = frozenKton.mul(balance).div(ktonSupply);
 
-            ERC223(ring).transfer(frozenDividend, frozenBalance, "0x0");
+            TRC223(ring).transferAndFallback(frozenDividend, frozenBalance, "0x0");
 
             emit TransferredFrozenDividend(frozenDividend, balance);
 

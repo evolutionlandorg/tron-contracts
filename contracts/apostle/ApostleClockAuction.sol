@@ -4,7 +4,7 @@ import "../ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../common/interfaces/ISettingsRegistry.sol";
-import "../common/interfaces/ERC223.sol";
+import "../common/interfaces/TRC223.sol";
 import "../common/PausableDSAuth.sol";
 import "./ApostleSettingIds.sol";
 import "./interfaces/IApostleBase.sol";
@@ -244,14 +244,14 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         uint256 ownerCutAmount = computeCut(_priceInToken, _auctionCut);
 
         // transfer to the seller
-        ERC223(_auction.token).transfer(_auction.seller, (_priceInToken - ownerCutAmount), toBytes(_buyer));
+        TRC223(_auction.token).transferAndFallback(_auction.seller, (_priceInToken - ownerCutAmount), toBytes(_buyer));
 
         if (_referer != 0x0) {
             uint refererBounty = computeCut(ownerCutAmount, _refererCut);
             ERC20(_auction.token).transfer(_referer, refererBounty);
-            ERC223(_auction.token).transfer(_pool, (ownerCutAmount - refererBounty), toBytes(_buyer));
+            TRC223(_auction.token).transferAndFallback(_pool, (ownerCutAmount - refererBounty), toBytes(_buyer));
         } else {
-            ERC223(_auction.token).transfer(_pool, ownerCutAmount, toBytes(_buyer));
+            TRC223(_auction.token).transferAndFallback(_pool, ownerCutAmount, toBytes(_buyer));
         }
 
         // modify bid-related member variables
@@ -279,15 +279,15 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         uint realReturnForEach = extractFromGap / 2;
 
         // here use transfer(address,uint256) for safety
-        ERC223(_auction.token).transfer(_auction.seller, realReturnForEach, toBytes(_buyer));
+        TRC223(_auction.token).transferAndFallback(_auction.seller, realReturnForEach, toBytes(_buyer));
         ERC20(_auction.token).transfer(_auction.lastBidder, (realReturnForEach + uint256(_auction.lastRecord)));
 
         if (_referer != 0x0) {
             uint refererBounty = computeCut(poolCutAmount, _refererCut);
             ERC20(_auction.token).transfer(_referer, refererBounty);
-            ERC223(_auction.token).transfer(_pool, (poolCutAmount - refererBounty), toBytes(_buyer));
+            TRC223(_auction.token).transferAndFallback(_pool, (poolCutAmount - refererBounty), toBytes(_buyer));
         } else {
-            ERC223(_auction.token).transfer(_pool, poolCutAmount, toBytes(_buyer));
+            TRC223(_auction.token).transferAndFallback(_pool, poolCutAmount, toBytes(_buyer));
         }
 
         // modify bid-related member variables
