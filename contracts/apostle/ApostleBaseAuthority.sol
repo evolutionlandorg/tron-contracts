@@ -16,6 +16,8 @@ contract ApostleBaseAuthority {
                ( whiteList[_src] && _sig == bytes4(keccak256("breedWithInAuction(uint256,uint256)")) ) ||
                ( whiteList[_src] && _sig == bytes4(keccak256("activityAdded(uint256,address,address)"))) ||
                 ( whiteList[_src] && _sig == bytes4(keccak256("activityRemoved(uint256,address,address)"))) ||
+                ( whiteList[_src] && _sig == bytes4(keccak256("updateGenesAndTalents(uint256,uint256,uint256)"))) ||
+                ( whiteList[_src] && _sig == bytes4(keccak256("batchUpdate(uint256[],uint256[],uint256[])"))) ||
                 ( whiteList[_src] && _sig == bytes4(keccak256("activityStopped(uint256)")));
     }
 }
