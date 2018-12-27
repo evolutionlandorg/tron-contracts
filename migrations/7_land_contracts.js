@@ -12,7 +12,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "development")
     {
         deployer.then(async () => {
-            await developmentDeploy(deployer, network, accounts);
+            // await developmentDeploy(deployer, network, accounts);
         });
     }
 };
@@ -20,8 +20,14 @@ module.exports = function(deployer, network, accounts) {
 async function developmentDeploy(deployer, network, accounts) {
     console.log("=======start to deploy land contracts===========\n");
 
+    await deployer.deploy(InterstellarEncoder);
     let settingsRegistry = await SettingsRegistry.deployed();
+
+    let settingIds = await SettingIds.deployed();
+
     let interstellarEncoder = await InterstellarEncoder.deployed();
+    interstellarEncoderId = await settingIds.CONTRACT_INTERSTELLAR_ENCODER.call();
+    await settingsRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoder.address);
 
     let setRegistryAddress = settingsRegistry.address;
     await deployer.deploy(LandBase, setRegistryAddress);
@@ -36,7 +42,6 @@ async function developmentDeploy(deployer, network, accounts) {
 
     //
     // // register in registry and initialization
-    let settingIds = await SettingIds.deployed();
     let objectOwnershipId = await settingIds.CONTRACT_OBJECT_OWNERSHIP.call();
     let landBaseId = await settingIds.CONTRACT_LAND_BASE.call();
     let tokenLocationId = await settingIds.CONTRACT_TOKEN_LOCATION.call();

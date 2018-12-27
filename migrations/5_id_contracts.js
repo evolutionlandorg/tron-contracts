@@ -5,14 +5,12 @@ const FrozenDividend = artifacts.require('FrozenDividend');
 const RolesUpdater = artifacts.require("RolesUpdater");
 const UserRoles = artifacts.require("UserRoles");
 const TakeBack = artifacts.require('TakeBack');
-const RING = artifacts.require("RING");
 
 
 const conf = {
     from: "TV9X71qbEFBAUSKrdq3tetKz2hwHnoDvVe",
     bank_unit_interest: 1000,
     bank_penalty_multiplier: 3,
-    networkId: 200001,  // TRON shasta
     ringAmountLimit: 500000 * 10**18,
     bagCountLimit: 50,
     perMinAmount: 20 ** 10**18,
@@ -28,7 +26,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "development")
     {
         deployer.then(async () => {
-            await developmentDeploy(deployer, network, accounts);
+            // await developmentDeploy(deployer, network, accounts);
         });
     }
 };
@@ -51,10 +49,8 @@ async function developmentDeploy(deployer, network, accounts) {
 
     await deployer.deploy(RolesUpdater, userRoles.address, conf.networkId, conf.supervisor_address);
     // await deployer.deploy(UserRolesAuthority, [RolesUpdater.address]);
-    let ring = await RING.deployed();
-    await deployer.deploy(TakeBack, ring.address, conf.supervisor_address, conf.networkId);
+    
     // deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
-
 
     let idSettingIds = await IDSettingIds.deployed();
 

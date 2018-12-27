@@ -1,7 +1,7 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
 var key = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
-var contracts = JSON.parse(fs.readFileSync('./script/myContractAddrs.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
 
 console.log(key);
 
@@ -64,14 +64,14 @@ const app = async () => {
         ringAddress,
         'transfer(address,uint256,bytes)',
         1000000000, // options.feeLimit,
-        0,          // options.callValue,
+        1111,          // options.callValue,
         parameters,
         myAddressHex
     );
 
-    // if (!transaction.result || !transaction.result.result) {
-    //     console.log(JSON.stringify(transaction, null, 4));
-    // }
+    if (!transaction.result || !transaction.result.result) {
+        console.log(JSON.stringify(transaction, null, 4));
+    }
 
     // If privateKey is false, this won't be signed here. We assume sign functionality will be replaced.
     const signedTransaction = await tronWeb.trx.sign(transaction.transaction, privateKey);
@@ -87,8 +87,8 @@ const app = async () => {
 
     console.log(JSON.stringify(broadcast, null, 2));
 
-    if (!broadcast.result)
-        console.log('Unknown error: ' + JSON.stringify(broadcast, null, 2));
+    // if (!broadcast.result)
+    //     console.log('Unknown error: ' + JSON.stringify(broadcast, null, 2));
 
     // console.log(transaction.transaction.raw_data.contract);
     // console.log(transaction.transaction.raw_data.contract[0].parameter.value);

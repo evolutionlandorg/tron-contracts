@@ -1,314 +1,12 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
-contract DSAuthority {
-    function canCall(
-        address src, address dst, bytes4 sig
-    ) public view returns (bool);
-}
-
-contract DSAuthEvents {
-    event LogSetAuthority (address indexed authority);
-    event LogSetOwner     (address indexed owner);
-}
-
-contract DSAuth is DSAuthEvents {
-    DSAuthority  public  authority;
-    address      public  owner;
-
-    constructor() public {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
-    }
-
-    function setOwner(address owner_)
-        public
-        auth
-    {
-        owner = owner_;
-        emit LogSetOwner(owner);
-    }
-
-    function setAuthority(DSAuthority authority_)
-        public
-        auth
-    {
-        authority = authority_;
-        emit LogSetAuthority(authority);
-    }
-
-    modifier auth {
-        require(isAuthorized(msg.sender, msg.sig));
-        _;
-    }
-
-    function isAuthorized(address src, bytes4 sig) internal view returns (bool) {
-        if (src == address(this)) {
-            return true;
-        } else if (src == owner) {
-            return true;
-        } else if (authority == DSAuthority(0)) {
-            return false;
-        } else {
-            return authority.canCall(src, this, sig);
-        }
-    }
-}
-
-contract DSNote {
-    event LogNote(
-        bytes4   indexed  sig,
-        address  indexed  guy,
-        bytes32  indexed  foo,
-        bytes32  indexed  bar,
-        uint              wad,
-        bytes             fax
-    ) anonymous;
-
-    modifier note {
-        bytes32 foo;
-        bytes32 bar;
-
-        assembly {
-            foo := calldataload(4)
-            bar := calldataload(36)
-        }
-
-        emit LogNote(msg.sig, msg.sender, foo, bar, msg.value, msg.data);
-
-        _;
-    }
-}
-
-contract DSStop is DSNote, DSAuth {
-
-    bool public stopped;
-
-    modifier stoppable {
-        require(!stopped);
-        _;
-    }
-    function stop() public auth note {
-        stopped = true;
-    }
-    function start() public auth note {
-        stopped = false;
-    }
-
-}
-
-contract ERC20Events {
-    event Approval(address indexed src, address indexed guy, uint wad);
-    event Transfer(address indexed src, address indexed dst, uint wad);
-}
-
-contract ERC20 is ERC20Events {
-    function totalSupply() public view returns (uint);
-    function balanceOf(address guy) public view returns (uint);
-    function allowance(address src, address guy) public view returns (uint);
-
-    function approve(address guy, uint wad) public returns (bool);
-    function transfer(address dst, uint wad) public returns (bool);
-    function transferFrom(
-        address src, address dst, uint wad
-    ) public returns (bool);
-}
-
-contract DSMath {
-    function add(uint x, uint y) internal pure returns (uint z) {
-        require((z = x + y) >= x);
-    }
-    function sub(uint x, uint y) internal pure returns (uint z) {
-        require((z = x - y) <= x);
-    }
-    function mul(uint x, uint y) internal pure returns (uint z) {
-        require(y == 0 || (z = x * y) / y == x);
-    }
-
-    function min(uint x, uint y) internal pure returns (uint z) {
-        return x <= y ? x : y;
-    }
-    function max(uint x, uint y) internal pure returns (uint z) {
-        return x >= y ? x : y;
-    }
-    function imin(int x, int y) internal pure returns (int z) {
-        return x <= y ? x : y;
-    }
-    function imax(int x, int y) internal pure returns (int z) {
-        return x >= y ? x : y;
-    }
-
-    uint constant WAD = 10 ** 18;
-    uint constant RAY = 10 ** 27;
-
-    function wmul(uint x, uint y) internal pure returns (uint z) {
-        z = add(mul(x, y), WAD / 2) / WAD;
-    }
-    function rmul(uint x, uint y) internal pure returns (uint z) {
-        z = add(mul(x, y), RAY / 2) / RAY;
-    }
-    function wdiv(uint x, uint y) internal pure returns (uint z) {
-        z = add(mul(x, WAD), y / 2) / y;
-    }
-    function rdiv(uint x, uint y) internal pure returns (uint z) {
-        z = add(mul(x, RAY), y / 2) / y;
-    }
-
-    // This famous algorithm is called "exponentiation by squaring"
-    // and calculates x^n with x as fixed-point and n as regular unsigned.
-    //
-    // It's O(log n), instead of O(n) for naive repeated multiplication.
-    //
-    // These facts are why it works:
-    //
-    //  If n is even, then x^n = (x^2)^(n/2).
-    //  If n is odd,  then x^n = x * x^(n-1),
-    //   and applying the equation for even x gives
-    //    x^n = x * (x^2)^((n-1) / 2).
-    //
-    //  Also, EVM division is flooring and
-    //    floor[(n-1) / 2] = floor[n / 2].
-    //
-    function rpow(uint x, uint n) internal pure returns (uint z) {
-        z = n % 2 != 0 ? x : RAY;
-
-        for (n /= 2; n != 0; n /= 2) {
-            x = rmul(x, x);
-
-            if (n % 2 != 0) {
-                z = rmul(z, x);
-            }
-        }
-    }
-}
+import "./interface/ITRC20.sol";
+import "../common/PausableDSAuth.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
-contract DSTokenBase is ERC20, DSMath {
-    uint256                                            _supply;
-    mapping (address => uint256)                       _balances;
-    mapping (address => mapping (address => uint256))  _approvals;
-
-    constructor(uint supply) public {
-        _balances[msg.sender] = supply;
-        _supply = supply;
-    }
-
-    function totalSupply() public view returns (uint) {
-        return _supply;
-    }
-    function balanceOf(address src) public view returns (uint) {
-        return _balances[src];
-    }
-    function allowance(address src, address guy) public view returns (uint) {
-        return _approvals[src][guy];
-    }
-
-    function transfer(address dst, uint wad) public returns (bool) {
-        return transferFrom(msg.sender, dst, wad);
-    }
-
-    function transferFrom(address src, address dst, uint wad)
-        public
-        returns (bool)
-    {
-        if (src != msg.sender) {
-            _approvals[src][msg.sender] = sub(_approvals[src][msg.sender], wad);
-        }
-
-        _balances[src] = sub(_balances[src], wad);
-        _balances[dst] = add(_balances[dst], wad);
-
-        emit Transfer(src, dst, wad);
-
-        return true;
-    }
-
-    function approve(address guy, uint wad) public returns (bool) {
-        _approvals[msg.sender][guy] = wad;
-
-        emit Approval(msg.sender, guy, wad);
-
-        return true;
-    }
-}
-
-contract DSToken is DSTokenBase(0), DSStop {
-
-    string  public  symbol;
-    uint256  public  decimals = 18; // standard token precision. override to customize
-
-    constructor(string symbol_) public {
-        symbol = symbol_;
-    }
-
-    event Mint(address indexed guy, uint wad);
-    event Burn(address indexed guy, uint wad);
-
-    function approve(address guy) public stoppable returns (bool) {
-        return super.approve(guy, uint(-1));
-    }
-
-    function approve(address guy, uint wad) public stoppable returns (bool) {
-        return super.approve(guy, wad);
-    }
-
-    function transferFrom(address src, address dst, uint wad)
-        public
-        stoppable
-        returns (bool)
-    {
-        if (src != msg.sender && _approvals[src][msg.sender] != uint(-1)) {
-            _approvals[src][msg.sender] = sub(_approvals[src][msg.sender], wad);
-        }
-
-        _balances[src] = sub(_balances[src], wad);
-        _balances[dst] = add(_balances[dst], wad);
-
-        emit Transfer(src, dst, wad);
-
-        return true;
-    }
-
-    function push(address dst, uint wad) public {
-        transferFrom(msg.sender, dst, wad);
-    }
-    function pull(address src, uint wad) public {
-        transferFrom(src, msg.sender, wad);
-    }
-    function move(address src, address dst, uint wad) public {
-        transferFrom(src, dst, wad);
-    }
-
-    function mint(uint wad) public {
-        mint(msg.sender, wad);
-    }
-    function burn(uint wad) public {
-        burn(msg.sender, wad);
-    }
-    function mint(address guy, uint wad) public auth stoppable {
-        _balances[guy] = add(_balances[guy], wad);
-        _supply = add(_supply, wad);
-        emit Mint(guy, wad);
-    }
-    function burn(address guy, uint wad) public auth stoppable {
-        if (guy != msg.sender && _approvals[guy][msg.sender] != uint(-1)) {
-            _approvals[guy][msg.sender] = sub(_approvals[guy][msg.sender], wad);
-        }
-
-        _balances[guy] = sub(_balances[guy], wad);
-        _supply = sub(_supply, wad);
-        emit Burn(guy, wad);
-    }
-
-    // Optional token name
-    string   public  name = "";
-
-    function setName(string name_) public auth {
-        name = name_;
-    }
-}
-
-/// @title ERC223ReceivingContract - Standard contract implementation for compatibility with ERC223 tokens.
-interface ERC223ReceivingContract {
+/// @title TRC223ReceivingContract - Standard contract implementation for compatibility with TRC223 tokens.
+contract TRC223ReceivingContract {
 
     /// @dev Function that is called when a user or another contract wants to transfer funds.
     /// @param _from Transaction initiator, analogue of msg.sender
@@ -319,11 +17,6 @@ interface ERC223ReceivingContract {
 
 /// @dev The token controller contract must implement these functions
 contract TokenController {
-    /// @notice Called when `_owner` sends ether to the MiniMe Token contract
-    /// @param _owner The address that sent the ether to create tokens
-    /// @return True if the ether is accepted, false if it throws
-    function proxyPayment(address _owner, bytes4 sig, bytes data) payable public returns (bool);
-
     /// @notice Notifies the controller about a token transfer allowing the
     ///  controller to react if desired
     /// @param _from The origin of the transfer
@@ -341,16 +34,16 @@ contract TokenController {
     function onApprove(address _owner, address _spender, uint _amount) public returns (bool);
 }
 
-interface ApproveAndCallFallBack {
+contract ApproveAndCallFallBack {
     function receiveApproval(address from, uint256 _amount, address _token, bytes _data) public;
 }
 
-interface ERC223 {
-    function transfer(address to, uint amount, bytes data) public returns (bool ok);
+contract TRC223 {
+    function transferAndFallback(address to, uint amount, bytes data) public returns (bool ok);
 
-    function transferFrom(address from, address to, uint256 amount, bytes data) public returns (bool ok);
+    function transferFromAndFallback(address from, address to, uint256 amount, bytes data) public returns (bool ok);
 
-    event ERC223Transfer(address indexed from, address indexed to, uint amount, bytes data);
+    event TRC223Transfer(address indexed from, address indexed to, uint amount, bytes data);
 }
 
 contract ISmartToken {
@@ -362,7 +55,26 @@ contract ISmartToken {
     function destroy(address _from, uint256 _amount) public;
 }
 
-contract RING is DSToken("RING"), ERC223, ISmartToken {
+
+/**
+ * @title Standard TRC20 token (compatible with ITRC20 token)
+ *
+ * @dev Implementation of the basic standard token.
+ * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md
+ */
+contract RING is PausableDSAuth, TRC223, ITRC20 {
+    using SafeMath for uint256;
+
+    mapping (address => uint256) private _balances;
+
+    mapping (address => mapping (address => uint256)) private _allowed;
+
+    uint256 private _totalSupply;
+
+    string private _name;
+    string private _symbol;
+    uint8 private _decimals;
+    
     address public newOwner;
     bool public transfersEnabled = true;    // true if transfer/transferFrom are enabled, false if not
 
@@ -376,9 +88,331 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
         _;
     }
 
-    constructor() public {
-        setName("Evolution Land Global Token");
+    constructor () public {
+        _symbol = "RING";
+        _decimals = 18;
+
+        _name = "Evolution Land Global Token";
+
         controller = msg.sender;
+    }
+
+    /**
+     * @return the name of the token.
+     */
+    function name() public view returns (string) {
+        return _name;
+    }
+
+    /**
+     * @return the symbol of the token.
+     */
+    function symbol() public view returns (string) {
+        return _symbol;
+    }
+
+    /**
+     * @return the number of decimals of the token.
+     */
+    function decimals() public view returns (uint8) {
+        return _decimals;
+    }
+
+    /**
+     * @dev Total number of tokens in existence
+     */
+    function totalSupply() public view returns (uint256) {
+        return _totalSupply;
+    }
+
+    /**
+     * @dev Gets the balance of the specified address.
+     * @param owner The address to query the balance of.
+     * @return An uint256 representing the amount owned by the passed address.
+     */
+    function balanceOf(address owner) public view returns (uint256) {
+        return _balances[owner];
+    }
+
+    /**
+     * @dev Function to check the amount of tokens that an owner allowed to a spender.
+     * @param owner address The address which owns the funds.
+     * @param spender address The address which will spend the funds.
+     * @return A uint256 specifying the amount of tokens still available for the spender.
+     */
+    function allowance(
+        address owner,
+        address spender
+    )
+    public
+    view
+    returns (uint256)
+    {
+        return _allowed[owner][spender];
+    }
+
+    function setName(string name_) public auth {
+        _name = name_;
+    }
+
+    /**
+     * @dev Transfer token for a specified address
+     * @param to The address to transfer to.
+     * @param value The amount to be transferred.
+     */
+    function transfer(address to, uint256 value) public transfersAllowed whenNotPaused returns (bool) {
+        // Alerts the token controller of the transfer
+        if (isContract(controller)) {
+            if (!TokenController(controller).onTransfer(msg.sender, to, value))
+                revert();
+        }
+
+        _transfer(msg.sender, to, value);
+        return true;
+    }
+
+    /**
+     * @dev Approve the passed address to spend the specified amount of tokens on behalf of msg.sender.
+     * Beware that changing an allowance with this method brings the risk that someone may use both the old
+     * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this
+     * race condition is to first reduce the spender's allowance to 0 and set the desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     * @param spender The address which will spend the funds.
+     * @param value The amount of tokens to be spent.
+     */
+    function approve(address spender, uint256 value) public whenNotPaused returns (bool) {
+        require(spender != address(0));
+
+        // Alerts the token controller of the approve function call
+        if (isContract(controller)) {
+            if (!TokenController(controller).onApprove(msg.sender, spender, value))
+                revert();
+        }
+
+        _allowed[msg.sender][spender] = value;
+        emit Approval(msg.sender, spender, value);
+        return true;
+    }
+
+    /**
+     * @dev Transfer tokens from one address to another
+     * @param from address The address which you want to send tokens from
+     * @param to address The address which you want to transfer to
+     * @param value uint256 the amount of tokens to be transferred
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    )
+    public transfersAllowed whenNotPaused
+    returns (bool)
+    {
+        // Alerts the token controller of the transfer
+        if (isContract(controller)) {
+            if (!TokenController(controller).onTransfer(from, to, value))
+                revert();
+        }
+
+        _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(value);
+        _transfer(from, to, value);
+        return true;
+    }
+
+    /**
+     * @dev Increase the amount of tokens that an owner allowed to a spender.
+     * approve should be called when allowed_[_spender] == 0. To increment
+     * allowed value is better to use this function to avoid 2 calls (and wait until
+     * the first transaction is mined)
+     * From MonolithDAO Token.sol
+     * @param spender The address which will spend the funds.
+     * @param addedValue The amount of tokens to increase the allowance by.
+     */
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    )
+    public whenNotPaused
+    returns (bool)
+    {
+        require(spender != address(0));
+
+        uint256 newValue = _allowed[msg.sender][spender].add(addedValue);
+
+        // Alerts the token controller of the approve function call
+        if (isContract(controller)) {
+            if (!TokenController(controller).onApprove(msg.sender, spender, newValue))
+                revert();
+        }
+
+        _allowed[msg.sender][spender] = newValue;
+        emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
+        return true;
+    }
+
+    /**
+     * @dev Decrease the amount of tokens that an owner allowed to a spender.
+     * approve should be called when allowed_[_spender] == 0. To decrement
+     * allowed value is better to use this function to avoid 2 calls (and wait until
+     * the first transaction is mined)
+     * From MonolithDAO Token.sol
+     * @param spender The address which will spend the funds.
+     * @param subtractedValue The amount of tokens to decrease the allowance by.
+     */
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    )
+    public whenNotPaused
+    returns (bool)
+    {
+        require(spender != address(0));
+
+        uint256 newValue = _allowed[msg.sender][spender].sub(subtractedValue);
+
+        // Alerts the token controller of the approve function call
+        if (isContract(controller)) {
+            if (!TokenController(controller).onApprove(msg.sender, spender, newValue))
+                revert();
+        }
+
+        _allowed[msg.sender][spender] = newValue;
+        emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
+        return true;
+    }
+
+    /**
+     * @dev Transfer token for a specified addresses
+     * @param from The address to transfer from.
+     * @param to The address to transfer to.
+     * @param value The amount to be transferred.
+     */
+    function _transfer(address from, address to, uint256 value) internal {
+        require(to != address(0));
+
+        _balances[from] = _balances[from].sub(value);
+        _balances[to] = _balances[to].add(value);
+        emit Transfer(from, to, value);
+    }
+
+    /**
+     * @dev Internal function that mints an amount of the token and assigns it to
+     * an account. This encapsulates the modification of balances such that the
+     * proper events are emitted.
+     * @param account The account that will receive the created tokens.
+     * @param value The amount that will be created.
+     */
+    function _mint(address account, uint256 value) internal {
+        require(_totalSupply.add(value) <= cap);
+
+        require(account != address(0));
+
+        _totalSupply = _totalSupply.add(value);
+        _balances[account] = _balances[account].add(value);
+        emit Transfer(address(0), account, value);
+        emit Mint(account, value);
+    }
+
+    /**
+     * @dev Internal function that burns an amount of the token of a given
+     * account.
+     * @param account The account whose tokens will be burnt.
+     * @param value The amount that will be burnt.
+     */
+    function _burn(address account, uint256 value) internal {
+        require(account != address(0));
+
+        _totalSupply = _totalSupply.sub(value);
+        _balances[account] = _balances[account].sub(value);
+        emit Transfer(account, address(0), value);
+        emit Burn(account, value);
+    }
+
+    /**
+     * @dev Internal function that burns an amount of the token of a given
+     * account, deducting from the sender's allowance for said account. Uses the
+     * internal burn function.
+     * @param account The account whose tokens will be burnt.
+     * @param value The amount that will be burnt.
+     */
+    function _burnFrom(address account, uint256 value) internal {
+        // Should https://github.com/OpenZeppelin/zeppelin-solidity/issues/707 be accepted,
+        // this function needs to emit an event with the updated approval.
+        _allowed[account][msg.sender] = _allowed[account][msg.sender].sub(
+            value);
+        _burn(account, value);
+    }
+
+    /**
+     * @dev Function to mint tokens
+     * @param to The address that will receive the minted tokens.
+     * @param value The amount of tokens to mint.
+     * @return A boolean that indicates if the operation was successful.
+     */
+    function mint(address to, uint256 value) public auth whenNotPaused returns (bool) {
+        _mint(to, value);
+        return true;
+    }
+
+    /**
+     * @dev Burns a specific amount of tokens from the target address and decrements allowance
+     * @param from address The address which you want to send tokens from
+     * @param value uint256 The amount of token to be burned
+     */
+    function burn(address from, uint256 value) public auth whenNotPaused {
+        _burn(from, value);
+    }
+
+    /*
+     * TRC 223
+     * Added support for the ERC 223 "tokenFallback" method in a "transfer" function with a payload.
+     */
+    function transferFromAndFallback(address _from, address _to, uint256 _amount, bytes _data)
+        public transfersAllowed
+        returns (bool success)
+    {
+        require(transferFrom(_from, _to, _amount));
+
+        if (isContract(_to)) {
+            TRC223ReceivingContract receiver = TRC223ReceivingContract(_to);
+            receiver.tokenFallback(_from, _amount, _data);
+        }
+
+        emit TRC223Transfer(_from, _to, _amount, _data);
+
+        return true;
+    }
+
+    /*
+     * TRC 223
+     * Added support for the ERC 223 "tokenFallback" method in a "transfer" function with a payload.
+     * https://github.com/ethereum/EIPs/issues/223
+     * function transfer(address _to, uint256 _value, bytes _data) public returns (bool success);
+     */
+    /// @notice Send `_value` tokens to `_to` from `msg.sender` and trigger
+    /// tokenFallback if sender is a contract.
+    /// @dev Function that is called when a user or another contract wants to transfer funds.
+    /// @param _to Address of token receiver.
+    /// @param _amount Number of tokens to transfer.
+    /// @param _data Data to be sent to tokenFallback
+    /// @return Returns success of function call.
+    function transferAndFallback(
+        address _to,
+        uint256 _amount,
+        bytes _data)
+        public transfersAllowed
+        returns (bool success)
+    {
+        require(transfer(_to, _amount));
+
+        if (isContract(_to)) {
+            TRC223ReceivingContract receiver = TRC223ReceivingContract(_to);
+            receiver.tokenFallback(msg.sender, _amount, _data);
+        }
+
+        emit TRC223Transfer(msg.sender, _to, _amount, _data);
+
+        return true;
     }
 
 //////////
@@ -417,24 +451,19 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
         transfersEnabled = !_disable;
     }
 
-    function issue(address _to, uint256 _amount) public auth stoppable {
+    function issue(address _to, uint256 _amount) public auth whenNotPaused {
         mint(_to, _amount);
     }
 
-    function destroy(address _from, uint256 _amount) public auth stoppable {
-        // do not require allowance
-
-        _balances[_from] = sub(_balances[_from], _amount);
-        _supply = sub(_supply, _amount);
-        emit Burn(_from, _amount);
-        emit Transfer(_from, 0, _amount);
+    function destroy(address _from, uint256 _amount) public auth whenNotPaused {
+        _burn(_from, _amount);
     }
 
 //////////
 // Cap Methods
 //////////
     function changeCap(uint256 _newCap) public auth {
-        require(_newCap >= _supply);
+        require(_newCap >= _totalSupply);
 
         cap = _newCap;
     }
@@ -444,103 +473,8 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
 //////////
     /// @notice Changes the controller of the contract
     /// @param _newController The new controller of the contract
-    function changeController(address _newController) auth {
+    function changeController(address _newController) public auth {
         controller = _newController;
-    }
-
-    /// @notice Send `_amount` tokens to `_to` from `_from` on the condition it
-    ///  is approved by `_from`
-    /// @param _from The address holding the tokens being transferred
-    /// @param _to The address of the recipient
-    /// @param _amount The amount of tokens to be transferred
-    /// @return True if the transfer was successful
-    function transferFrom(address _from, address _to, uint256 _amount
-    ) public transfersAllowed returns (bool success) {
-        // Alerts the token controller of the transfer
-        if (isContract(controller)) {
-            if (!TokenController(controller).onTransfer(_from, _to, _amount))
-               revert();
-        }
-
-        success = super.transferFrom(_from, _to, _amount);
-    }
-
-    /*
-     * ERC 223
-     * Added support for the ERC 223 "tokenFallback" method in a "transfer" function with a payload.
-     */
-    function transferFrom(address _from, address _to, uint256 _amount, bytes _data)
-        public transfersAllowed
-        returns (bool success)
-    {
-        // Alerts the token controller of the transfer
-        if (isContract(controller)) {
-            if (!TokenController(controller).onTransfer(_from, _to, _amount))
-               revert();
-        }
-
-        require(super.transferFrom(_from, _to, _amount));
-
-        if (isContract(_to)) {
-            ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
-            receiver.tokenFallback(_from, _amount, _data);
-        }
-
-        emit ERC223Transfer(_from, _to, _amount, _data);
-
-        return true;
-    }
-
-    /*
-     * ERC 223
-     * Added support for the ERC 223 "tokenFallback" method in a "transfer" function with a payload.
-     * https://github.com/ethereum/EIPs/issues/223
-     * function transfer(address _to, uint256 _value, bytes _data) public returns (bool success);
-     */
-    /// @notice Send `_value` tokens to `_to` from `msg.sender` and trigger
-    /// tokenFallback if sender is a contract.
-    /// @dev Function that is called when a user or another contract wants to transfer funds.
-    /// @param _to Address of token receiver.
-    /// @param _amount Number of tokens to transfer.
-    /// @param _data Data to be sent to tokenFallback
-    /// @return Returns success of function call.
-    function transfer(
-        address _to,
-        uint256 _amount,
-        bytes _data)
-        public
-        returns (bool success)
-    {
-        return transferFrom(msg.sender, _to, _amount, _data);
-    }
-
-    /// @notice `msg.sender` approves `_spender` to spend `_amount` tokens on
-    ///  its behalf. This is a modified version of the ERC20 approve function
-    ///  to be a little bit safer
-    /// @param _spender The address of the account able to transfer the tokens
-    /// @param _amount The amount of tokens to be approved for transfer
-    /// @return True if the approval was successful
-    function approve(address _spender, uint256 _amount) returns (bool success) {
-        // Alerts the token controller of the approve function call
-        if (isContract(controller)) {
-            if (!TokenController(controller).onApprove(msg.sender, _spender, _amount))
-                revert();
-        }
-        
-        return super.approve(_spender, _amount);
-    }
-
-    function mint(address _guy, uint _wad) auth stoppable {
-        require(add(_supply, _wad) <= cap);
-
-        super.mint(_guy, _wad);
-
-        emit Transfer(0, _guy, _wad);
-    }
-    function burn(address _guy, uint _wad) auth stoppable {
-        super.burn(_guy, _wad);
-
-        emit Transfer(_guy, 0, _wad);
     }
 
     /// @notice `msg.sender` approves `_spender` to send `_amount` tokens on
@@ -551,7 +485,7 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
     /// @param _amount The amount of tokens to be approved for transfer
     /// @return True if the function call was successful
     function approveAndCall(address _spender, uint256 _amount, bytes _extraData
-    ) returns (bool success) {
+    ) public returns (bool success) {
         if (!approve(_spender, _amount)) revert();
 
         ApproveAndCallFallBack(_spender).receiveApproval(
@@ -567,25 +501,13 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
     /// @dev Internal function to determine if an address is a contract
     /// @param _addr The address being queried
     /// @return True if `_addr` is a contract
-    function isContract(address _addr) constant internal returns(bool) {
+    function isContract(address _addr) view internal returns(bool) {
         uint size;
         if (_addr == 0) return false;
         assembly {
             size := extcodesize(_addr)
         }
         return size>0;
-    }
-
-    /// @notice The fallback function: If the contract's controller has not been
-    ///  set to 0, then the `proxyPayment` method is called which relays the
-    ///  ether and creates tokens as described in the token controller contract
-    function deposit() public payable {
-        if (isContract(controller)) {
-            if (! TokenController(controller).proxyPayment.value(msg.value)(msg.sender, msg.sig, msg.data))
-                revert();
-        } else {
-            revert();
-        }
     }
 
 //////////
@@ -602,14 +524,14 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
             return;
         }
 
-        ERC20 token = ERC20(_token);
+        ITRC20 token = ITRC20(_token);
         uint balance = token.balanceOf(this);
         token.transfer(address(msg.sender), balance);
 
         emit ClaimedTokens(_token, address(msg.sender), balance);
     }
 
-    function withdrawTokens(ERC20 _token, address _to, uint256 _amount) public auth
+    function withdrawTokens(ITRC20 _token, address _to, uint256 _amount) public auth
     {
         assert(_token.transfer(_to, _amount));
     }
@@ -619,4 +541,8 @@ contract RING is DSToken("RING"), ERC223, ISmartToken {
 ////////////////
 
     event ClaimedTokens(address indexed _token, address indexed _controller, uint _amount);
+
+    event Mint(address indexed guy, uint wad);
+
+    event Burn(address indexed guy, uint wad);
 }

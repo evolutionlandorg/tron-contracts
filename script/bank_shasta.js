@@ -38,21 +38,27 @@ const app = async () => {
 
     const ringAddress = contracts["RING"].hex;
     const bankAddress = contracts["GringottsBank"].hex;
+    const registry = contracts["SettingsRegistry"].hex;
 
     console.log(bankAddress);
 
-    let ringContract = await tronWeb.contract().at(ringAddress);
+    let r = await tronWeb.contract().at(registry);
 
-    let value = await ringContract.balanceOf(myAddress).call();
+    let value = await r.addressOf("0x434f4e54524143545f52494e475f45524332305f544f4b454e00000000000000").call();
 
-    console.log("my ring balance:", value.toString());
+    console.log(value);
+    // let ringContract = await tronWeb.contract().at(ringAddress);
 
-    await ringContract['transfer(address,uint256,bytes)'](bankAddress,"1000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000001")
-        .send({
-            feeLimit:1000000000,
-            callValue: 0,
-            shouldPollResponse:true
-        });
+    // let value = await ringContract.balanceOf(myAddress).call();
+
+    // console.log("my ring balance:", value.toString());
+
+    // await ringContract['transfer(address,uint256,bytes)'](bankAddress,"1000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000001")
+    //     .send({
+    //         feeLimit:1000000000,
+    //         callValue: 0,
+    //         shouldPollResponse:true
+    //     });
     // await ringContract.transfer('41c29b9bfba00ec2a2fb0b9d881c7924b89299cbf4', "1000000000000000000", "0x0000000000000000000000000000000000000000000000000000000000000001")
     //     .send({
     //         feeLimit:1000000000,

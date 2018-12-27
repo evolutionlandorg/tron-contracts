@@ -1,0 +1,62 @@
+{
+    "SettingIds": {
+        "base58": "TJe26GUTyppjrBcMVDKThbJ3Eu2AfYm3fH",
+        "hex": "415f181f1480bea504d6310cc7db1d1aea23be330c"
+    },
+    "SettingsRegistry": {
+        "base58": "TCbezyWfmKmChZihRpDaaKYAuUJnv55Zz1",
+        "hex": "411cd4edbec62f4bc43ffa3c6a58779242e82282e7"
+    },
+    "RING": {
+        "base58": "TL175uyihLqQD656aFx3uhHYe1tyGkmXaW",
+        "hex": "416e0d26adf5323f5b82d5714354dc3c6870adee7c"
+    },
+    "KTON": {
+        "base58": "TW3kTpVtYYQ5Ka1awZvLb9Yy6ZTDEC93dC",
+        "hex": "41dc3e713213d0403f82addbfb66b8574b86851c19"
+    },
+    "RINGAuthority": {
+        "base58": "THRoz4uj1q57SrpACqgyS3mhJwzndnWu6M",
+        "hex": "4151d0e5d3b8d1706b4785cd02c3e36f8d9ac32ecf"
+    },
+    "TakeBack": {
+        "base58": "TN6bV4u8ihdbmuzFXnFeB6kXFpksgGiZgW",
+        "hex": "418507305db28a11038a493821b84117cf9a9f08fe"
+    },
+    "ContractFeatures": {
+        "base58": "TVo5H7j6rEeacgLFcoGBwHSGcMXLpmTgiz",
+        "hex": "41d977e8bb03de15ffe33662bb6ed34f6bc929a603"
+    },
+    "BancorFormula": {
+        "base58": "TG69Vty1A8M6DNHUoD48ewh4GmeLQC8L2P",
+        "hex": "414320be110a7b35b625b4bc4fb3330932df277fae"
+    },
+    "Whitelist": {
+        "base58": "TEJYsE365Jh9Vt4hM1HZEhvTxmHaN5vfNy",
+        "hex": "412f88fd23bfbca040450fd2a300f5405296d4b185"
+    },
+    "TrxToken": {
+        "base58": "TUh2Gkq1ZkQyZyfc2KZ9JQsMavWaY3Cdma",
+        "hex": "41cd5ac730df2305dbcc65a74290ed9492a862b3fa"
+    },
+    "BancorNetwork": {
+        "base58": "TJ9gGiDuLH17HRy5amhyxzSsLmSrLfq1uv",
+        "hex": "4159bbedfc43b1680626768d99d36fd680a72fab2b"
+    },
+    "BancorConverter": {
+        "base58": "TBsVKMjP9u55TrnGWb7diRNcRBrov4S96H",
+        "hex": "4114db601342034c29b55dae890094a5b9f3458366"
+    },
+    "BancorExchange": {
+        "base58": "TLuWvfRvdauzu4tK6q46JGPLXzQnwiLQgd",
+        "hex": "4177f6aea1ae52179f3390c9650b8829f361708055"
+    },
+    "GringottsBank": {
+        "base58": "TTW2Vpr9TCu6gxGZ1yjwqy7R79hEH8iscC",
+        "hex": "41c04e43cb87b432329a32aa99605982590b0191ec"
+    },
+    "MintAndBurnAuthority": {
+        "base58": "TXGgpS8WzM1P1kwaH5ZiqYNkttJycfbkHB",
+        "hex": "41e9a8eee09e377f29f460286d8465ead6e8b4caba"
+    }
+}
