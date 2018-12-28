@@ -215,4 +215,12 @@ contract LandBase is DSAuth, ILandBase, SettingIds {
     function setRegistry(address _registry) public onlyOwner {
         registry = ISettingsRegistry(_registry);
     }
+
+    function setResourceToken2RateAttrId(address _resource, uint8 _rateAttrId) public auth {
+        resourceToken2RateAttrId[_resource] = _rateAttrId;
+    }
+
+    function setLocationId2TokenId(uint256 _locationId, uint256 _tokenId) public auth {
+        locationId2TokenId[_locationId] = _tokenId;
+    }
 }
