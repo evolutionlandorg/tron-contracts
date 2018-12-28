@@ -32,11 +32,11 @@ contract PointsRewardPool is PausableDSAuth, AuctionSettingIds {
     }
 
     function playWithSmallTicket() public isHuman whenNotPaused {
-        _play(10 trx, 8);
+        _play(10 * 10 ** 18, 8);
     }
 
     function playWithLargeTicket() public isHuman whenNotPaused {
-        _play(100 trx, 10);
+        _play(100 * 10 ** 18, 10);
     }
 
     function totalRewardInPool(address _token) public view returns (uint256) {
@@ -55,9 +55,7 @@ contract PointsRewardPool is PausableDSAuth, AuctionSettingIds {
 
         uint256 seed = uint256(keccak256(abi.encodePacked(
                 (block.timestamp).add
-                (block.difficulty).add
                 ((uint256(keccak256(abi.encodePacked(block.coinbase)))) / (now)).add
-                (block.gaslimit).add
                 ((uint256(keccak256(abi.encodePacked(tx.origin)))) / (now)).add
                 (block.number)
             )));
