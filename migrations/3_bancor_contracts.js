@@ -37,10 +37,10 @@ module.exports = function(deployer, network, accounts) {
 
             const trxAddr = '417b7a34048d4e421e54b415392b662629f7173685';
             const ringAddr = '4181f0f3891cb32d1af69a6c853aefa6cf80f270b5';
-            const bancorExAuthAddr = '41bb4588648a4d7ee43e96cfaed49f3c859090b0be';
+
             await bancorExchange.setQuickBuyPath([trxAddr, ringAddr, ringAddr]);
             await bancorExchange.setQuickSellPath([ringAddr, ringAddr, trxAddr]);
-            await bancorExchange.setAuthority(bancorExAuthAddr);
+
 
         });
     }

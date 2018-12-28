@@ -149,6 +149,8 @@ async function developmentDeploy(deployer, network, accounts) {
     // set authority
     let userPointsAuthority = await UserPointsAuthority.deployed();
     await userPoint.setAuthority(userPointsAuthority.address);
+    let bancorExchangeAuthority = await BancorExchangeAuthority.deployed();
+    await bancorEx.setAuthority(bancorExchangeAuthority.address);
 
     let clockAuctionAuthority = await ClockAuctionAuthority.deployed();
     await clockAuction.setAuthority(clockAuctionAuthority.address);
