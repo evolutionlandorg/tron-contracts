@@ -10,7 +10,7 @@ import "./converter/interfaces/IBancorFormula.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ContractIds.sol";
 
-contract BancorExchange is PausableDSAuth, SettingIds, ContractIds {
+contract BancorExchangeV2 is PausableDSAuth, SettingIds, ContractIds {
 
     using SafeMath for *;
 
