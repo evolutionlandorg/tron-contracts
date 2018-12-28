@@ -1,7 +1,7 @@
 pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
+import "../ERC721/ERC721Token.sol";
 import "./interfaces/IInterstellarEncoder.sol";
 import "./interfaces/ISettingsRegistry.sol";
 import "./DSAuth.sol";
