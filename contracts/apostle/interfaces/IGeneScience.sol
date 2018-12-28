@@ -14,7 +14,7 @@ contract IGeneScience {
     /// @return the genes and talents that are supposed to be passed down the child
     function mixGenesAndTalents(uint256 genes1, uint256 genes2, uint256 talents1, uint256 talents2, address resouceToken, uint256 level) public returns (uint256, uint256);
 
-    function getStrength(uint256 _talents, address _resouceToken) public view returns (uint256);
+    function getStrength(uint256 _talents, address _resouceToken, uint256 _landTokenId) public view returns (uint256);
 
     function isOkWithRaceAndGender(uint _matronGenes, uint _sireGenes) public view returns (bool);
 }

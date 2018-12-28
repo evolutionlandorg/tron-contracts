@@ -2,7 +2,7 @@ pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "../common/interfaces/ISettingsRegistry.sol";
-import "../common/interfaces/ERC223.sol";
+import "../common/interfaces/TRC223.sol";
 import "../common/interfaces/ITokenUse.sol";
 import "./interfaces/IApostleBase.sol";
 import "./SiringAuctionBase.sol";
@@ -148,8 +148,8 @@ contract SiringClockAuction is SiringAuctionBase {
         address _auctionToken, address _from, address _seller, uint256 _sireId, uint256 _matronId, uint256 _priceInToken, uint256 _autoBirthFee) internal {
         //uint256 ownerCutAmount = _computeCut(priceInToken);
         uint cut = _computeCut(_priceInToken);
-        ERC223(_auctionToken).transfer(_seller, (_priceInToken - cut), toBytes(_from));
-        ERC223(_auctionToken).transfer(registry.addressOf(CONTRACT_REVENUE_POOL), (cut + _autoBirthFee), toBytes(_from));
+        TRC223(_auctionToken).transferAndFallback(_seller, (_priceInToken - cut), toBytes(_from));
+        TRC223(_auctionToken).transferAndFallback(registry.addressOf(CONTRACT_REVENUE_POOL), (cut + _autoBirthFee), toBytes(_from));
 
         IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE)).approveSiring(_from, _sireId);
 

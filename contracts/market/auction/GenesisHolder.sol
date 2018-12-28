@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "../../ERC721/ERC721Basic.sol";
 import "../../common/interfaces/ISettingsRegistry.sol";
-import "../../common/interfaces/ERC223.sol";
+import "../../common/interfaces/TRC223.sol";
 import "../../land/interfaces/ILandBase.sol";
 import "./interfaces/IClockAuction.sol";
 import "./AuctionSettingIds.sol";
@@ -32,7 +32,7 @@ contract GenesisHolder is Ownable, AuctionSettingIds {
         address revenuePool = registry.addressOf(CONTRACT_REVENUE_POOL);
 
         if(msg.sender == ring || msg.sender == kton) {
-            ERC223(msg.sender).transfer(revenuePool, _value, _data);
+            TRC223(msg.sender).transferAndFallback(revenuePool, _value, _data);
         }
     }
 

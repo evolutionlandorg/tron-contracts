@@ -5,7 +5,7 @@ import "./interfaces/IApostleBase.sol";
 import "./interfaces/IApostleAuction.sol";
 import "../ERC721/ERC721.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "../common/interfaces/ERC223.sol";
+import "../common/interfaces/TRC223.sol";
 import "../common/PausableDSAuth.sol";
 
 contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
@@ -71,7 +71,7 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
         address revenuePool = registry.addressOf(CONTRACT_REVENUE_POOL);
 
         if(msg.sender == ring || msg.sender == kton) {
-            ERC223(msg.sender).transfer(revenuePool, _value, _data);
+            TRC223(msg.sender).transferAndFallback(revenuePool, _value, _data);
         }
     }
 

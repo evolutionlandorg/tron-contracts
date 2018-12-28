@@ -8,18 +8,15 @@ const TakeBack = artifacts.require('TakeBack');
 
 
 const conf = {
-    from: "TV9X71qbEFBAUSKrdq3tetKz2hwHnoDvVe",
-    bank_unit_interest: 1000,
-    bank_penalty_multiplier: 3,
-    ringAmountLimit: 500000 * 10**18,
-    bagCountLimit: 50,
-    perMinAmount: 20 ** 10**18,
-    weight10Percent: 100000,
+    // from: "TV9X71qbEFBAUSKrdq3tetKz2hwHnoDvVe",
+    // bank_unit_interest: 1000,
+    // bank_penalty_multiplier: 3,
+    // ringAmountLimit: 500000 * 10**18,
+    // bagCountLimit: 50,
+    // perMinAmount: 20 ** 10**18,
     supervisor_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
-    dev_pool_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
-    contribution_incentive_address: 'TDWzV6W1L1uRcJzgg2uKa992nAReuDojfQ',
-    // errorsparce
-    uint_error_space: 0
+    dev_pool_address: 'TJDkQxUdSgM9qosxMfeJJig4A34EFzEXLJ',
+    contribution_incentive_address: 'TD6CuG2fmnhaHbmz7fGcuUBQAnw4Wror84',
 }
 
 module.exports = function(deployer, network, accounts) {
@@ -47,8 +44,9 @@ async function developmentDeploy(deployer, network, accounts) {
     await deployer.deploy(DividendPool, settingsRegistry.address);
     let dividendPool = await DividendPool.deployed();
 
-    await deployer.deploy(RolesUpdater, userRoles.address, conf.networkId, conf.supervisor_address);
+    // await deployer.deploy(RolesUpdater, userRoles.address, conf.networkId, conf.supervisor_address);
     // await deployer.deploy(UserRolesAuthority, [RolesUpdater.address]);
+    // await userRoles.setAuthority(UserRolesAuthority.address);
     
     // deployer.deploy(RedBag, settingsRegistry.address, conf.ringAmountLimit, conf.bagCountLimit, conf.perMinAmount);
 
@@ -64,8 +62,6 @@ async function developmentDeploy(deployer, network, accounts) {
 
     let frozenDivId = await idSettingIds.CONTRACT_FROZEN_DIVIDEND.call();
     await settingsRegistry.setAddressProperty(frozenDivId, frozenDividend.address);
-
-    // await userRoles.setAuthority(UserRolesAuthority.address);
 
     console.log("=======end to deploy id contracts===========\n");
     

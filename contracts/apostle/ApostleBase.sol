@@ -9,11 +9,12 @@ import "../common/interfaces/IMinerObject.sol";
 import "../common/interfaces/IActivityObject.sol";
 import "../common/interfaces/IActivity.sol";
 import "../common/PausableDSAuth.sol";
-import "../common/interfaces/ERC223.sol";
+import "../common/interfaces/TRC223.sol";
 import "../ERC721/SupportsInterfaceWithLookup.sol";
 import "./ApostleSettingIds.sol";
 import "./interfaces/IGeneScience.sol";
 import "./interfaces/IHabergPotionShop.sol";
+import "./interfaces/ILandBase.sol";
 
 // all Ids in this contracts refer to index which is using 128-bit unsigned integers.
 // this is CONTRACT_APOSTLE_BASE
@@ -79,16 +80,13 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         uint32(7 days)
     ];
 
-
-    /*
-     *  Modifiers
-     */
     modifier isHuman() {
         require(msg.sender == tx.origin, "robot is not permitted");
         _;
     }
-    /*** STORAGE ***/
 
+
+    /*** STORAGE ***/
     uint128 public lastApostleObjectId;
 
     ISettingsRegistry public registry;
@@ -334,7 +332,6 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         Apostle storage matron = tokenId2Apostle[_matronId];
         emit AutoBirth(_matronId, uint48(matron.cooldownEndTime));
     }
-
     /// @notice Have a pregnant apostle give birth!
     /// @param _matronId An apostle ready to give birth.
     /// @return The apostle tokenId of the new Apostles.
@@ -416,7 +413,7 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
 
         if (msg.sender == registry.addressOf(CONTRACT_RING_ERC20_TOKEN)) {
             require(_value >= autoBirthFee, 'not enough to breed.');
-            ERC223(msg.sender).transfer(registry.addressOf(CONTRACT_REVENUE_POOL), _value, toBytes(_from));
+            TRC223(msg.sender).transferAndFallback(registry.addressOf(CONTRACT_REVENUE_POOL), _value, toBytes(_from));
 
             assembly {
                 let ptr := mload(0x40)
@@ -429,7 +426,7 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
             _breedWith(matronId, sireId);
             emit AutoBirth(matronId, uint48(tokenId2Apostle[matronId].cooldownEndTime));
 
-        } else {
+        } else if (isValidResourceToken(msg.sender)){
 
             assembly {
                 let ptr := mload(0x40)
@@ -449,6 +446,12 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         }
 
     }
+
+    function isValidResourceToken(address _resourceToken) public view returns (bool) {
+        uint index = ILandBase(registry.addressOf(SettingIds.CONTRACT_LAND_BASE)).resourceToken2RateAttrId(_resourceToken);
+        return index > 0;
+    }
+
 
     /// Anyone can try to kill this Apostle;
     function killApostle(uint256 _tokenId) public {
@@ -474,10 +477,10 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
     }
 
     /// IMinerObject
-    function strengthOf(uint256 _tokenId, address _resourceToken) public view returns (uint256) {
+    function strengthOf(uint256 _tokenId, address _resourceToken, uint256 _landTokenId) public view returns (uint256) {
         uint talents = tokenId2Apostle[_tokenId].talents;
         return IGeneScience(registry.addressOf(CONTRACT_GENE_SCIENCE))
-            .getStrength(talents, _resourceToken);
+        .getStrength(talents, _resourceToken, _landTokenId);
     }
 
     /// IActivityObject
@@ -520,7 +523,22 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         b = new bytes(32);
         assembly {mstore(add(b, 32), x)}
     }
-    
+
+    function updateGenesAndTalents(uint256 _tokenId, uint256 _genes, uint256 _talents) public auth {
+        Apostle storage aps = tokenId2Apostle[_tokenId];
+        aps.genes = _genes;
+        aps.talents = _talents;
+    }
+
+    function batchUpdate(uint256[] _tokenIds, uint256[] _genesList, uint256[] _talentsList) public auth {
+        require(_tokenIds.length == _genesList.length && _tokenIds.length == _talentsList.length);
+        for(uint i = 0; i < _tokenIds.length; i++) {
+            Apostle storage aps = tokenId2Apostle[_tokenIds[i]];
+            aps.genes = _genesList[i];
+            aps.talents = _talentsList[i];
+        }
+    }
+
     function setRegistry(address _registry) public onlyOwner {
         registry = ISettingsRegistry(_registry);
     }
