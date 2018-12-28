@@ -44,10 +44,10 @@ const conf = {
 };
 
 module.exports = function(deployer, network, accounts) {
-    if (network == "development")
+    if (network == "shasta")
     {
         deployer.then(async () => {
-            // await developmentDeploy(deployer, network, accounts);
+            await developmentDeploy(deployer, network, accounts);
         });
     }
 };
@@ -55,9 +55,10 @@ module.exports = function(deployer, network, accounts) {
 async function developmentDeploy(deployer, network, accounts) {
     console.log("=======start to deploy market contracts===========\n");
 
-    let settingsRegistry = await SettingsRegistry.deployed();
+    // let settingsRegistry = await SettingsRegistry.deployed();
 
-    let setRegistryAddress = settingsRegistry.address;
+    // let setRegistryAddress = settingsRegistry.address;
+    let setRegistryAddress = '41b83adfcf60a4e8afd0849bca48c054b47178618f';
     await deployer.deploy(AuctionSettingIds);
     await deployer.deploy(ClockAuction,setRegistryAddress);
     await deployer.deploy(MysteriousTreasure,setRegistryAddress,[10439, 419, 5258, 12200, 12200]);
@@ -91,56 +92,56 @@ async function developmentDeploy(deployer, network, accounts) {
     let own = await genesisHolder.owner();
     console.log("owner: ", own);
     await genesisHolder.setOperator(own);
-
     //
-    // //register to registry
-    let settingIds = await AuctionSettingIds.deployed();
-    let revenueId = await settingIds.CONTRACT_REVENUE_POOL.call();
-    await settingsRegistry.setAddressProperty(revenueId, revenuePool.address);
+    // //
+    // // //register to registry
+    // let settingIds = await AuctionSettingIds.deployed();
+    // let revenueId = await settingIds.CONTRACT_REVENUE_POOL.call();
+    // await settingsRegistry.setAddressProperty(revenueId, revenuePool.address);
+    // //
+    // let pointsRewardId = await settingIds.CONTRACT_POINTS_REWARD_POOL.call();
+    // await settingsRegistry.setAddressProperty(pointsRewardId, pointsRewardPool.address);
+    // //
+    // let userPointsId = await settingIds.CONTRACT_USER_POINTS.call();
+    // await settingsRegistry.setAddressProperty(userPointsId, userPoint.address);
+    // //
+    // let contributionId = await settingIds.CONTRACT_CONTRIBUTION_INCENTIVE_POOL.call();
+    // await settingsRegistry.setAddressProperty(contributionId, conf.supervisor_address);
+    // //
+    // let dividendsId = await settingIds.CONTRACT_DIVIDENDS_POOL.call();
+    // await settingsRegistry.setAddressProperty(dividendsId, conf.supervisor_address);
+    // //
+    // let devId = await settingIds.CONTRACT_DEV_POOL.call();
+    // await settingsRegistry.setAddressProperty(devId, conf.supervisor_address);
+    // //
+    // let auctionId = await settingIds.CONTRACT_CLOCK_AUCTION.call();
+    // await settingsRegistry.setAddressProperty(auctionId, clockAuction.address);
     //
-    let pointsRewardId = await settingIds.CONTRACT_POINTS_REWARD_POOL.call();
-    await settingsRegistry.setAddressProperty(pointsRewardId, pointsRewardPool.address);
+    // let auctionCutId = await settingIds.UINT_AUCTION_CUT.call();
+    // await settingsRegistry.setUintProperty(auctionCutId, conf.uint_auction_cut);
     //
-    let userPointsId = await settingIds.CONTRACT_USER_POINTS.call();
-    await settingsRegistry.setAddressProperty(userPointsId, userPoint.address);
+    // let waitingTimeId = await settingIds.UINT_AUCTION_BID_WAITING_TIME.call();
+    // await settingsRegistry.setUintProperty(waitingTimeId, conf.uint_bid_waiting_time);
     //
-    let contributionId = await settingIds.CONTRACT_CONTRIBUTION_INCENTIVE_POOL.call();
-    await settingsRegistry.setAddressProperty(contributionId, conf.supervisor_address);
+    // let treasureId = await settingIds.CONTRACT_MYSTERIOUS_TREASURE.call();
+    // await settingsRegistry.setAddressProperty(treasureId, mysteriousTreasure.address);
     //
-    let dividendsId = await settingIds.CONTRACT_DIVIDENDS_POOL.call();
-    await settingsRegistry.setAddressProperty(dividendsId, conf.supervisor_address);
+    // let bancorExchangeId = await settingIds.CONTRACT_BANCOR_EXCHANGE.call();
+    // let bancorEx = await BancorExchange.deployed();
+    // await settingsRegistry.setAddressProperty(bancorExchangeId, bancorEx.address);
     //
-    let devId = await settingIds.CONTRACT_DEV_POOL.call();
-    await settingsRegistry.setAddressProperty(devId, conf.supervisor_address);
+    // let refererCutId = await settingIds.UINT_REFERER_CUT.call();
+    // await settingsRegistry.setUintProperty(refererCutId, conf.uint_referer_cut);
     //
-    let auctionId = await settingIds.CONTRACT_CLOCK_AUCTION.call();
-    await settingsRegistry.setAddressProperty(auctionId, clockAuction.address);
-
-    let auctionCutId = await settingIds.UINT_AUCTION_CUT.call();
-    await settingsRegistry.setUintProperty(auctionCutId, conf.uint_auction_cut);
-
-    let waitingTimeId = await settingIds.UINT_AUCTION_BID_WAITING_TIME.call();
-    await settingsRegistry.setUintProperty(waitingTimeId, conf.uint_bid_waiting_time);
-
-    let treasureId = await settingIds.CONTRACT_MYSTERIOUS_TREASURE.call();
-    await settingsRegistry.setAddressProperty(treasureId, mysteriousTreasure.address);
-
-    let bancorExchangeId = await settingIds.CONTRACT_BANCOR_EXCHANGE.call();
-    let bancorEx = await BancorExchange.deployed();
-    await settingsRegistry.setAddressProperty(bancorExchangeId, bancorEx.address);
-
-    let refererCutId = await settingIds.UINT_REFERER_CUT.call();
-    await settingsRegistry.setUintProperty(refererCutId, conf.uint_referer_cut);
-
-    let errorSpaceId = await settingIds.UINT_EXCHANGE_ERROR_SPACE.call();
-    await settingsRegistry.setUintProperty(errorSpaceId, conf.uint_error_space);
-
-
-
+    // let errorSpaceId = await settingIds.UINT_EXCHANGE_ERROR_SPACE.call();
+    // await settingsRegistry.setUintProperty(errorSpaceId, conf.uint_error_space);
+    //
+    //
+    //
     // allow treasure to modify data in landbase
-    let landBase = await LandBase.deployed();
-    let landBaseAuthority = await LandBaseAuthority.deployed();
-    await landBase.setAuthority(landBaseAuthority.address);
+    // let landBase = await LandBase.deployed();
+    // let landBaseAuthority = await LandBaseAuthority.deployed();
+    // await landBase.setAuthority(landBaseAuthority.address);
 
     // transfer treasure's owner to clockAuction
     await mysteriousTreasure.setOwner(clockAuction.address);
@@ -148,10 +149,9 @@ async function developmentDeploy(deployer, network, accounts) {
     // set authority
     let userPointsAuthority = await UserPointsAuthority.deployed();
     await userPoint.setAuthority(userPointsAuthority.address);
-    let bancorExchangeAuthority = await BancorExchangeAuthority.deployed();
-    await bancorEx.setAuthority(bancorExchangeAuthority.address);
 
-    await clockAuction.setAuthority(ClockAuctionAuthority.address);
+    let clockAuctionAuthority = await ClockAuctionAuthority.deployed();
+    await clockAuction.setAuthority(clockAuctionAuthority.address);
 
 
     console.log("=======end to deploy market contracts===========\n");
