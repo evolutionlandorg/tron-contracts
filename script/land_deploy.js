@@ -47,6 +47,10 @@ const app = async () => {
     const interstellarEncoderAddr = contracts["InterstellarEncoder"].hex;
     const objectOwnershipAddress = contracts["ObjectOwnership"].hex;
     const tokenLocationIdAddress = contracts["TokenLocation"].hex;
+    const tokenLocationAuthAddress = contracts["TokenLocationAuthority"].hex;
+    const landBaseAuthorityAddr = contracts["LandBaseAuthority"].hex;
+
+    const objectOwnershipAuthorityAddr = contracts["ObjectOwnershipAuthority"].hex;
 
     const landBaseAddressTrx = contracts["LandBase"].hex;
     let landBaseAddressEth = '0x' + landBaseAddressTrx.substring(2);
@@ -56,27 +60,27 @@ const app = async () => {
     let SettingRegistry = await tronWeb.contract().at(registrysAddress);
     let ObjectOwnership = await tronWeb.contract().at(objectOwnershipAddress);
     let InterstellarEncoder = await tronWeb.contract().at(interstellarEncoderAddr);
-
-    let ObjectOwnershipAuthority= await tronWeb.contract().new({
-        abi:jObjectOwnershipAuthority.abi,
-        bytecode:jObjectOwnershipAuthority.bytecode,
-        feeLimit:1000000000,
-        callValue:0,
-        userFeePercentage:100,
-        parameters:[[landBaseAddressEth]]
-    });
-    console.log("deployed ObjectOwnershipAuthority: ", ObjectOwnershipAuthority.address);
-
-    let TokenLocationAuthority = await tronWeb.contract().new({
-        abi:jTokenLocationAuthority.abi,
-        bytecode:jTokenLocationAuthority.bytecode,
-        feeLimit:1000000000,
-        callValue:0,
-        userFeePercentage:100,
-        parameters:[[landBaseAddressEth]]
-    });
-    console.log("deployed TokenLocationAuthority: ", TokenLocationAuthority.address);
-
+    //
+    // let ObjectOwnershipAuthority= await tronWeb.contract().new({
+    //     abi:jObjectOwnershipAuthority.abi,
+    //     bytecode:jObjectOwnershipAuthority.bytecode,
+    //     feeLimit:1000000000,
+    //     callValue:0,
+    //     userFeePercentage:100,
+    //     parameters:[[landBaseAddressEth]]
+    // });
+    // console.log("deployed ObjectOwnershipAuthority: ", ObjectOwnershipAuthority.address);
+    //
+    // let TokenLocationAuthority = await tronWeb.contract().new({
+    //     abi:jTokenLocationAuthority.abi,
+    //     bytecode:jTokenLocationAuthority.bytecode,
+    //     feeLimit:1000000000,
+    //     callValue:0,
+    //     userFeePercentage:100,
+    //     parameters:[[landBaseAddressEth]]
+    // });
+    // console.log("deployed TokenLocationAuthority: ", TokenLocationAuthority.address);
+    //
     let interstellarEncoderId = await SettingIDs.CONTRACT_INTERSTELLAR_ENCODER().call();
     console.log("interstellarEncoderId in settingids: ", interstellarEncoderId);
     await SettingRegistry.setAddressProperty(interstellarEncoderId, interstellarEncoderAddr).send({
@@ -84,8 +88,8 @@ const app = async () => {
            callValue:0,
            shouldPollResponse:true
     });
-
-
+    //
+    //
     let landBaseId = await SettingIDs.CONTRACT_LAND_BASE().call();
     let objectOwnershipId = await SettingIDs.CONTRACT_OBJECT_OWNERSHIP().call();
     let tokenLocationId = await SettingIDs.CONTRACT_TOKEN_LOCATION().call();
@@ -106,15 +110,17 @@ const app = async () => {
         shouldPollResponse:true
     });
 
-    await ObjectOwnership.setAuthority(ObjectOwnershipAuthority.address).send({
+    await ObjectOwnership.setAuthority(objectOwnershipAuthorityAddr).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true
     });
 
-    let ret = await InterstellarEncoder.contractId2Address(1).call();
-    console.log("objectOwnershipAddress: ",objectOwnershipAddress);
-    console.log("index 1 in InterstellarEncoder : ",ret);
+
+
+    // let ret = await InterstellarEncoder.contractId2Address(1).call();
+    // console.log("objectOwnershipAddress: ",objectOwnershipAddress);
+    // console.log("index 1 in InterstellarEncoder : ",ret);
 
     await InterstellarEncoder.registerNewTokenContract(objectOwnershipAddress).send({
         feeLimit:1000000000,
@@ -129,10 +135,17 @@ const app = async () => {
         shouldPollResponse:true
     });
     console.log("test2");
-
-    console.log("TokenLocationAuthority address: ", TokenLocationAuthority.address);
+    //
+    // console.log("TokenLocationAuthority address: ", TokenLocationAuthority.address);
     let tokenLocation = await tronWeb.contract().at(tokenLocationIdAddress);
-    await tokenLocation.setAuthority(TokenLocationAuthority.address).send({
+    await tokenLocation.setAuthority(tokenLocationAuthAddress).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
+    let landBase = await tronWeb.contract().at(landBaseAddressTrx);
+    await landBase.setAuthority(landBaseAuthorityAddr).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true
