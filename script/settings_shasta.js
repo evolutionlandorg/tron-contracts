@@ -60,15 +60,18 @@ const app = async () => {
     await SettingsRegistry.addressOf(channelDividendPoolKey).call();
     console.log("channelDividendPool: ", channelDividendValue.toString());
 
-    let res = await SettingsRegistry.setAddressProperty(await DividendPool.CONTRACT_DIVIDENDS_POOL().call(), contracts["DividendPool"].hex).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // let res = await SettingsRegistry.setAddressProperty(await DividendPool.CONTRACT_DIVIDENDS_POOL().call(), contracts["DividendPool"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     let CONTRACT_FROZEN_DIVIDEND = 
     await SettingsRegistry.addressOf(await DividendPool.CONTRACT_DIVIDENDS_POOL().call()).call();
     console.log("CONTRACT_FROZEN_DIVIDEND: ", CONTRACT_FROZEN_DIVIDEND.toString());
+
+    let cut = await SettingsRegistry.uintOf(await DividendPool.UINT_REFERER_CUT().call()).call();
+    console.log("CONTRACT_FROZEN_DIVIDEND: ", cut.toString());
 };
 
 app();

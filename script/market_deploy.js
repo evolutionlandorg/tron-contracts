@@ -45,6 +45,7 @@ const app = async () => {
     const pointsRewardPoolAddress = contracts["PointsRewardPool"].hex;
     const userPointsAddress = contracts["UserPoints"].hex;
     const userPointsAuthorityAddress = contracts["UserPointsAuthority"].hex;
+    const dividendPoolAddress = contracts["DividendPool"].hex;
 
     const clockAuctionAddress = contracts["ClockAuction"].hex;
     const clockAuctionAuthority = contracts["ClockAuctionAuthority"].hex;
@@ -86,7 +87,7 @@ const app = async () => {
     });
 
     let dividendsId = await SettingIDs.CONTRACT_DIVIDENDS_POOL().call();
-    await SettingRegistry.setAddressProperty(dividendsId, supervisor_address).send({
+    await SettingRegistry.setAddressProperty(dividendsId, dividendPoolAddress).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true
