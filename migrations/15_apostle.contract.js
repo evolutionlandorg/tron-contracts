@@ -1,3 +1,5 @@
+var fs = require('fs');
+var contracts = JSON.parse(fs.readFileSync('../script/auto_generated_address_shasta.json', 'utf8'));
 
 const InterstellarEncoder = artifacts.require('InterstellarEncoder');
 const ApostleBase = artifacts.require('ApostleBase');
@@ -13,9 +15,9 @@ const ApostleBaseAuthority = artifacts.require('ApostleBaseAuthority');
 const ClockAuctionAuthority = artifacts.require('ClockAuctionAuthority');
 
 const conf = {
-    registry_address: '411b2b0c56b851a6c10d0e4a25a1e8184aa8c03297',
-    objectOwnershipProxy_address: '411cad3f158adc0706f140bf20fa910947f947ab8e',
-    landBaseProxy_address: '411263e37711650b948dfb161bb17ba866d5129f26',
+    registry_address: contracts["SettingsRegistry"].hex,
+    objectOwnershipProxy_address: contracts["ObjectOwnership"].hex,
+    landBaseProxy_address: contracts["LandBase"].hex,
     landObject_class: 1,
     apostleObject_class: 2,
     autoBirthFee: 500 * 10 ** 18,
@@ -24,12 +26,16 @@ const conf = {
     gen0Limit: 2000
 };
 
+
+
 module.exports = function(deployer, network, accounts) {
 
-    console.log("deployer: ", deployer,", network: ", network, ", accounts: ",accounts);
-    if (network == "development")
+    console.log("registry_address: ", conf.registry_address);
+    // console.log("deployer: ", deployer,", network: ", network, ", accounts: ",accounts);
+    if (network == "shasta")
     {
         deployer.then(async () => {
+
             await shastaApostleDeploy(deployer, network, accounts);
         });
     }
@@ -37,6 +43,7 @@ module.exports = function(deployer, network, accounts) {
 
 
 async function shastaApostleDeploy(deployer, network, accounts){
+
     await deployer.deploy(InterstellarEncoder);
     await deployer.deploy(ApostleSettingIds);
     await deployer.deploy(ApostleBase,conf.registry_address);

@@ -2,6 +2,7 @@ const TronWeb = require('tronweb')
 var fs = require('fs');
 var key = JSON.parse(fs.readFileSync('./script/key.json', 'utf8'));
 var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_apostle_address.json', 'utf8'));
+var mcontracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
 
 // HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
 const fullNode = 'https://api.shasta.trongrid.io'; // Full node http endpoint
@@ -34,7 +35,7 @@ const app = async () => {
     if (!connected)
         return;
 
-    const registrysAddress = '411b2b0c56b851a6c10d0e4a25a1e8184aa8c03297';
+    const registrysAddress = mcontracts["SettingsRegistry"].hex;
     const apostleSettingIdsAddr = contracts["ApostleSettingIds"].hex;
     const apostleBaseAddr = contracts["ApostleBase"].hex;
     const apostleClockAuctionAddr = contracts["ApostleClockAuction"].hex;
@@ -86,7 +87,7 @@ const app = async () => {
         shouldPollResponse:true
     });
 
-    const objectOwnershipAddress = '411cad3f158adc0706f140bf20fa910947f947ab8e';
+    const objectOwnershipAddress = mcontracts["ObjectOwnership"].hex;
     let objectOwnershipAuthorityAddr = contracts["ObjectOwnershipAuthority"].hex;
     let ObjectOwnership = await tronWeb.contract().at(objectOwnershipAddress);
 
@@ -95,6 +96,9 @@ const app = async () => {
         callValue:0,
         shouldPollResponse:true
     });
+
+    console.log("finished");
+
 };
 
 app();
