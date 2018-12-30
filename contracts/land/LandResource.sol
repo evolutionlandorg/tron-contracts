@@ -134,7 +134,7 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
             _tokenId, _resourceToken, (_currentTime + _lastUpdateTime) / 2);
 
         // calculate the area of trapezoid
-        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime).mul(1 ** 18).div(1 days);
+        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime).mul(10 ** 18).div(1 days);
     }
 
     function _getMaxMineBalance(uint256 _tokenId, address _resourceToken, uint256 _currentTime, uint256 _lastUpdateTime) internal view returns (uint256) {
@@ -286,7 +286,7 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
         require(land2ResourceMineState[_landTokenId].totalMiners <= land2ResourceMineState[_landTokenId].maxMiners);
 
         address miner = IInterstellarEncoder(registry.addressOf(CONTRACT_INTERSTELLAR_ENCODER)).getObjectAddress(_tokenId);
-        uint256 strength = IMinerObject(miner).strengthOf(_tokenId, _resource);
+        uint256 strength = IMinerObject(miner).strengthOf(_tokenId, _resource, _landTokenId);
 
         land2ResourceMineState[_landTokenId].miners[_resource].push(_tokenId);
         land2ResourceMineState[_landTokenId].totalMinerStrength[_resource] += strength;
@@ -342,8 +342,21 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
         land2ResourceMineState[landTokenId].totalMiners -= 1;
 
         address miner = IInterstellarEncoder(registry.addressOf(CONTRACT_INTERSTELLAR_ENCODER)).getObjectAddress(_tokenId);
-        uint256 strength = IMinerObject(miner).strengthOf(_tokenId, resource);
-        land2ResourceMineState[landTokenId].totalMinerStrength[resource] = land2ResourceMineState[landTokenId].totalMinerStrength[resource].sub(strength);
+        uint256 strength = IMinerObject(miner).strengthOf(_tokenId, resource, landTokenId);
+
+        // for backward compatibility
+        // if strength can fluctuate some time in the future
+        if(land2ResourceMineState[landTokenId].totalMinerStrength[resource] != 0) {
+            if(land2ResourceMineState[landTokenId].totalMinerStrength[resource] > strength) {
+                land2ResourceMineState[landTokenId].totalMinerStrength[resource] = land2ResourceMineState[landTokenId].totalMinerStrength[resource].sub(strength);
+            } else {
+                land2ResourceMineState[landTokenId].totalMinerStrength[resource] = 0;
+            }
+        }
+
+        if(land2ResourceMineState[landTokenId].totalMiners == 0) {
+            land2ResourceMineState[landTokenId].totalMinerStrength[resource] = 0;
+        }
 
         delete miner2Index[_tokenId];
 
