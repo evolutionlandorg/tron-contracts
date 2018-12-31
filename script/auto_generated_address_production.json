@@ -150,5 +150,9 @@
     "ClockAuctionAuthority": {
         "base58": "TUHeLrQbe3gv6NWhtp9774tsAGghHgm3XT",
         "hex": "41c8eee7be460445817fe2ecb4a266a63b756e74b4"
+    },
+    "MysteriousTreasureAuthority": {
+        "base58": "TX9WXE4pd3GyMkRgZRt3VC5ruRYNcvwaDX",
+        "hex": "41e84d6d176e39cf3fef8280e23fdc144ac6654c38"
     }
 }
