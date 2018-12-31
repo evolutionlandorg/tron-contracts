@@ -58,5 +58,97 @@
     "MintAndBurnAuthority": {
         "base58": "TXGgpS8WzM1P1kwaH5ZiqYNkttJycfbkHB",
         "hex": "41e9a8eee09e377f29f460286d8465ead6e8b4caba"
+    },
+    "FrozenDividend": {
+        "base58": "TPbKNNJH7nkA1nShxsZygN5ZUwPdNgXBjk",
+        "hex": "41956deccfffbbed1154d863e2c60a9af8e16cc38f"
+    },
+    "DividendPool": {
+        "base58": "TBGsx5pdgG7bnSXvYcnE6MSvbZYsVPaWEw",
+        "hex": "410e4fb5ba7838f93adff4104038148a158d0c46b8"
+    },
+    "FIRE": {
+        "base58": "TSxvo3HsdfWpg1Z6KGrLa14Ap56aFKk1bz",
+        "hex": "41ba6c9bf5cd0b9209a4ac0c82b53f6cbe4fff5623"
+    },
+    "SIOO": {
+        "base58": "TQZDHQw6evUsACqT14pCVMvbTXMZbarFtt",
+        "hex": "41a0002398fcf33c6fa50206751f70f2f8f553fe58"
+    },
+    "HHO": {
+        "base58": "TNGkC4xUSAyWaiJu3tu7EmgqUtvR45jTFG",
+        "hex": "4186f29de0e912e4ffdabc6de1b9666fa8d63b66a7"
+    },
+    "WOOD": {
+        "base58": "TGuGnbnUAao1Rqp7W4SWJdbT25onnJ3oy2",
+        "hex": "414c0a6059688ff86c4bfd88312bceb4e0e050b078"
+    },
+    "GOLD": {
+        "base58": "TCA6c9DLYKX4QTPL5pfCBkJqrJJ9DdVM4S",
+        "hex": "4117ff7d2060e2f91b6cbc0b4b335c1d37cd8861f5"
+    },
+    "InterstellarEncoder": {
+        "base58": "TQ7TMEBDYj3SBxwZUgybr75Gbq75oEwaPk",
+        "hex": "419b2110c87018b184651f92b0780948e883517d09"
+    },
+    "LandBase": {
+        "base58": "TXZ5bYpqbPvjEhP6FFEc64hDDgUgjFuYGd",
+        "hex": "41ecc29a3d40032583103ef937626d34f0e51f766b"
+    },
+    "ObjectOwnership": {
+        "base58": "TA3qDud99CYHK9Cyv5a4xaAgpQyS1K6qGw",
+        "hex": "4100dfe66a889aa22228e7b17236ceb7e6d3b286b2"
+    },
+    "TokenLocation": {
+        "base58": "TXJnJGLxuMP7MWe6Wk1hYCDtJ6vYeGMWV2",
+        "hex": "41ea0e56e20beaafc81619287fb3236a108db90700"
+    },
+    "ObjectOwnershipAuthority": {
+        "base58": "TQcDEytocg2mzQ7F4SMpDRvfwfspDtbppF",
+        "hex": "41a0915a18c33e78209a32d89bf22882a2fe6825e8"
+    },
+    "TokenLocationAuthority": {
+        "base58": "TLN1uFRWfhwwp7P28MJpECYg8jT8BMbfKB",
+        "hex": "4172018f1b2fb175b1db7ae5e5d22d4a494a213eda"
+    },
+    "ClockAuction": {
+        "base58": "TLoLEuUVpiUa58rebVQi9A4CcwrqEAZhKv",
+        "hex": "4176cb443f8280d28d6f84531a92c1330dd3203fdb"
+    },
+    "MysteriousTreasure": {
+        "base58": "TEyqpKGBfEuFnYWWHBfLCsaw3DAS5JUreM",
+        "hex": "4136f75c3f56f3ba24fe23672c3a2a333095b876f3"
+    },
+    "GenesisHolder": {
+        "base58": "TZ69MFbFCWNfyHkBxyMt8rSie8eTgi1wMD",
+        "hex": "41fd9ac1a0b242ba7116399174dd7ce5ff462e6c0f"
+    },
+    "RevenuePool": {
+        "base58": "TVbNDVucQi2G2JWBgUnDdSqfL5e3k8dCik",
+        "hex": "41d7410e6f0f369d8f8953b58817fb043c9de45a64"
+    },
+    "PointsRewardPool": {
+        "base58": "TUy9vLdVUtyQAx2gSF5RfnwnTU1gAvbQUi",
+        "hex": "41d067d15418edcd7ba2da26589bdc2bf961e640dc"
+    },
+    "UserPoints": {
+        "base58": "TSWu8E1v78P3dCcR7JckzXtt2YmVk4ZJeA",
+        "hex": "41b580669bb5b33a97267861d1176fe412a800f791"
+    },
+    "UserPointsAuthority": {
+        "base58": "TL9jT6zkJwip5qfrvpeA6BzvL7LHtkzVom",
+        "hex": "416faed5c59ff46796dcbd223dbd91a587defe1b01"
+    },
+    "LandBaseAuthority": {
+        "base58": "TLCgj1rKNPK2QowptxA2k84bX8QgDPn532",
+        "hex": "41703dcec2c62cd394659395de172efea478bb118c"
+    },
+    "BancorExchangeAuthority": {
+        "base58": "TAbsU5yc8RRt51A8zBHRj96fBFEXqe52tY",
+        "hex": "4106ef159c74608e1db7e96febbf62d09eec6c50e3"
+    },
+    "ClockAuctionAuthority": {
+        "base58": "TUHeLrQbe3gv6NWhtp9774tsAGghHgm3XT",
+        "hex": "41c8eee7be460445817fe2ecb4a266a63b756e74b4"
     }
 }
