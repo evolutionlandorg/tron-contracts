@@ -56,6 +56,10 @@ const app = async () => {
     console.log("RevenuePool: ", revenewPoolValue.toString());
 
 
+    // console.log(await SettingRegistry.addressOf(await IDSettingIDs.CONTRACT_FROZEN_DIVIDEND().call()).call());
+
+
+
     let channelDividendValue = 
     await SettingsRegistry.addressOf(channelDividendPoolKey).call();
     console.log("channelDividendPool: ", channelDividendValue.toString());
