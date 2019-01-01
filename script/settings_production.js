@@ -84,9 +84,13 @@ const app = async () => {
 
     console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_CONTRIBUTION_INCENTIVE_POOL().call()).call());
 
+    // await SettingRegistry.setAddressProperty(await AuctionSettingIds.CONTRACT_BANCOR_EXCHANGE().call(), contracts["BancorExchange"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
-    // console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_BANCOR_EXCHANGE().call()).call());
-
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_BANCOR_EXCHANGE().call()).call());
 
     console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_POINTS_REWARD_POOL().call()).call());
 
