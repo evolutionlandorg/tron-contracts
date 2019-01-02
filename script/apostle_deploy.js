@@ -40,9 +40,18 @@ const app = async () => {
     const apostleBaseAddr = contracts["ApostleBase"].hex;
     const apostleClockAuctionAddr = contracts["ApostleClockAuction"].hex;
     const siringClockAuctionAddr = contracts["SiringClockAuction"].hex;
+    const mintAndBurnAddr = contracts["MintAndBurnAuthority"].hex;
 
     let SettingRegistry = await tronWeb.contract().at(registrysAddress);
     let ApostleSettingIds = await tronWeb.contract().at(apostleSettingIdsAddr);
+
+    let gold =  await tronWeb.contract().at(mcontracts["GOLD"].hex);
+    let wood =  await tronWeb.contract().at(mcontracts["WOOD"].hex);
+    let water =  await tronWeb.contract().at(mcontracts["HHO"].hex);
+    let fire =  await tronWeb.contract().at(mcontracts["FIRE"].hex);
+    let tu =  await tronWeb.contract().at(mcontracts["SIOO"].hex);
+
+    let tokenUse = await tronWeb.contract().at(contracts["TokenUse"].hex);
 
     let apostleBaseId = await ApostleSettingIds.CONTRACT_APOSTLE_BASE().call();
     let clockAuctionId = await ApostleSettingIds.CONTRACT_APOSTLE_AUCTION().call();
@@ -50,6 +59,13 @@ const app = async () => {
     let birthFeeId = await ApostleSettingIds.UINT_AUTOBIRTH_FEE().call();
     let mixTalentId = await ApostleSettingIds.UINT_MIX_TALENT().call();
     let bidWaitingTimeId = await ApostleSettingIds.UINT_APOSTLE_BID_WAITING_TIME().call();
+    let interstellarEncoderID = await ApostleSettingIds.CONTRACT_INTERSTELLAR_ENCODER().call();
+
+    await SettingRegistry.setAddressProperty(interstellarEncoderID, contracts["InterstellarEncoder"].hex).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
 
     await SettingRegistry.setAddressProperty(apostleBaseId, apostleBaseAddr).send({
         feeLimit:1000000000,
@@ -92,6 +108,48 @@ const app = async () => {
     let ObjectOwnership = await tronWeb.contract().at(objectOwnershipAddress);
 
     await ObjectOwnership.setAuthority(objectOwnershipAuthorityAddr).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
+
+    let tokenUseCutId = await tokenUse.UINT_TOKEN_OFFER_CUT().call();
+    await SettingRegistry.setUintProperty(tokenUseCutId, 400).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
+    let tokenUseAddr = contracts["TokenUse"].hex;
+    let tokenUseId = await tokenUse.CONTRACT_TOKEN_USE().call();
+    await SettingRegistry.setAddressProperty(tokenUseId, tokenUseAddr).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
+    await gold.setAuthority(mintAndBurnAddr).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+    await wood.setAuthority(mintAndBurnAddr).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+    await water.setAuthority(mintAndBurnAddr).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+    await fire.setAuthority(mintAndBurnAddr).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+    await tu.setAuthority(mintAndBurnAddr).send({
         feeLimit:1000000000,
         callValue:0,
         shouldPollResponse:true
