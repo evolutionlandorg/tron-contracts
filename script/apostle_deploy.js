@@ -155,6 +155,14 @@ const app = async () => {
         shouldPollResponse:true
     });
 
+    let genScience = await tronWeb.contract().at(contracts["GeneScienceV3"].hex);
+    let genScienceId = await genScience.CONTRACT_GENE_SCIENCE().call();
+    await SettingRegistry.setAddressProperty(genScienceId, genScience.address).send({
+        feeLimit:1000000000,
+        callValue:0,
+        shouldPollResponse:true
+    });
+
     console.log("finished");
 
 };

@@ -54,5 +54,9 @@
     "MintAndBurnAuthority": {
         "base58": "TQeW4b3hDiVTFtSPJgkps71cm2hnJMVfKW",
         "hex": "41a10039a3d6416a1a25c0dfb91fa4553e472c067c"
+    },
+    "GeneScienceV3": {
+        "base58": "TCuLvFkbEZ6QH2g7JyUVxYddoNyAufaVMb",
+        "hex": "41202d528ab6c35cd60aa0c4ab7356f4f1a911cc02"
     }
 }

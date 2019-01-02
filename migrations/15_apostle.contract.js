@@ -14,6 +14,8 @@ const ObjectOwnership = artifacts.require('ObjectOwnership');
 const ApostleBaseAuthority = artifacts.require('ApostleBaseAuthority');
 const ClockAuctionAuthority = artifacts.require('ClockAuctionAuthority');
 
+const GeneScience = artifacts.require('GeneScienceV3');
+
 const conf = {
     registry_address: contracts["SettingsRegistry"].hex,
     objectOwnershipProxy_address: contracts["ObjectOwnership"].hex,
@@ -122,7 +124,7 @@ async function shastaApostleDeploy(deployer, network, accounts){
     let tokenUseAuth = await TokenUseAuthority.deployed();
     await tokenUse.setAuthority(tokenUseAuth.address);
 
-    let ms =new Date().getTime();
+    let ms = new Date().getTime();
     let curS = parseInt(ms / 1000000);
     await deployer.deploy(LandResource, conf.registry_address, curS);
     await deployer.deploy(LandResourceAuthority, [tokenUseETHAddr]);
@@ -133,6 +135,8 @@ async function shastaApostleDeploy(deployer, network, accounts){
 
     let landResourceAddr = landResource.address;
     await deployer.deploy(MintAndBurnAuthority, landResourceAddr);
+
+    await deployer.deploy(GeneScience, conf.registry_address );
 
 
 };
