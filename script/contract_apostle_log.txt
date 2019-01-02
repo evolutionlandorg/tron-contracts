@@ -33,3 +33,24 @@ ClockAuctionAuthority:
 ApostleBaseAuthority:
 (base58) TMaoxpxSgjdqvq4yuCbGQpYXUk8cizsom4
 (hex) 417f65206f4cfa7fd9b8057a5da4de7a6bd97a3009
+
+TokenUse:
+(base58) TAFHF3Gv6xu1pLS5ozU3pt6TZE3k8Ysdi1
+(hex) 41030a321583764047b647ffcffa6f66548eaa778f
+
+TokenUseAuthority:
+(base58) TXhdKpoHAkCjuLXhWdmwUzVeyhVHXH7xoW
+(hex) 41ee606a879cbc7a881339f69d30843e8eb941edb7
+
+LandResource:
+(base58) TNeMUs5k4F32C2d4a2aLHYrzREYyCQzzUB
+(hex) 418b08cf66da4390c186d96148763bc6d0cea3f202
+
+LandResourceAuthority:
+(base58) TVgyBkh3P8jM6MSqvKd9XgF8ARmhJUv8GR
+(hex) 41d85053ddd0a19870b09c829438485c3af409655c
+
+MintAndBurnAuthority:
+(base58) TQeW4b3hDiVTFtSPJgkps71cm2hnJMVfKW
+(hex) 41a10039a3d6416a1a25c0dfb91fa4553e472c067c
+
