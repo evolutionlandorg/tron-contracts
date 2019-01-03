@@ -31,8 +31,8 @@ ClockAuctionAuthority:
 (hex) 417ab9e224104894604edc3c623c56c7f8d2b0adfb
 
 ApostleBaseAuthority:
-(base58) TMaoxpxSgjdqvq4yuCbGQpYXUk8cizsom4
-(hex) 417f65206f4cfa7fd9b8057a5da4de7a6bd97a3009
+(base58) TXHvHp1pKJvShQD2iBFETRQmcycQN13fhr
+(hex) 41e9e4984ef746b918c750d0480e3542719f64a70e
 
 TokenUse:
 (base58) TAFHF3Gv6xu1pLS5ozU3pt6TZE3k8Ysdi1
