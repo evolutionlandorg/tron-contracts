@@ -69,9 +69,14 @@ async function shastaApostleDeploy(deployer, network, accounts){
     let genOwner = await gen0Apostle.owner();
     await gen0Apostle.setOperator(genOwner);
 
+    await deployer.deploy(TokenUse, conf.registry_address );
+    let tokenUse = await TokenUse.deployed();
+    let tokenUseAddr = tokenUse.address;
+    let tokenUseETHAddr = '0x' + tokenUseAddr.substring(2);
+
     await deployer.deploy(ObjectOwnershipAuthority, [landBaseEthAddr, apostleBaseEthAddr]);
     await deployer.deploy(ClockAuctionAuthority, [gen0ApostleEthAddr]);
-    await deployer.deploy(ApostleBaseAuthority, [gen0ApostleEthAddr, siringClockAuctionEthAddr]);
+    await deployer.deploy(ApostleBaseAuthority, [gen0ApostleEthAddr, siringClockAuctionEthAddr,tokenUseETHAddr]);
 
     // register in registry
     // let apostleSettingIds = await ApostleSettingIds.deployed();
@@ -113,13 +118,7 @@ async function shastaApostleDeploy(deployer, network, accounts){
     await interstellarEncoder.registerNewObjectClass(conf.landBaseProxy_address, conf.landObject_class);
     await interstellarEncoder.registerNewObjectClass(apostleBaseAddr, conf.apostleObject_class);
 
-
-    await deployer.deploy(TokenUse, conf.registry_address );
     await deployer.deploy(TokenUseAuthority, [landBaseEthAddr]);
-
-    let tokenUse = await TokenUse.deployed();
-    let tokenUseAddr = tokenUse.address;
-    let tokenUseETHAddr = '0x' + tokenUseAddr.substring(2);
     let tokenUseAuth = await TokenUseAuthority.deployed();
     await tokenUse.setAuthority(tokenUseAuth.address);
 
