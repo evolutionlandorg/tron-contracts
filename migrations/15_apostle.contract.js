@@ -25,8 +25,7 @@ const conf = {
     autoBirthFee: 500 * 10 ** 18,
     resourceNeededPerLevel: 5 * 10 ** 18,
     bidWaitingTime: 10 * 60,
-    gen0Limit: 2000,
-    curTick:
+    gen0Limit: 2000
 };
 
 
