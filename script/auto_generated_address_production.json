@@ -175,7 +175,7 @@
         "base58": "TUSYGDS99rag9nVuvHgNDSDHWiW4ZfpLxP",
         "hex": "41ca9d92d82e7a4054f9dee7e8c6b4451cfff3c87d"
     },
-    "ObjectOwnershipAuthority": {
+    "ObjectOwnershipAuthorityV2": {
         "base58": "TYibBbJjDcNERC5x4NY3CisJBPDh8UrFe5",
         "hex": "41f9872b7ce2e5969d98fbdd13e7f03397a4d8ccea"
     },
