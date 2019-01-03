@@ -116,7 +116,7 @@ contract TokenUse is DSAuth, ITokenUse, SettingIds {
     function _createTokenUseOffer(uint256 _tokenId, uint256 _duration, uint256 _price, address _acceptedActivity, address _owner) internal {
         require(isObjectReadyToUse(_tokenId), "No, it is still in use.");
         require(tokenId2UseOffer[_tokenId].owner == 0, "Token already in another offer.");
-        require(_price >= (1 ** 18), "price must larger than 1 ring.");
+        require(_price >= (1 * 10 ** 18), "price must larger than 1 ring.");
         require(_duration >= 7 days);
 
         ERC721(registry.addressOf(CONTRACT_OBJECT_OWNERSHIP)).transferFrom(_owner, address(this), _tokenId);

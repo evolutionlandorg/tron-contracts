@@ -1,7 +1,7 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
 var key = JSON.parse(fs.readFileSync('./script/key2.json', 'utf8'));
-var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta_old.json', 'utf8'));
 
 console.log(key);
 
@@ -36,46 +36,73 @@ const app = async () => {
     if (!connected)
         return;
 
-    const settingsRegistryAddress = contracts["SettingsRegistry"].hex;
+    let SettingRegistry = await tronWeb.contract().at(contracts["SettingsRegistry"].hex);
+    let AuctionSettingIds = await tronWeb.contract().at(contracts["RevenuePool"].hex);
+    let IDSettingIds = await tronWeb.contract().at(contracts["DividendPool"].hex);
+    let SettingIds = await tronWeb.contract().at(contracts["SettingIds"].hex);
 
-    const revenuePoolAddress = contracts["RevenuePool"].hex;
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_RING_ERC20_TOKEN().call()).call());
+    
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_KTON_ERC20_TOKEN().call()).call());
 
-    const dividendPoolAddress = contracts["DividendPool"].hex;
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_GOLD_ERC20_TOKEN().call()).call());
 
-    let SettingsRegistry = await tronWeb.contract().at(settingsRegistryAddress);
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_WOOD_ERC20_TOKEN().call()).call());
 
-    let RevenuePool = await tronWeb.contract().at(revenuePoolAddress);
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_WATER_ERC20_TOKEN().call()).call());
 
-    let DividendPool = await tronWeb.contract().at(dividendPoolAddress);
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_FIRE_ERC20_TOKEN().call()).call());
 
-    let channelDividendPoolKey = await DividendPool.CONTRACT_CHANNEL_DIVIDEND().call();
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_SOIL_ERC20_TOKEN().call()).call());
 
-    let revenewPoolKey = await RevenuePool.CONTRACT_REVENUE_POOL().call();
+    console.log("CONTRACT_OBJECT_OWNERSHIP");
 
-    let revenewPoolValue = await SettingsRegistry.addressOf(revenewPoolKey).call();
-    console.log("RevenuePool: ", revenewPoolValue.toString());
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_OBJECT_OWNERSHIP().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_TOKEN_LOCATION().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_LAND_BASE().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_USER_POINTS().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_INTERSTELLAR_ENCODER().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_DIVIDENDS_POOL().call()).call());
+
+    console.log(await SettingRegistry.uintOf(await SettingIds.UINT_AUCTION_CUT().call()).call());
+
+    console.log(await SettingRegistry.uintOf(await SettingIds.UINT_REFERER_CUT().call()).call());
+
+    console.log(await SettingRegistry.uintOf(await AuctionSettingIds.UINT_AUCTION_BID_WAITING_TIME().call()).call());
 
 
-    // console.log(await SettingRegistry.addressOf(await IDSettingIDs.CONTRACT_FROZEN_DIVIDEND().call()).call());
+    console.log(await SettingRegistry.uintOf(await AuctionSettingIds.UINT_EXCHANGE_ERROR_SPACE().call()).call());
 
 
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_CLOCK_AUCTION().call()).call());
 
-    let channelDividendValue = 
-    await SettingsRegistry.addressOf(channelDividendPoolKey).call();
-    console.log("channelDividendPool: ", channelDividendValue.toString());
 
-    // let res = await SettingsRegistry.setAddressProperty(await DividendPool.CONTRACT_DIVIDENDS_POOL().call(), contracts["DividendPool"].hex).send({
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_MYSTERIOUS_TREASURE().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_CONTRIBUTION_INCENTIVE_POOL().call()).call());
+
+    // await SettingRegistry.setAddressProperty(await AuctionSettingIds.CONTRACT_BANCOR_EXCHANGE().call(), contracts["BancorExchange"].hex).send({
     //     feeLimit:1000000000,
     //     callValue: 0,
     //     shouldPollResponse:true
     // });
 
-    let CONTRACT_FROZEN_DIVIDEND = 
-    await SettingsRegistry.addressOf(await DividendPool.CONTRACT_DIVIDENDS_POOL().call()).call();
-    console.log("CONTRACT_FROZEN_DIVIDEND: ", CONTRACT_FROZEN_DIVIDEND.toString());
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_BANCOR_EXCHANGE().call()).call());
 
-    let cut = await SettingsRegistry.uintOf(await DividendPool.UINT_REFERER_CUT().call()).call();
-    console.log("CONTRACT_FROZEN_DIVIDEND: ", cut.toString());
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_POINTS_REWARD_POOL().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await AuctionSettingIds.CONTRACT_DEV_POOL().call()).call());
+
+    console.log(await SettingRegistry.addressOf(await IDSettingIds.CONTRACT_CHANNEL_DIVIDEND().call()).call());
+
+
+    console.log(await SettingRegistry.addressOf(await IDSettingIds.CONTRACT_FROZEN_DIVIDEND().call()).call());
+
 };
 
 app();
