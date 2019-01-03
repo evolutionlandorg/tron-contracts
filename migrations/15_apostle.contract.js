@@ -118,10 +118,6 @@ async function shastaApostleDeploy(deployer, network, accounts){
     await interstellarEncoder.registerNewObjectClass(conf.landBaseProxy_address, conf.landObject_class);
     await interstellarEncoder.registerNewObjectClass(apostleBaseAddr, conf.apostleObject_class);
 
-    await deployer.deploy(TokenUseAuthority, [landBaseEthAddr]);
-    let tokenUseAuth = await TokenUseAuthority.deployed();
-    await tokenUse.setAuthority(tokenUseAuth.address);
-
     let ms = new Date().getTime();
     let curS = parseInt(ms / 1000);
     await deployer.deploy(LandResource, conf.registry_address, curS);
@@ -133,6 +129,11 @@ async function shastaApostleDeploy(deployer, network, accounts){
 
     let landResourceAddr = landResource.address;
     await deployer.deploy(MintAndBurnAuthority, landResourceAddr);
+    let landResourceEthAddr = '0x' + landResourceAddr.substring(2);
+
+    await deployer.deploy(TokenUseAuthority, [tokenUseETHAddr,apostleBaseEthAddr,landResourceEthAddr]);
+    let tokenUseAuth = await TokenUseAuthority.deployed();
+    await tokenUse.setAuthority(tokenUseAuth.address);
 
     await deployer.deploy(GeneScience, conf.registry_address );
 
