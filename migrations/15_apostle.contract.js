@@ -12,9 +12,9 @@ const ObjectOwnershipAuthority = artifacts.require('ObjectOwnershipAuthority');
 const ObjectOwnership = artifacts.require('ObjectOwnership');
 
 const ApostleBaseAuthority = artifacts.require('ApostleBaseAuthority');
-const ClockAuctionAuthority = artifacts.require('ClockAuctionAuthority');
+const ApostleClockAuctionAuthority = artifacts.require('ApostleClockAuctionAuthority');
 
-const GeneScience = artifacts.require('GeneScienceV3');
+// const GeneScience = artifacts.require('GeneScienceV3');
 
 const conf = {
     registry_address: contracts["SettingsRegistry"].hex,
@@ -75,7 +75,7 @@ async function shastaApostleDeploy(deployer, network, accounts){
     let tokenUseETHAddr = '0x' + tokenUseAddr.substring(2);
 
     await deployer.deploy(ObjectOwnershipAuthority, [landBaseEthAddr, apostleBaseEthAddr]);
-    await deployer.deploy(ClockAuctionAuthority, [gen0ApostleEthAddr]);
+    await deployer.deploy(ApostleClockAuctionAuthority, [gen0ApostleEthAddr]);
     await deployer.deploy(ApostleBaseAuthority, [gen0ApostleEthAddr, siringClockAuctionEthAddr,tokenUseETHAddr]);
 
     // register in registry
@@ -109,7 +109,7 @@ async function shastaApostleDeploy(deployer, network, accounts){
     let apostleBaseAuthority = await ApostleBaseAuthority.deployed();
     await apostleBase.setAuthority(apostleBaseAuthority.address);
 
-    let apostleClockAuctionAuthority = await ClockAuctionAuthority.deployed();
+    let apostleClockAuctionAuthority = await ApostleClockAuctionAuthority.deployed();
     await apostleClockAuction.setAuthority(apostleClockAuctionAuthority.address);
 
     // register object contract address in interstellarEncoder
@@ -123,7 +123,7 @@ async function shastaApostleDeploy(deployer, network, accounts){
     await tokenUse.setAuthority(tokenUseAuth.address);
 
     let ms = new Date().getTime();
-    let curS = parseInt(ms / 1000000);
+    let curS = parseInt(ms / 1000);
     await deployer.deploy(LandResource, conf.registry_address, curS);
     await deployer.deploy(LandResourceAuthority, [tokenUseETHAddr]);
 

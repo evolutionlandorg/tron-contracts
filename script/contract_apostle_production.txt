@@ -1,0 +1,39 @@
+  ApostleBase:
+    (base58) TKipWmcgGfGYgxWh3hNKPNRKKmvRyZkNxJ
+    (hex) 416af8a99d0539ac273ef92b13b0edefedfcf51bc8
+  ApostleClockAuction:
+    (base58) TVfR7sYZ2qYb25PGm5vLnh72jUkkE3596K
+    (hex) 41d80524bd98439612184c481cc6a6a3608491551f
+  Gen0Apostle:
+    (base58) TXeRjHjrLLomnPUnjAVJdYtMDi9qqFtHwH
+    (hex) 41edc57d25fb6a9432313013075e6775b75b381f6a
+  SiringClockAuction:
+    (base58) TYakY6juMU6iMygYHMxFf6DMKJtgoyJjhE
+    (hex) 41f80ba670704296752b1a3c8f17ff17e24bc7234e
+  TokenUse:
+    (base58) TUSYGDS99rag9nVuvHgNDSDHWiW4ZfpLxP
+    (hex) 41ca9d92d82e7a4054f9dee7e8c6b4451cfff3c87d
+  ObjectOwnershipAuthority:
+    (base58) TYibBbJjDcNERC5x4NY3CisJBPDh8UrFe5
+    (hex) 41f9872b7ce2e5969d98fbdd13e7f03397a4d8ccea
+  ApostleClockAuctionAuthority:
+    (base58) TLTtpdL9iGJfMU2c2g127RNnY9eNzX5UsC
+    (hex) 41731e251b4eb9df486d5ecf4b9411cba5651e73e4
+  ApostleBaseAuthority:
+    (base58) TH1CBFN7yucik2TuMLSQBVxKtQcgH3oFYG
+    (hex) 414d290638b604accdd71e5852fd15cb11a6985109
+  TokenUseAuthority:
+    (base58) TWAmyNooDEvbq9JkzyKdAonSnAPbWGkWUR
+    (hex) 41dd929d32d83b20de1bbd0618392a258a29588714
+  LandResource:
+    (base58) TYWPwc2DLXPRsYZwVDnwqpjwdFsv3TkbKb
+    (hex) 41f738cb701d94a35352621de20bc48ba598ae142e
+  LandResourceAuthority:
+    (base58) TMqRpGHRxVeaXHMHUdWjTktmb6RnmbJ5J5
+    (hex) 418228e0d1f0a347262d3f86c250f7372d0f52ef6d
+  ResourceMintAndBurnAuthority:
+    (base58) TPUorUvnxj8bpD4GZAkWVJXibKfHZ28V6u
+    (hex) 419432ca8a2d45963fa4ac20d077fa915b59ba262f
+  GeneScience:
+    (base58) TWJDBxsmaQNDB6XkYbUrqEjJ2JeaukSYmS
+    (hex) 41defa936e411dec9528d1f4d2943aa329352bf7b6

@@ -3,7 +3,7 @@ const fs = require('fs');
 var obj = {};
 
 var lineReader = require('readline').createInterface({
-    input: require('fs').createReadStream('./script/contracts_production.log')
+    input: require('fs').createReadStream('./script/contract_apostle_production.txt')
 });
 
 var contractName;
@@ -33,7 +33,7 @@ lineReader.on('line', function (line) {
     lineReader.close();
 
     // console.log(obj);
-    fs.writeFile("./script/auto_generated_address_production.json", JSON.stringify(obj, null, 4), function(err) {
+    fs.writeFile("./script/auto_generated_address_production_apostle.json", JSON.stringify(obj, null, 4), function(err) {
         if (err) throw err;
         console.log('complete');
         }

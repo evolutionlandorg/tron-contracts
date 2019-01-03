@@ -1,6 +1,6 @@
 pragma solidity ^0.4.23;
 
-contract ClockAuctionAuthority {
+contract ApostleClockAuctionAuthority {
 
     mapping (address => bool) public whiteList;
 
