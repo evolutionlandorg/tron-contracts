@@ -343,6 +343,10 @@ contract ApostleClockAuction is PausableDSAuth, ApostleSettingIds {
         emit ClaimedTokens(_token, owner, balance);
     }
 
+    function claimERC721Tokens(uint256 _tokenId) public onlyOwner {
+        ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).transferFrom(address(this), owner, _tokenId);
+    }
+
     /// @dev Computes owner's cut of a sale.
     /// @param _price - Sale price of NFT.
     function computeCut(uint256 _price, uint256 _cut) public pure returns (uint256) {

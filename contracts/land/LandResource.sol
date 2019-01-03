@@ -130,11 +130,11 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
     */
     function _getMinableBalance(uint256 _tokenId, address _resourceToken, uint256 _currentTime, uint256 _lastUpdateTime) public view returns (uint256 minableBalance) {
 
-        uint256 speed_in_current_period = getReleaseSpeed(
-            _tokenId, _resourceToken, (_currentTime + _lastUpdateTime) / 2);
+        uint256 speed_in_current_period = ILandBase(registry.addressOf(CONTRACT_LAND_BASE))
+        .getResourceRate(_tokenId, _resourceToken).mul(_getReleaseSpeedInSeconds(_tokenId, ((_currentTime + _lastUpdateTime) / 2))).mul(1 * 10 ** 18).div(1 days).div(TOTAL_SECONDS);
 
         // calculate the area of trapezoid
-        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime).mul(10 ** 18).div(1 days);
+        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime);
     }
 
     function _getMaxMineBalance(uint256 _tokenId, address _resourceToken, uint256 _currentTime, uint256 _lastUpdateTime) internal view returns (uint256) {

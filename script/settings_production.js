@@ -8,7 +8,10 @@ console.log(key);
 //const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
 const fullNode = 'http://104.199.150.138:8500'; // Full node http endpoint
 const solidityNode = 'http://104.199.150.138:8600'; // Solidity node http endpoint
-const eventServer = 'http://104.199.150.138:18891'; // Contract events http endpoint
+const eventServer = 'http://35.201.218.126:18891'; // Contract events http endpoint
+
+// const fullNode = 'https://api.trongrid.io'; // Full node http endpoint
+// const solidityNode = 'https://api.trongrid.io'; // Solidity node http endpoint
 // const eventServer = 'https://api.trongrid.io'; // Contract events http endpoint
 
 const privateKey = key.privateKey;
