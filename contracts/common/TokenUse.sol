@@ -323,6 +323,34 @@ contract TokenUse is DSAuth, ITokenUse, SettingIds {
         emit ClaimedTokens(_token, owner, balance);
     }
 
+    function changeTokenUseStatus(
+        uint256 _tokenId, address _user, address _owner, uint48 _startTime, uint48 _endTime, uint256 _price, address _acceptedActivity) public auth {
+        tokenId2UseStatus[_tokenId].user = _user;
+        tokenId2UseStatus[_tokenId].owner = _owner;
+        tokenId2UseStatus[_tokenId].startTime = _startTime;
+        tokenId2UseStatus[_tokenId].endTime = _endTime;
+        tokenId2UseStatus[_tokenId].price = _price;
+        tokenId2UseStatus[_tokenId].acceptedActivity = _acceptedActivity;
+    }
+
+    function changeTokenUseOffer(
+        uint256 _tokenId, address _owner, uint48 _duration, uint256 _price, address _acceptedActivity) public auth {
+        tokenId2UseOffer[_tokenId].owner = _owner;
+        tokenId2UseOffer[_tokenId].duration = _duration;
+        tokenId2UseOffer[_tokenId].price = _price;
+        tokenId2UseOffer[_tokenId].acceptedActivity = _acceptedActivity;
+    }
+
+    function changeTokenActivity(
+        uint256 _tokenId, address _activity, uint48 _endTime) public auth {
+        tokenId2CurrentActivity[_tokenId].activity = _activity;
+        tokenId2CurrentActivity[_tokenId].endTime = _endTime;
+    }
+
+    function claimERC721Tokens(uint256 _tokenId) public auth {
+        ERC721(registry.addressOf(CONTRACT_OBJECT_OWNERSHIP)).transferFrom(address(this), owner, _tokenId);
+    }
+
     function toBytes(address x) public pure returns (bytes b) {
         b = new bytes(32);
         assembly { mstore(add(b, 32), x) }
