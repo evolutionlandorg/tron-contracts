@@ -1,3 +1,5 @@
+var fs = require('fs');
+var contracts = JSON.parse(fs.readFileSync('../script/auto_generated_address_shasta.json', 'utf8'));
 
 const InterstellarEncoder = artifacts.require('InterstellarEncoder');
 const ApostleBase = artifacts.require('ApostleBase');
@@ -12,24 +14,31 @@ const ObjectOwnership = artifacts.require('ObjectOwnership');
 const ApostleBaseAuthority = artifacts.require('ApostleBaseAuthority');
 const ClockAuctionAuthority = artifacts.require('ClockAuctionAuthority');
 
+const GeneScience = artifacts.require('GeneScienceV3');
+
 const conf = {
-    registry_address: '411b2b0c56b851a6c10d0e4a25a1e8184aa8c03297',
-    objectOwnershipProxy_address: '411cad3f158adc0706f140bf20fa910947f947ab8e',
-    landBaseProxy_address: '411263e37711650b948dfb161bb17ba866d5129f26',
+    registry_address: contracts["SettingsRegistry"].hex,
+    objectOwnershipProxy_address: contracts["ObjectOwnership"].hex,
+    landBaseProxy_address: contracts["LandBase"].hex,
     landObject_class: 1,
     apostleObject_class: 2,
     autoBirthFee: 500 * 10 ** 18,
     resourceNeededPerLevel: 5 * 10 ** 18,
     bidWaitingTime: 10 * 60,
-    gen0Limit: 2000
+    gen0Limit: 2000,
+    curTick:
 };
+
+
 
 module.exports = function(deployer, network, accounts) {
 
-    console.log("deployer: ", deployer,", network: ", network, ", accounts: ",accounts);
-    if (network == "development")
+    console.log("registry_address: ", conf.registry_address);
+    // console.log("deployer: ", deployer,", network: ", network, ", accounts: ",accounts);
+    if (network == "shasta")
     {
         deployer.then(async () => {
+
             await shastaApostleDeploy(deployer, network, accounts);
         });
     }
@@ -37,6 +46,7 @@ module.exports = function(deployer, network, accounts) {
 
 
 async function shastaApostleDeploy(deployer, network, accounts){
+
     await deployer.deploy(InterstellarEncoder);
     await deployer.deploy(ApostleSettingIds);
     await deployer.deploy(ApostleBase,conf.registry_address);
@@ -57,6 +67,8 @@ async function shastaApostleDeploy(deployer, network, accounts){
     let siringClockAuctionAddr = siringClockAuction.address;
     let siringClockAuctionEthAddr = '0x' + siringClockAuctionAddr.substring(2);
 
+    let genOwner = await gen0Apostle.owner();
+    await gen0Apostle.setOperator(genOwner);
 
     await deployer.deploy(ObjectOwnershipAuthority, [landBaseEthAddr, apostleBaseEthAddr]);
     await deployer.deploy(ClockAuctionAuthority, [gen0ApostleEthAddr]);
@@ -101,5 +113,30 @@ async function shastaApostleDeploy(deployer, network, accounts){
     await interstellarEncoder.registerNewTokenContract(conf.objectOwnershipProxy_address);
     await interstellarEncoder.registerNewObjectClass(conf.landBaseProxy_address, conf.landObject_class);
     await interstellarEncoder.registerNewObjectClass(apostleBaseAddr, conf.apostleObject_class);
+
+
+    await deployer.deploy(TokenUse, conf.registry_address );
+    await deployer.deploy(TokenUseAuthority, [landBaseEthAddr]);
+
+    let tokenUse = await TokenUse.deployed();
+    let tokenUseAddr = tokenUse.address;
+    let tokenUseETHAddr = '0x' + tokenUseAddr.substring(2);
+    let tokenUseAuth = await TokenUseAuthority.deployed();
+    await tokenUse.setAuthority(tokenUseAuth.address);
+
+    let ms = new Date().getTime();
+    let curS = parseInt(ms / 1000000);
+    await deployer.deploy(LandResource, conf.registry_address, curS);
+    await deployer.deploy(LandResourceAuthority, [tokenUseETHAddr]);
+
+    let landResource = await LandResource.deployed();
+    let landResourceAuth = await LandResourceAuthority.deployed();
+    await landResource.setAuthority(landResourceAuth.address);
+
+    let landResourceAddr = landResource.address;
+    await deployer.deploy(MintAndBurnAuthority, landResourceAddr);
+
+    await deployer.deploy(GeneScience, conf.registry_address );
+
 
 };

@@ -1,38 +1,62 @@
 {
     "InterstellarEncoder": {
-        "base58": "TSyULhtvkbCm7Hs8deyEwUFApPfxqrtCQQ",
-        "hex": "41ba86f14504d102ff4e3c82936d4ec149f133e206"
+        "base58": "TFUKf9UQT5EBEeKF8Rz8HNArfiGqgwKDwh",
+        "hex": "413c5a3f9febc3166f08fcdff9bc5e945e45b29e52"
     },
     "ApostleSettingIds": {
-        "base58": "TSW3GpBDntbueFV4bCG5WuyKK3jxBsomfc",
-        "hex": "41b556c95a1a22f15732edb4ea0cb21d02663c24b7"
+        "base58": "TPL5rG2QZfFG69ytGSHXQJMtRDmejYMvyu",
+        "hex": "41928c6683420bb97be34cd8456b0aab6ec4d0cfb6"
     },
     "ApostleBase": {
-        "base58": "TBxw6VujWLvrmT7etYt5a162zgjw3nRuz4",
-        "hex": "4115e2f946ea34c2aab33a1c88f5b90f34efa736bc"
+        "base58": "TWU8fEhdLx3EXCMoLD644GUBPDoDJnsUAW",
+        "hex": "41e0daf449bfd486f1b065f75235d16b08b9dee66f"
     },
     "ApostleClockAuction": {
-        "base58": "TBadv4ChGPGBXAQN5g73yC1aJFg3wzWE8B",
-        "hex": "4111ab7b3c6aa291f7b20d9bf0a76a7b8cb4fd528f"
+        "base58": "TJFbNM5AnDzSfGL87kda2fCDXzzXV1bXTg",
+        "hex": "415ada552cf5fb8933c5dd9f0393740d439dee4dc6"
     },
     "Gen0Apostle": {
-        "base58": "TBe9vrYNoT63PKjEsFN5qQJp3mx35o8894",
-        "hex": "411255c8945ab6eaec0a8ecd1d0de3c616b28cf747"
+        "base58": "TMy8Y9kxAPVzTNJZ6MLKQZLjSjbpW4fswZ",
+        "hex": "41839dc87a3a9de3ed211588f30865b0ea5fdc852d"
     },
     "SiringClockAuction": {
-        "base58": "TDsQDNJ8R2cWAtAHk6sBNkcKYjenxneYsU",
-        "hex": "412ac75dea5e3e480ec5c9157b01713747c634e2cc"
+        "base58": "TTxxc7L2oGD67b3PLMVABAieQ5CRcSpNtv",
+        "hex": "41c5663f48cf038dc2ec333f9fed03fa80bc778ba7"
     },
     "ObjectOwnershipAuthority": {
-        "base58": "TLhtaUnArA8CuY4hgxW3oacNFGhQQwbv7Z",
-        "hex": "4175c3c3c9c83228504754fda23debbf518b6d4b02"
+        "base58": "TUuvMPSy5Dgc9DqxebsL5DDqmEi2GVyAia",
+        "hex": "41cfcb3e6338ecc3ecf296ebe120e852ef742723bf"
     },
     "ClockAuctionAuthority": {
-        "base58": "TEkumRBQXobD3Uigt7j1kCiAhkWnXqgReq",
-        "hex": "413485400a93348e434600724ddec0531595cecbea"
+        "base58": "TMA87s7NUB4RSJCUBb1xZDun9pNNEvibnh",
+        "hex": "417ab9e224104894604edc3c623c56c7f8d2b0adfb"
     },
     "ApostleBaseAuthority": {
-        "base58": "TAjefFSRT1mcQgkQcrNxDW2VXsAcgD7gtp",
-        "hex": "410867b88e724b1236015342866f93d53578473edd"
+        "base58": "TMaoxpxSgjdqvq4yuCbGQpYXUk8cizsom4",
+        "hex": "417f65206f4cfa7fd9b8057a5da4de7a6bd97a3009"
+    },
+    "TokenUse": {
+        "base58": "TAFHF3Gv6xu1pLS5ozU3pt6TZE3k8Ysdi1",
+        "hex": "41030a321583764047b647ffcffa6f66548eaa778f"
+    },
+    "TokenUseAuthority": {
+        "base58": "TXhdKpoHAkCjuLXhWdmwUzVeyhVHXH7xoW",
+        "hex": "41ee606a879cbc7a881339f69d30843e8eb941edb7"
+    },
+    "LandResource": {
+        "base58": "TNeMUs5k4F32C2d4a2aLHYrzREYyCQzzUB",
+        "hex": "418b08cf66da4390c186d96148763bc6d0cea3f202"
+    },
+    "LandResourceAuthority": {
+        "base58": "TVgyBkh3P8jM6MSqvKd9XgF8ARmhJUv8GR",
+        "hex": "41d85053ddd0a19870b09c829438485c3af409655c"
+    },
+    "MintAndBurnAuthority": {
+        "base58": "TQeW4b3hDiVTFtSPJgkps71cm2hnJMVfKW",
+        "hex": "41a10039a3d6416a1a25c0dfb91fa4553e472c067c"
+    },
+    "GeneScienceV3": {
+        "base58": "TCuLvFkbEZ6QH2g7JyUVxYddoNyAufaVMb",
+        "hex": "41202d528ab6c35cd60aa0c4ab7356f4f1a911cc02"
     }
 }
