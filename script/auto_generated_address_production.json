@@ -103,10 +103,6 @@
         "base58": "TXJnJGLxuMP7MWe6Wk1hYCDtJ6vYeGMWV2",
         "hex": "41ea0e56e20beaafc81619287fb3236a108db90700"
     },
-    "ObjectOwnershipAuthority": {
-        "base58": "TQcDEytocg2mzQ7F4SMpDRvfwfspDtbppF",
-        "hex": "41a0915a18c33e78209a32d89bf22882a2fe6825e8"
-    },
     "TokenLocationAuthority": {
         "base58": "TLN1uFRWfhwwp7P28MJpECYg8jT8BMbfKB",
         "hex": "4172018f1b2fb175b1db7ae5e5d22d4a494a213eda"
@@ -175,7 +171,7 @@
         "base58": "TUSYGDS99rag9nVuvHgNDSDHWiW4ZfpLxP",
         "hex": "41ca9d92d82e7a4054f9dee7e8c6b4451cfff3c87d"
     },
-    "ObjectOwnershipAuthorityV2": {
+    "ObjectOwnershipAuthority": {
         "base58": "TYibBbJjDcNERC5x4NY3CisJBPDh8UrFe5",
         "hex": "41f9872b7ce2e5969d98fbdd13e7f03397a4d8ccea"
     },

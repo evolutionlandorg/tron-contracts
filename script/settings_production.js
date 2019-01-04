@@ -6,13 +6,13 @@ var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_prod
 console.log(key);
 
 //const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
-const fullNode = 'http://104.199.150.138:8500'; // Full node http endpoint
-const solidityNode = 'http://104.199.150.138:8600'; // Solidity node http endpoint
-const eventServer = 'http://35.201.218.126:18891'; // Contract events http endpoint
+// const fullNode = 'http://104.199.150.138:8500'; // Full node http endpoint
+// const solidityNode = 'http://104.199.150.138:8600'; // Solidity node http endpoint
+// const eventServer = 'http://35.201.218.126:18891'; // Contract events http endpoint
 
-// const fullNode = 'https://api.trongrid.io'; // Full node http endpoint
-// const solidityNode = 'https://api.trongrid.io'; // Solidity node http endpoint
-// const eventServer = 'https://api.trongrid.io'; // Contract events http endpoint
+const fullNode = 'https://api.trongrid.io'; // Full node http endpoint
+const solidityNode = 'https://api.trongrid.io'; // Solidity node http endpoint
+const eventServer = 'https://api.trongrid.io'; // Contract events http endpoint
 
 const privateKey = key.privateKey;
 const myAddress = key.address;
@@ -44,6 +44,7 @@ const app = async () => {
     let AuctionSettingIds = await tronWeb.contract().at(contracts["RevenuePool"].hex);
     let IDSettingIds = await tronWeb.contract().at(contracts["DividendPool"].hex);
     let SettingIds = await tronWeb.contract().at(contracts["SettingIds"].hex);
+    let ApostleIds = await tronWeb.contract().at(contracts["ApostleBase"].hex);
 
     console.log(await SettingRegistry.addressOf(await SettingIds.CONTRACT_RING_ERC20_TOKEN().call()).call());
     
@@ -105,8 +106,85 @@ const app = async () => {
 
     console.log(await SettingRegistry.addressOf(await IDSettingIds.CONTRACT_FROZEN_DIVIDEND().call()).call());
 
+    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_GENE_SCIENCE().call(), contracts["GeneScience"].hex).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
 
+    console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_GENE_SCIENCE().call()).call());
 
+    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_APOSTLE_BASE().call(), contracts["ApostleBase"].hex).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_APOSTLE_BASE().call()).call());
+
+    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_SIRING_AUCTION().call(), contracts["SiringClockAuction"].hex).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_SIRING_AUCTION().call()).call());
+
+    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_APOSTLE_AUCTION().call(), contracts["ApostleClockAuction"].hex).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_APOSTLE_AUCTION().call()).call());
+
+    // await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_HABERG_POTION_SHOP().call(), contracts["Har"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
+
+    // console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_HABERG_POTION_SHOP().call()).call());
+
+    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_TOKEN_USE().call(), contracts["TokenUse"].hex).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_TOKEN_USE().call()).call());
+
+    await SettingRegistry.setUintProperty(await ApostleIds.UINT_AUTOBIRTH_FEE().call(), "500000000000000000000").send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_AUTOBIRTH_FEE().call()).call());
+
+    await SettingRegistry.setUintProperty(await ApostleIds.UINT_MIX_TALENT().call(), "5000000000000000000").send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_MIX_TALENT().call()).call());
+
+    await SettingRegistry.setUintProperty(await ApostleIds.UINT_APOSTLE_BID_WAITING_TIME().call(), 600).send({
+        feeLimit:1000000000,
+        callValue: 0,
+        shouldPollResponse:true
+    });
+
+    console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_APOSTLE_BID_WAITING_TIME().call()).call());
+
+    // await SettingRegistry.setUintProperty(await ApostleIds.UINT_HABERG_POTION_TAX_RATE().call(), 600).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
+
+    // console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_HABERG_POTION_TAX_RATE().call()).call());
 
 };
 
