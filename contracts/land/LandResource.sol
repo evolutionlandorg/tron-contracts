@@ -401,15 +401,31 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
         return land2ResourceMineState[_landTokenId].totalMinerStrength[_resourceToken];
     }
 
-    function availableResources(uint256 _landTokenId, address[5] _resourceTokens) public view returns (uint256,uint256,uint256,uint256,uint256) {
+    function availableResources(uint256 _landTokenId) public view returns (uint256,uint256,uint256,uint256,uint256) {
+        address gold = registry.addressOf(CONTRACT_GOLD_ERC20_TOKEN);
+        address wood = registry.addressOf(CONTRACT_WOOD_ERC20_TOKEN);
+        address water = registry.addressOf(CONTRACT_WATER_ERC20_TOKEN);
+        address fire = registry.addressOf(CONTRACT_FIRE_ERC20_TOKEN);
+        address soil = registry.addressOf(CONTRACT_SOIL_ERC20_TOKEN);
 
+        address[5] resourceTokens;
+        resourceTokens[0] = gold;
+        resourceTokens[1] = wood;
+        resourceTokens[2] = water;
+        resourceTokens[3] = fire;
+        resourceTokens[4] = soil;
+        return _availableResources(_landTokenId, resourceTokens);
+
+    }
+
+    function _availableResources(uint256 _landTokenId, address[5] _resourceTokens) internal view returns (uint256,uint256,uint256,uint256,uint256) {
         uint availableGold = _calculateMinedBalance(_landTokenId, _resourceTokens[0], now) + land2ResourceMineState[_landTokenId].mintedBalance[_resourceTokens[0]];
         uint availableWood = _calculateMinedBalance(_landTokenId, _resourceTokens[1], now) + land2ResourceMineState[_landTokenId].mintedBalance[_resourceTokens[1]];
         uint availableWater = _calculateMinedBalance(_landTokenId, _resourceTokens[2], now) + land2ResourceMineState[_landTokenId].mintedBalance[_resourceTokens[2]];
         uint availableFire = _calculateMinedBalance(_landTokenId, _resourceTokens[3], now) + land2ResourceMineState[_landTokenId].mintedBalance[_resourceTokens[3]];
         uint availableSoil = _calculateMinedBalance(_landTokenId, _resourceTokens[4], now) + land2ResourceMineState[_landTokenId].mintedBalance[_resourceTokens[4]];
 
-        return (availableGold, availableWood, availableWater, availableFire, availableSoil);
+    return (availableGold, availableWood, availableWater, availableFire, availableSoil);
     }
 
     function mintedBalanceOnLand(uint256 _landTokenId, address _resourceToken) public view returns (uint256) {
