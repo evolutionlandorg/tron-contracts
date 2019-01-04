@@ -111,6 +111,8 @@ const app = async () => {
     //     callValue: 0,
     //     shouldPollResponse:true
     // });
+    
+    console.log("CONTRACT_GENE_SCIENCE");
 
     console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_GENE_SCIENCE().call()).call());
 
