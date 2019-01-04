@@ -106,35 +106,35 @@ const app = async () => {
 
     console.log(await SettingRegistry.addressOf(await IDSettingIds.CONTRACT_FROZEN_DIVIDEND().call()).call());
 
-    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_GENE_SCIENCE().call(), contracts["GeneScience"].hex).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_GENE_SCIENCE().call(), contracts["GeneScience"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_GENE_SCIENCE().call()).call());
 
-    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_APOSTLE_BASE().call(), contracts["ApostleBase"].hex).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_APOSTLE_BASE().call(), contracts["ApostleBase"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_APOSTLE_BASE().call()).call());
 
-    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_SIRING_AUCTION().call(), contracts["SiringClockAuction"].hex).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_SIRING_AUCTION().call(), contracts["SiringClockAuction"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_SIRING_AUCTION().call()).call());
 
-    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_APOSTLE_AUCTION().call(), contracts["ApostleClockAuction"].hex).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_APOSTLE_AUCTION().call(), contracts["ApostleClockAuction"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_APOSTLE_AUCTION().call()).call());
 
@@ -146,35 +146,35 @@ const app = async () => {
 
     // console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_HABERG_POTION_SHOP().call()).call());
 
-    await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_TOKEN_USE().call(), contracts["TokenUse"].hex).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setAddressProperty(await ApostleIds.CONTRACT_TOKEN_USE().call(), contracts["TokenUse"].hex).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.addressOf(await ApostleIds.CONTRACT_TOKEN_USE().call()).call());
 
-    await SettingRegistry.setUintProperty(await ApostleIds.UINT_AUTOBIRTH_FEE().call(), "500000000000000000000").send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setUintProperty(await ApostleIds.UINT_AUTOBIRTH_FEE().call(), "500000000000000000000").send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_AUTOBIRTH_FEE().call()).call());
 
-    await SettingRegistry.setUintProperty(await ApostleIds.UINT_MIX_TALENT().call(), "5000000000000000000").send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setUintProperty(await ApostleIds.UINT_MIX_TALENT().call(), "5000000000000000000").send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_MIX_TALENT().call()).call());
 
-    await SettingRegistry.setUintProperty(await ApostleIds.UINT_APOSTLE_BID_WAITING_TIME().call(), 600).send({
-        feeLimit:1000000000,
-        callValue: 0,
-        shouldPollResponse:true
-    });
+    // await SettingRegistry.setUintProperty(await ApostleIds.UINT_APOSTLE_BID_WAITING_TIME().call(), 600).send({
+    //     feeLimit:1000000000,
+    //     callValue: 0,
+    //     shouldPollResponse:true
+    // });
 
     console.log(await SettingRegistry.uintOf(await ApostleIds.UINT_APOSTLE_BID_WAITING_TIME().call()).call());
 
