@@ -80,6 +80,36 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
         _registerInterface(InterfaceId_IActivity);
     }
 
+    function changeResourceReleaseStartTime(uint256 _resourceReleaseStartTime) public auth {
+        resourceReleaseStartTime = _resourceReleaseStartTime;
+    }
+
+    function changeAttenPerDay(uint256 _attenPerDay) public auth {
+        attenPerDay = _attenPerDay;
+    }
+
+    function changeRecoverAttenPerDay(uint256 _recoverAttenPerDay) public auth {
+        recoverAttenPerDay = _recoverAttenPerDay;
+    }
+
+    function changeLandResourceMineState(
+        uint256 _landTokenId, uint256 _lastUpdateSpeedInSeconds, uint256 _lastDestoryAttenInSeconds, uint256 _industryIndex, uint128 _lastUpdateTime, uint64 _totalMiners, uint64 _maxMiners)
+    public auth
+    {
+        land2ResourceMineState[_landTokenId].lastUpdateSpeedInSeconds = _lastUpdateSpeedInSeconds;
+        land2ResourceMineState[_landTokenId].lastDestoryAttenInSeconds = _lastDestoryAttenInSeconds;
+        land2ResourceMineState[_landTokenId].industryIndex = _industryIndex;
+        land2ResourceMineState[_landTokenId].lastUpdateTime = _lastUpdateTime;
+        land2ResourceMineState[_landTokenId].totalMiners = _totalMiners;
+        land2ResourceMineState[_landTokenId].maxMiners = _maxMiners;
+    }
+
+    function changeMinerStatus(uint256 _tokenId, uint256 _landTokenId, address _resource, uint64 _indexInResource) public auth {
+        miner2Index[_tokenId].landTokenId = _landTokenId;
+        miner2Index[_tokenId].resource = _resource;
+        miner2Index[_tokenId].indexInResource = _indexInResource;
+    }
+
     // get amount of speed uint at this moment
     function _getReleaseSpeedInSeconds(uint256 _tokenId, uint256 _time) internal view returns (uint256 currentSpeed) {
         require(_time >= resourceReleaseStartTime, "Should after release time");
@@ -130,11 +160,11 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
     */
     function _getMinableBalance(uint256 _tokenId, address _resourceToken, uint256 _currentTime, uint256 _lastUpdateTime) public view returns (uint256 minableBalance) {
 
-        uint256 speed_in_current_period = getReleaseSpeed(
-            _tokenId, _resourceToken, (_currentTime + _lastUpdateTime) / 2);
+        uint256 speed_in_current_period = ILandBase(registry.addressOf(CONTRACT_LAND_BASE))
+        .getResourceRate(_tokenId, _resourceToken).mul(_getReleaseSpeedInSeconds(_tokenId, ((_currentTime + _lastUpdateTime) / 2))).mul(1 * 10 ** 18).div(1 days).div(TOTAL_SECONDS);
 
         // calculate the area of trapezoid
-        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime).mul(10 ** 18).div(1 days);
+        minableBalance = speed_in_current_period.mul(_currentTime - _lastUpdateTime);
     }
 
     function _getMaxMineBalance(uint256 _tokenId, address _resourceToken, uint256 _currentTime, uint256 _lastUpdateTime) internal view returns (uint256) {
@@ -181,7 +211,7 @@ contract LandResource is SupportsInterfaceWithLookup, DSAuth, IActivity, LandSet
         land2ResourceMineState[_landTokenId].mintedBalance[_resourceToken] += minedBalance;
     }
 
-    function _calculateMinedBalance(uint256 _landTokenId, address _resourceToken, uint256 _currentTime) internal returns (uint256) {
+    function _calculateMinedBalance(uint256 _landTokenId, address _resourceToken, uint256 _currentTime) internal view returns (uint256) {
         uint256 currentTime = _currentTime;
 
         uint256 minedBalance;

@@ -503,7 +503,26 @@ contract ApostleBase is SupportsInterfaceWithLookup, IActivity, IActivityObject,
         // do nothing.
     }
 
-    function getApostleInfo(uint256 _tokenId) public view returns(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256) {
+    // ONLY for upgrade purpose
+    function changeApostleInfo(
+        uint256 _tokenId, uint256 _genes, uint256 _talents, uint256 _matronId, 
+        uint256 _sireId, uint256 _siringWithId, uint16 _cooldownIndex,
+        uint16 _generation, uint48 _birthTime, uint48 _activeTime, uint48 _deadTime, uint48 _cooldownEndTime) public auth {
+        tokenId2Apostle[_tokenId].genes = _genes;
+        tokenId2Apostle[_tokenId].talents = _talents;
+        tokenId2Apostle[_tokenId].matronId = _matronId;
+        tokenId2Apostle[_tokenId].sireId = _sireId;
+        tokenId2Apostle[_tokenId].siringWithId = _siringWithId;
+        tokenId2Apostle[_tokenId].cooldownIndex = _cooldownIndex;
+        tokenId2Apostle[_tokenId].generation = _generation;
+        tokenId2Apostle[_tokenId].birthTime = _birthTime;
+        tokenId2Apostle[_tokenId].activeTime = _activeTime;
+        tokenId2Apostle[_tokenId].deadTime = _deadTime;
+        tokenId2Apostle[_tokenId].cooldownEndTime = _cooldownEndTime;
+    }
+
+    function getApostleInfo(uint256 _tokenId) public view returns(
+        uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256) {
         Apostle storage apostle = tokenId2Apostle[_tokenId];
         return (
         apostle.genes,

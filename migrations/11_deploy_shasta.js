@@ -91,7 +91,7 @@ let takeBack;
 
 module.exports = function(deployer, network, accounts) {
 
-    console.log("deployer: ", deployer,", network: ", network, ", accounts: ",accounts);
+    // console.log("deployer: ", deployer,", network: ", network, ", accounts: ",accounts);
     if (network == "shasta")
     {
         deployer.then(async () => {

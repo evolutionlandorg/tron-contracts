@@ -65,6 +65,14 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
         operator = _operator;
     }
 
+    function setGen0CreationLimit(uint256 _gen0CreationLimit) public onlyOwner {
+        gen0CreationLimit = _gen0CreationLimit;
+    }
+
+    function changeGen0Count(uint256 _gen0Count) public onlyOwner {
+        gen0Count = _gen0Count;
+    }
+
     function tokenFallback(address _from, uint256 _value, bytes _data) public {
         address ring = registry.addressOf(CONTRACT_RING_ERC20_TOKEN);
         address kton = registry.addressOf(CONTRACT_KTON_ERC20_TOKEN);
@@ -107,6 +115,11 @@ contract Gen0Apostle is PausableDSAuth, ApostleSettingIds {
         ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).transferFrom(address(this), owner, _tokenId);
 
         emit ClaimedERC721Token(owner, _tokenId);
+    }
+
+    function setApproval(address _operator, bool _isApproved) public onlyOwner {
+        ERC721 nft = ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP));
+        nft.setApprovalForAll(_operator, _isApproved);
     }
 
     function setRegistry(address _registry) public onlyOwner {

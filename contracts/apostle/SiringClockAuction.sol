@@ -9,6 +9,9 @@ import "./SiringAuctionBase.sol";
 
 /// @title Clock auction for non-fungible tokens.
 contract SiringClockAuction is SiringAuctionBase {
+    // claimedToken event
+    event ClaimedTokens(address indexed token, address indexed owner, uint amount);
+    
     constructor(ISettingsRegistry _registry) public {
         registry = _registry;
     }
@@ -180,6 +183,26 @@ contract SiringClockAuction is SiringAuctionBase {
     returns (bytes4) {
         return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
 
+    }
+
+    /// @notice This method can be used by the owner to extract mistakenly
+    ///  sent tokens to this contract.
+    /// @param _token The address of the token contract that you want to recover
+    ///  set to 0 in case you want to extract ether.
+    function claimTokens(address _token) public onlyOwner {
+        if (_token == 0x0) {
+            owner.transfer(address(this).balance);
+            return;
+        }
+        ERC20 token = ERC20(_token);
+        uint balance = token.balanceOf(address(this));
+        token.transfer(owner, balance);
+
+        emit ClaimedTokens(_token, owner, balance);
+    }
+
+    function claimERC721Tokens(uint256 _tokenId) public onlyOwner {
+        ERC721(registry.addressOf(SettingIds.CONTRACT_OBJECT_OWNERSHIP)).transferFrom(address(this), owner, _tokenId);
     }
 
     function setRegistry(address _registry) public onlyOwner {

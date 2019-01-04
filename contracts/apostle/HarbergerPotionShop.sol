@@ -192,6 +192,20 @@ contract  HarbergerPotionShop is DSAuth, ApostleSettingIds {
         emit ClaimedTokens(_token, owner, balance);
     }
 
+    function claimERC721Tokens(uint256 _tokenId) public onlyOwner {
+        ERC721(registry.addressOf(CONTRACT_OBJECT_OWNERSHIP)).transferFrom(address(this), owner, _tokenId);
+    }
+
+    function changeTokenPotionState(
+        uint256 _tokenId, uint256 _estimatePrice, uint256 _availablePotionFund, uint48 _startTime, uint48 _boughtLifeTime, uint48 _lastUpdateTime, bool _isDead) public auth {
+        tokenId2PotionState[_tokenId].estimatePrice = _estimatePrice;
+        tokenId2PotionState[_tokenId].availablePotionFund = _availablePotionFund;
+        tokenId2PotionState[_tokenId].startTime = _startTime;
+        tokenId2PotionState[_tokenId].boughtLifeTime = _boughtLifeTime;
+        tokenId2PotionState[_tokenId].lastUpdateTime = _lastUpdateTime;
+        tokenId2PotionState[_tokenId].isDead = _isDead;
+    }
+
     function setRegistry(address _registry) public onlyOwner {
         registry = ISettingsRegistry(_registry);
     }
