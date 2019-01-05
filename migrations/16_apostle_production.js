@@ -125,21 +125,28 @@ async function shastaApostleDeploy(deployer, network, accounts){
     // let tokenUseAuth = await TokenUseAuthority.deployed();
     // await tokenUse.setAuthority(tokenUseAuth.address);
 
-    let tokenUseAddr = "41ca9d92d82e7a4054f9dee7e8c6b4451cfff3c87d";
-    let tokenUseETHAddr = '0x' + tokenUseAddr.substring(2);
+    // let tokenUseAddr = "41ca9d92d82e7a4054f9dee7e8c6b4451cfff3c87d";
+    // let tokenUseETHAddr = '0x' + tokenUseAddr.substring(2);
+
+    // let landResourceAddr = "41f738cb701d94a35352621de20bc48ba598ae142e";
+    // let landResourceEthAddr = '0x' + landResourceAddr.substring(2);
+
+    // await deployer.deploy(TokenUseAuthority, [tokenUseETHAddr,apostleBaseEthAddr,landResourceEthAddr]);
+    // let tokenUseAuth = await TokenUseAuthority.deployed();
+    // await tokenUse.setAuthority(tokenUseAuth.address);
 
     // let ms = new Date().getTime();
     // let curS = parseInt(ms / 1000000);
-    await deployer.deploy(LandResource, conf.registry_address, 1546560000);
-    // await deployer.deploy(LandResourceAuthority, [tokenUseETHAddr]);
+    // await deployer.deploy(LandResource, conf.registry_address, 1546560000);
+    // // await deployer.deploy(LandResourceAuthority, [tokenUseETHAddr]);
 
-    let landResource = await LandResource.deployed();
-    // let landResourceAuth = await LandResourceAuthority.deployed();
-    // await landResource.setAuthority(landResourceAuth.address);
+    // let landResource = await LandResource.deployed();
+    // // let landResourceAuth = await LandResourceAuthority.deployed();
+    // // await landResource.setAuthority(landResourceAuth.address);
 
-    let landResourceAddr = landResource.address;
-    await deployer.deploy(MintAndBurnAuthority, landResourceAddr);
-    // set the auth of resources
+    // let landResourceAddr = landResource.address;
+    // await deployer.deploy(MintAndBurnAuthority, landResourceAddr);
+    // // set the auth of resources
 
     await deployer.deploy(GeneScience, conf.registry_address );
 

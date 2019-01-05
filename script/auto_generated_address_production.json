@@ -103,10 +103,6 @@
         "base58": "TXJnJGLxuMP7MWe6Wk1hYCDtJ6vYeGMWV2",
         "hex": "41ea0e56e20beaafc81619287fb3236a108db90700"
     },
-    "ObjectOwnershipAuthority": {
-        "base58": "TQcDEytocg2mzQ7F4SMpDRvfwfspDtbppF",
-        "hex": "41a0915a18c33e78209a32d89bf22882a2fe6825e8"
-    },
     "TokenLocationAuthority": {
         "base58": "TLN1uFRWfhwwp7P28MJpECYg8jT8BMbfKB",
         "hex": "4172018f1b2fb175b1db7ae5e5d22d4a494a213eda"
@@ -175,7 +171,7 @@
         "base58": "TUSYGDS99rag9nVuvHgNDSDHWiW4ZfpLxP",
         "hex": "41ca9d92d82e7a4054f9dee7e8c6b4451cfff3c87d"
     },
-    "ObjectOwnershipAuthorityV2": {
+    "ObjectOwnershipAuthority": {
         "base58": "TYibBbJjDcNERC5x4NY3CisJBPDh8UrFe5",
         "hex": "41f9872b7ce2e5969d98fbdd13e7f03397a4d8ccea"
     },
@@ -188,8 +184,8 @@
         "hex": "414d290638b604accdd71e5852fd15cb11a6985109"
     },
     "TokenUseAuthority": {
-        "base58": "TWAmyNooDEvbq9JkzyKdAonSnAPbWGkWUR",
-        "hex": "41dd929d32d83b20de1bbd0618392a258a29588714"
+        "base58": "TPqYFCns2f9hw4AGsv6CVjL6KNDCxeqB7h",
+        "hex": "41981e7f4c88b69f5f8ba96cd02b9e776aaef4dfbc"
     },
     "LandResource": {
         "base58": "TYWPwc2DLXPRsYZwVDnwqpjwdFsv3TkbKb",
@@ -204,7 +200,7 @@
         "hex": "419432ca8a2d45963fa4ac20d077fa915b59ba262f"
     },
     "GeneScience": {
-        "base58": "TWJDBxsmaQNDB6XkYbUrqEjJ2JeaukSYmS",
-        "hex": "41defa936e411dec9528d1f4d2943aa329352bf7b6"
+        "base58": "TTkRgYABiVEa6iBfmqcwxzU4B4YioJDNse",
+        "hex": "41c307712030acfcf0d36ed3c7d736d9e07af00a97"
     }
 }
