@@ -43,7 +43,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "production")
     {
         deployer.then(async () => {
-            await shastaApostleDeploy(deployer, network, accounts);
+            // await shastaApostleDeploy(deployer, network, accounts);
         });
     }
 };

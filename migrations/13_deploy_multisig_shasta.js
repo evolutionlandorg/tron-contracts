@@ -1,5 +1,5 @@
 const MultiSigWallet = artifacts.require("MultiSigWallet");
-const LocationCoder = artifacts.require("LocationCoder");
+// const LocationCoder = artifacts.require("LocationCoder");
 
 module.exports = function(deployer, network, accounts) {
 

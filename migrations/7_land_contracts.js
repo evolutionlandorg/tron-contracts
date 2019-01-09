@@ -12,7 +12,7 @@ module.exports = function(deployer, network, accounts) {
     if (network == "shasta")
     {
         deployer.then(async () => {
-            await developmentDeploy(deployer, network, accounts);
+            // await developmentDeploy(deployer, network, accounts);
         });
     }
 };

@@ -27,19 +27,19 @@ module.exports = function(deployer, network, accounts) {
     {
         deployer.then(async () => {
             // await developmentDeploy(deployer, network, accounts);
-            //修复bancorExchane合约，跑完该部署脚本后，手动在whiteList合约增加白名单给新bancorEx合约地址
-            let bancorNetAddr = '41c1cf497da383a68d09038b58c90e87d820ce7d8d';
-            let bancorCvtAddr = '41649b08c0f47fbaec6bfcdf84fb6559b95eb084b1';
-            const registryAddr = '41b83adfcf60a4e8afd0849bca48c054b47178618f';
-            await deployer.deploy(BancorExchange, bancorNetAddr, bancorCvtAddr, registryAddr);
+            // //修复bancorExchane合约，跑完该部署脚本后，手动在whiteList合约增加白名单给新bancorEx合约地址
+            // let bancorNetAddr = '41c1cf497da383a68d09038b58c90e87d820ce7d8d';
+            // let bancorCvtAddr = '41649b08c0f47fbaec6bfcdf84fb6559b95eb084b1';
+            // const registryAddr = '41b83adfcf60a4e8afd0849bca48c054b47178618f';
+            // await deployer.deploy(BancorExchange, bancorNetAddr, bancorCvtAddr, registryAddr);
 
-            let bancorExchange = await BancorExchange.deployed();
+            // let bancorExchange = await BancorExchange.deployed();
 
-            const trxAddr = '417b7a34048d4e421e54b415392b662629f7173685';
-            const ringAddr = '4181f0f3891cb32d1af69a6c853aefa6cf80f270b5';
+            // const trxAddr = '417b7a34048d4e421e54b415392b662629f7173685';
+            // const ringAddr = '4181f0f3891cb32d1af69a6c853aefa6cf80f270b5';
 
-            await bancorExchange.setQuickBuyPath([trxAddr, ringAddr, ringAddr]);
-            await bancorExchange.setQuickSellPath([ringAddr, ringAddr, trxAddr]);
+            // await bancorExchange.setQuickBuyPath([trxAddr, ringAddr, ringAddr]);
+            // await bancorExchange.setQuickSellPath([ringAddr, ringAddr, trxAddr]);
 
 
         });
