@@ -40,7 +40,8 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
     uint256 internal constant TIMEDURATION = 6*3600;
 
     /// Event created on initilizing token dex in source network.
-    event DexToken (bytes32 indexed dexNonce, address from, address to, uint256 amount, uint256 network, uint256 dstNetwork);
+    event DexToken (bytes32 indexed dexNonce, address from, address to,
+        uint256 dexAmount, uint256 feeToken,uint256 requiredFee, uint256 network, uint256 dstNetwork);
 
     /// Constructor.
     constructor (
@@ -104,7 +105,7 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
 
         bytes32 dexNonce =  keccak256(abi.encodePacked(from, receipt, _amount, network, dstNetwork, unixtime));
 
-        emit DexToken(dexNonce, from, receipt, dexAmount, network, dstNetwork);
+        emit DexToken(dexNonce, from, receipt, dexAmount,feeToken,requiredFee,network, dstNetwork);
 
     }
 
