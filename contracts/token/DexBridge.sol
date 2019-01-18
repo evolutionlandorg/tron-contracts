@@ -1,3 +1,4 @@
+
 pragma solidity ^0.4.23;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -7,6 +8,7 @@ interface ITOKEN {
 
     function balanceOf(address owner) public view returns (uint256);
     function transferFrom(address from, address to, uint256 value) public returns (bool);
+    function transfer(address to, uint256 value) public returns (bool);
 }
 
 contract ApproveAndCallFallBack {
@@ -37,11 +39,15 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
 
     uint256 public startTime;
 
+    uint256 public maxDexAmount;
+
     uint256 internal constant TIMEDURATION = 6*3600;
 
     /// Event created on initilizing token dex in source network.
     event DexToken (bytes32 indexed dexNonce, address from, address to,
         uint256 dexAmount, uint256 feeToken,uint256 requiredFee, uint256 network, uint256 dstNetwork);
+    event ClaimedTokens(address indexed _token, address indexed _controller, uint _amount);
+
 
     /// Constructor.
     constructor (
@@ -49,7 +55,8 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
         uint256 minFeeTokenParam,
         address feeOwnerParam,
         uint256 networkParam,
-        uint256 initFeeRatioParam
+        uint256 initFeeRatioParam,
+        uint256 maxDexAmountParam
     ) public
     {
         require(tokenAddressParam != address(0) && isContract(tokenAddressParam), "token address is invalid!");
@@ -60,6 +67,8 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
 
         network = networkParam;
         initFeeRatio = initFeeRatioParam;
+
+        maxDexAmount = maxDexAmountParam;
 
         startTime = now;
     }
@@ -97,6 +106,8 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
         }
 
         uint256 dexAmount = _amount.sub(requiredFee);
+        require(dexAmount <= maxDexAmount, "the user dex token amount beyond the max limit!");
+
         if(requiredFee > 0){
             require(token.transferFrom(from,feeOwner,requiredFee), "init transfer fee token fail!");
         }
@@ -127,6 +138,10 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
 
     }
 
+    function setMaxDexAmount(uint256 amount) public onlyOwner{
+        maxDexAmount = amount;
+    }
+
     function queryDexFee(uint256 amount, uint256 inputTime) public view returns (uint256) {
         if (inputTime - startTime >= TIMEDURATION || inputTime <= startTime) {
             return minFeeToken;
@@ -141,5 +156,18 @@ contract DexBridge is ApproveAndCallFallBack, Ownable {
         }
 
         return required;
+    }
+
+    function claimTokens(address _token) public onlyOwner {
+        if (_token == 0x0) {
+            address(msg.sender).transfer(address(this).balance);
+            return;
+        }
+
+        ITOKEN token = ITOKEN(_token);
+        uint balance = token.balanceOf(this);
+        token.transfer(address(msg.sender), balance);
+
+        emit ClaimedTokens(_token, address(msg.sender), balance);
     }
 }
