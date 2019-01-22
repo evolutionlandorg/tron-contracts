@@ -202,5 +202,9 @@
     "GeneScience": {
         "base58": "TLzHgo1nmhCrzrYpbk7A6Y8DBENH5pvKTs",
         "hex": "4178ddb5e33c563ef3053b17c02f473cf2745f2c4b"
+    },
+    "ByzantineSimpleSwapBridge": {
+        "base58": "TSu1fQKFkTv95U312R6E94RMdixsupBZDS",
+        "hex": "41b9af025d8c7ecf875b8498562bf1469d24c0b1a8"
     }
 }
