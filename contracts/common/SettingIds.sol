@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.23;
 
 /**
     Id definitions for SettingsRegistry.sol
@@ -31,11 +31,15 @@ contract SettingIds {
 
     bytes32 public constant CONTRACT_DIVIDENDS_POOL = "CONTRACT_DIVIDENDS_POOL";
 
-    bytes32 public constant CONTRACT_REVENUE_POOL = "CONTRACT_REVENUE_POOL";
-
     bytes32 public constant CONTRACT_TOKEN_USE = "CONTRACT_TOKEN_USE";
 
-        // Cut owner takes on each auction, measured in basis points (1/100 of a percent).
+    bytes32 public constant CONTRACT_REVENUE_POOL = "CONTRACT_REVENUE_POOL";
+
+    bytes32 public constant CONTRACT_ERC721_BRIDGE = "CONTRACT_ERC721_BRIDGE";
+
+    bytes32 public constant CONTRACT_PET_BASE = "CONTRACT_PET_BASE";
+
+    // Cut owner takes on each auction, measured in basis points (1/100 of a percent).
     // this can be considered as transaction fee.
     // Values 0-10,000 map to 0%-100%
     // set ownerCut to 4%
@@ -50,4 +54,6 @@ contract SettingIds {
     // set refererCut to 4%
     // refererCut = 400;
     bytes32 public constant UINT_REFERER_CUT = "UINT_REFERER_CUT";
+
+    bytes32 public constant CONTRACT_LAND_RESOURCE = "CONTRACT_LAND_RESOURCE";
 }
