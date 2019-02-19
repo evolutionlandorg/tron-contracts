@@ -21,4 +21,8 @@ contract IApostleBase {
     function isDead(uint256 _tokenId) public view returns (bool);
 
     function approveSiring(address _addr, uint256 _sireId) public;
+
+    function getApostleInfo(uint256 _tokenId) public view returns(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256);
+
+    function updateGenesAndTalents(uint256 _tokenId, uint256 _genes, uint256 _talents) public;
 }
