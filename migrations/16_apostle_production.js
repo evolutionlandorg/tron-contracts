@@ -19,7 +19,7 @@ const LandResource = artifacts.require('LandResource');
 const LandResourceAuthority = artifacts.require('LandResourceAuthority');
 const MintAndBurnAuthority = artifacts.require('MintAndBurnAuthority');
 
-const GeneScience = artifacts.require('GeneScience');
+// const GeneScience = artifacts.require('GeneScience');
 
 const conf = {
     registry_address: contracts["SettingsRegistry"].hex,

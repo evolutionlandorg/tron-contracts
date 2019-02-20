@@ -19,7 +19,6 @@ contract PetBase is PausableDSAuth, ApostleSettingIds {
     /*
      *  Storage
     */
-    bool private singletonLock = false;
 
     ISettingsRegistry public registry;
 
@@ -44,18 +43,8 @@ contract PetBase is PausableDSAuth, ApostleSettingIds {
     event Tied(uint256 apostleTokenId, uint256 mirrorTokenId, uint256 enhancedTalents, bool changed, address originNFT, address owner);
     event UnTied(uint256 apostleTokenId, uint256 mirrorTokenId, uint256 enhancedTalents, bool changed, address originNFT, address owner);
 
-    /*
-        *  Modifiers
-        */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
 
-    function initializeContract(ISettingsRegistry _registry, uint128 _number) public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
+    constructor(ISettingsRegistry _registry, uint128 _number) public {
         registry = _registry;
         maxTiedNumber = _number;
     }
@@ -141,19 +130,8 @@ contract PetBase is PausableDSAuth, ApostleSettingIds {
         // TODO: update mine
         // changed - true
         bool changed = _talents == _modifiedTalents ? false : true;
-        if (changed) {
-            address landResource = registry.addressOf(CONTRACT_LAND_RESOURCE);
-            if (ILandResource(landResource).landWorkingOn(_apostleTokenId) != 0) {
-                // true means minus strength
-                ILandResource(landResource).updateMinerStrengthWhenStop(_apostleTokenId);
-            }
 
-            IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE)).updateGenesAndTalents(_apostleTokenId, _genes, _modifiedTalents);
-
-            if (ILandResource(landResource).landWorkingOn(_apostleTokenId) != 0) {
-                ILandResource(landResource).updateMinerStrengthWhenStart(_apostleTokenId);
-            }
-        }
+        IApostleBase(registry.addressOf(CONTRACT_APOSTLE_BASE)).updateGenesAndTalents(_apostleTokenId, _genes, _modifiedTalents);
 
         return changed;
     }

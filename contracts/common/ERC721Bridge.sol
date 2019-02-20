@@ -19,8 +19,6 @@ contract ERC721Bridge is SettingIds, PausableDSAuth {
     /*
      *  Storage
     */
-    bool private singletonLock = false;
-
     ISettingsRegistry public registry;
 
 
@@ -41,20 +39,10 @@ contract ERC721Bridge is SettingIds, PausableDSAuth {
     event SwapOut(uint256 originTokenId, uint256 mirrorTokenId, address owner);
 
 
-    /*
-    *  Modifiers
-    */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
-
-    function initializeContract(ISettingsRegistry _registry) public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
+    constructor(ISettingsRegistry _registry) public {
         registry = _registry;
     }
+
 
     function registerAdaptor(address _originNftAddress, address _erc721Adaptor) public whenNotPaused onlyOwner {
         originNFT2Adaptor[_originNftAddress] = _erc721Adaptor;

@@ -13,8 +13,6 @@ contract ERC721Adaptor is PausableDSAuth, SettingIds {
     /*
      *  Storage
     */
-    bool private singletonLock = false;
-
     uint16 public producerId;
 
     uint8 public convertType;
@@ -26,18 +24,8 @@ contract ERC721Adaptor is PausableDSAuth, SettingIds {
     // tokenId_outside_evolutionLand => tokenId_inside
     mapping(uint256 => uint256) public cachedOriginId2MirrorId;
 
-    /*
-    *  Modifiers
-    */
-    modifier singletonLockCall() {
-        require(!singletonLock, "Only can call once");
-        _;
-        singletonLock = true;
-    }
 
-    function initializeContract(ISettingsRegistry _registry, ERC721 _originNft, uint16 _producerId) public singletonLockCall {
-        owner = msg.sender;
-        emit LogSetOwner(msg.sender);
+    constructor(ISettingsRegistry _registry, ERC721 _originNft, uint16 _producerId) public {
         registry = _registry;
         originNft = _originNft;
         producerId = _producerId;
