@@ -31,7 +31,7 @@ const conf = {
 module.exports = function(deployer, network, accounts) {
     if (network == 'shasta') {
         deployer.then(async() => {
-            await shastaPetDeploy(deployer);
+            // await shastaPetDeploy(deployer);
         });
     }
 

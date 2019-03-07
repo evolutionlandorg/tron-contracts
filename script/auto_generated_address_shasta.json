@@ -188,8 +188,8 @@
         "hex": "41839dc87a3a9de3ed211588f30865b0ea5fdc852d"
     },
     "SiringClockAuction": {
-        "base58": "TTxxc7L2oGD67b3PLMVABAieQ5CRcSpNtv",
-        "hex": "41c5663f48cf038dc2ec333f9fed03fa80bc778ba7"
+        "base58": "TDLGQtusszFMWh5mMg8e8kG2R44XUSWhdo",
+        "hex": "4124e3f5bb768a0cba2e3b7d88c660793a5ed260cf"
     },
     "ObjectOwnershipAuthority": {
         "base58": "TUuvMPSy5Dgc9DqxebsL5DDqmEi2GVyAia",
@@ -232,8 +232,8 @@
         "hex": "414c52f61dc2671c3f9c93ae78cb02382c4903e29c"
     },
     "InterstellarEncoderV3": {
-        "base58": "TMJhZoCReXeNRUaQ6Kjexndr1pc1eWKkrd",
-        "hex": "417c59219cecd1f684c9b3ea97b3291e3e20578fe1"
+        "base58": "TCFSA2M32nT5wcJnX5GVCAfAdh3qkX8Aik",
+        "hex": "411901e34952abfd65ac3ebbb6efb5be038a785a7c"
     },
     "ERC721Bridge": {
         "base58": "TLCM8Tc65inffzeVA6CsQSroZo61emiHbx",
