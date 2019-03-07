@@ -1,7 +1,7 @@
 const TronWeb = require('tronweb')
 var fs = require('fs');
-var key = JSON.parse(fs.readFileSync('./scripts/key1.json', 'utf8'));
-var contracts = JSON.parse(fs.readFileSync('./scripts/auto_generated_address_shasta.json', 'utf8'));
+var key = JSON.parse(fs.readFileSync('./script/key2.json', 'utf8'));
+var contracts = JSON.parse(fs.readFileSync('./script/auto_generated_address_shasta.json', 'utf8'));
 
 //const HttpProvider = TronWeb.providers.HttpProvider; // This provider is optional, you can just use a url for the nodes instead
 const fullNode = 'https://api.shasta.trongrid.io'; // Full node http endpoint
