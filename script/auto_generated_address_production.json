@@ -23,6 +23,10 @@
         "base58": "TN6bV4u8ihdbmuzFXnFeB6kXFpksgGiZgW",
         "hex": "418507305db28a11038a493821b84117cf9a9f08fe"
     },
+    "TakeBackKTON": {
+        "base58": "TDPvJMZfmLUShJs2chnQnYvAWPSYS2YCC4",
+        "hex": "412594D59E47C9CDD2AE0C5BBFD64ACC2D6F67737D"
+    },
     "ContractFeatures": {
         "base58": "TVo5H7j6rEeacgLFcoGBwHSGcMXLpmTgiz",
         "hex": "41d977e8bb03de15ffe33662bb6ed34f6bc929a603"
@@ -204,7 +208,7 @@
         "hex": "4178ddb5e33c563ef3053b17c02f473cf2745f2c4b"
     },
     "ByzantineSimpleSwapBridge": {
-        "base58": "TSu1fQKFkTv95U312R6E94RMdixsupBZDS",
-        "hex": "41b9af025d8c7ecf875b8498562bf1469d24c0b1a8"
+        "base58": "TKDks8ooty95oK17Cq18mNCEXLjDQ8B5g2",
+        "hex": "4165798DC18E6F8382FE96EC797105FC270FD4F466"
     }
 }
