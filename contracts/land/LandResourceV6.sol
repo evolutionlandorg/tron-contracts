@@ -141,9 +141,9 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint256 id
 	);
 
-    event SetMaxLandBar(uint256 maxAmount);
-    event SetMaxMiner(uint256 maxMiners);
-    event Migrated(uint256 landId);
+        event SetMaxLandBar(uint256 maxAmount);
+        event SetMaxMiner(uint256 maxMiners);
+        event Migrated(uint256 landId);
 
 	// 0x434f4e54524143545f4c414e445f424153450000000000000000000000000000
 	bytes32 public constant CONTRACT_LAND_BASE = "CONTRACT_LAND_BASE";
@@ -228,8 +228,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	mapping(address => mapping(uint256 => uint256)) public protectPeriod;
 	// v5 add end
 
-    address public OLD_LAND;
-    mapping(uint256 => bool) public migrated;
+        address public OLD_LAND;
+        mapping(uint256 => bool) public migrated;
 
 	/*
 	 *  Modifiers
@@ -240,8 +240,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	// 	singletonLock = true;
 	// }
 
-    // initializeContract be called by proxy contract
-    // see https://blog.openzeppelin.com/the-transparent-proxy-pattern/
+        // initializeContract be called by proxy contract
+        // see https://blog.openzeppelin.com/the-transparent-proxy-pattern/
 	constructor(
 		address _registry,
 		uint256 _resourceReleaseStartTime,
@@ -260,65 +260,65 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
         ggOLD_LAND = _oldLand;
 	}
 
-    function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
-        require(_lengths.length == 5, "invalid lengths");
-        require(migrated[_landTokenId] == false, "already migrated");
-        uint256 totalMiners = _migrateMinerStatus(_landTokenId, _lengths);
-        _migrateResourceMineState(_landTokenId, totalMiners);
-        migrated[_landTokenId] = true;
-        emit Migrated(_landTokenId);
-    }
-
-    function _migrateMinerStatus(uint256 _landTokenId, uint256[] memory _lengths) internal returns (uint256) {
-        address[5] memory resources = [
-            registry.addressOf(CONTRACT_GOLD_ERC20_TOKEN),
-            registry.addressOf(CONTRACT_WOOD_ERC20_TOKEN),
-            registry.addressOf(CONTRACT_WATER_ERC20_TOKEN),
-            registry.addressOf(CONTRACT_FIRE_ERC20_TOKEN),
-            registry.addressOf(CONTRACT_SOIL_ERC20_TOKEN)
-        ]; 
-        uint256 totalMiners = 0;
-        for (uint256 i = 0; i < 5; i++) {
-            address resource = resources[i];
-            uint256 length = _lengths[i];
-            for (uint256 index = 0; index < length; index++) {
-                uint256 miner = ILandResource(OLD_LAND).getMinerOnLand(_landTokenId, resource, index);
-                _changeMinerStatus(miner, _landTokenId, resource, uint64(index));
-                totalMiners++;
-            }
-            uint256 mintedBalance = ILandResource(OLD_LAND).mintedBalanceOnLand(_landTokenId, resource);
-            land2ResourceMineState[_landTokenId].mintedBalance[resource] = mintedBalance;
-
-            uint256 totalMinerStrength = ILandResource(OLD_LAND).getTotalMiningStrength(_landTokenId, resource);
-            land2ResourceMineState[_landTokenId].totalMinerStrength[resource] = totalMinerStrength; 
+        function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
+            require(_lengths.length == 5, "invalid lengths");
+            require(migrated[_landTokenId] == false, "already migrated");
+            uint256 totalMiners = _migrateMinerStatus(_landTokenId, _lengths);
+            _migrateResourceMineState(_landTokenId, totalMiners);
+            migrated[_landTokenId] = true;
+            emit Migrated(_landTokenId);
         }
-        return totalMiners;
-    }
 
-    function _migrateResourceMineState(uint256 _landTokenId, uint256 _totalMiners) internal {
-        (
-            uint256 lastUpdateSpeedInSeconds,
-            uint256 lastDestoryAttenInSeconds,
-            uint256 industryIndex,
-            uint128 lastUpdateTime,
-            uint64 totalMiners,
-            uint64 max
-        ) = ILandResource(OLD_LAND).land2ResourceMineState(_landTokenId);
-        require(totalMiners == _totalMiners, "missing miner");
-        land2ResourceMineState[_landTokenId].lastUpdateSpeedInSeconds = lastUpdateSpeedInSeconds;
-        land2ResourceMineState[_landTokenId].lastDestoryAttenInSeconds = lastDestoryAttenInSeconds;
-        land2ResourceMineState[_landTokenId].industryIndex = industryIndex;
-        land2ResourceMineState[_landTokenId].lastUpdateTime = lastUpdateTime;
-        land2ResourceMineState[_landTokenId].totalMiners = totalMiners;
-        land2ResourceMineState[_landTokenId].maxMiners = max;
-    } 
+        function _migrateMinerStatus(uint256 _landTokenId, uint256[] memory _lengths) internal returns (uint256) {
+            address[5] memory resources = [
+                registry.addressOf(CONTRACT_GOLD_ERC20_TOKEN),
+                registry.addressOf(CONTRACT_WOOD_ERC20_TOKEN),
+                registry.addressOf(CONTRACT_WATER_ERC20_TOKEN),
+                registry.addressOf(CONTRACT_FIRE_ERC20_TOKEN),
+                registry.addressOf(CONTRACT_SOIL_ERC20_TOKEN)
+            ]; 
+            uint256 totalMiners = 0;
+            for (uint256 i = 0; i < 5; i++) {
+                address resource = resources[i];
+                uint256 length = _lengths[i];
+                for (uint256 index = 0; index < length; index++) {
+                    uint256 miner = ILandResource(OLD_LAND).getMinerOnLand(_landTokenId, resource, index);
+                    _changeMinerStatus(miner, _landTokenId, resource, uint64(index));
+                    totalMiners++;
+                }
+                uint256 mintedBalance = ILandResource(OLD_LAND).mintedBalanceOnLand(_landTokenId, resource);
+                land2ResourceMineState[_landTokenId].mintedBalance[resource] = mintedBalance;
 
-    function _changeMinerStatus(uint256 _tokenId, uint256 _landTokenId, address _resource, uint64 _indexInResource) internal {
-        miner2Index[_tokenId].landTokenId = _landTokenId;
-        miner2Index[_tokenId].resource = _resource;
-        miner2Index[_tokenId].indexInResource = _indexInResource;
-        land2ResourceMineState[_landTokenId].miners[_resource].push(_tokenId);
-    }
+                uint256 totalMinerStrength = ILandResource(OLD_LAND).getTotalMiningStrength(_landTokenId, resource);
+                land2ResourceMineState[_landTokenId].totalMinerStrength[resource] = totalMinerStrength; 
+            }
+            return totalMiners;
+        }
+
+        function _migrateResourceMineState(uint256 _landTokenId, uint256 _totalMiners) internal {
+            (
+                uint256 lastUpdateSpeedInSeconds,
+                uint256 lastDestoryAttenInSeconds,
+                uint256 industryIndex,
+                uint128 lastUpdateTime,
+                uint64 totalMiners,
+                uint64 max
+            ) = ILandResource(OLD_LAND).land2ResourceMineState(_landTokenId);
+            require(totalMiners == _totalMiners, "missing miner");
+            land2ResourceMineState[_landTokenId].lastUpdateSpeedInSeconds = lastUpdateSpeedInSeconds;
+            land2ResourceMineState[_landTokenId].lastDestoryAttenInSeconds = lastDestoryAttenInSeconds;
+            land2ResourceMineState[_landTokenId].industryIndex = industryIndex;
+            land2ResourceMineState[_landTokenId].lastUpdateTime = lastUpdateTime;
+            land2ResourceMineState[_landTokenId].totalMiners = totalMiners;
+            land2ResourceMineState[_landTokenId].maxMiners = max;
+        } 
+
+        function _changeMinerStatus(uint256 _tokenId, uint256 _landTokenId, address _resource, uint64 _indexInResource) internal {
+            miner2Index[_tokenId].landTokenId = _landTokenId;
+            miner2Index[_tokenId].resource = _resource;
+            miner2Index[_tokenId].indexInResource = _indexInResource;
+            land2ResourceMineState[_landTokenId].miners[_resource].push(_tokenId);
+        }
 
 	// get amount of speed uint at this moment
 	function _getReleaseSpeedInSeconds(uint256 _tokenId, uint256 _time)
