@@ -14,6 +14,7 @@ import "../common/interfaces/IMinerObject.sol";
 import "./interfaces/ILandBase.sol";
 import "./interfaces/ILandBaseExt.sol";
 import "./interfaces/IMetaDataTeller.sol";
+import "./interfaces/ILandResource.sol";
 
 // DSAuth see https://github.com/evolutionlandorg/common-contracts/blob/2873a4f8f970bd442ffcf9c6ae63b3dc79e743db/contracts/DSAuth.sol#L40
 contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
@@ -24,6 +25,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	uint256 public constant DENOMINATOR = 10000;
 
 	uint256 public constant TOTAL_SECONDS = DENOMINATOR * (1 days);
+
+	// bool private singletonLock = false;
 
 	ISettingsRegistry public registry;
 
@@ -138,8 +141,9 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint256 id
 	);
 
-    	event SetMaxLandBar(uint256 maxAmount);
-    	event SetMaxMiner(uint256 maxMiners);
+    event SetMaxLandBar(uint256 maxAmount);
+    event SetMaxMiner(uint256 maxMiners);
+    event Migrated(uint256 landId);
 
 	// 0x434f4e54524143545f4c414e445f424153450000000000000000000000000000
 	bytes32 public constant CONTRACT_LAND_BASE = "CONTRACT_LAND_BASE";
@@ -224,17 +228,26 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	mapping(address => mapping(uint256 => uint256)) public protectPeriod;
 	// v5 add end
 
+    address public OLD_LAND;
+    mapping(uint256 => bool) public migrated;
+
+	/*
+	 *  Modifiers
+	 */
+	// modifier singletonLockCall() {
+	// 	require(!singletonLock, "Only can call once");
+	// 	_;
+	// 	singletonLock = true;
+	// }
+
     	// initializeContract be called by proxy contract
     	// see https://blog.openzeppelin.com/the-transparent-proxy-pattern/
 	constructor(
 		address _registry,
-		uint256 _resourceReleaseStartTime
+		uint256 _resourceReleaseStartTime,
+        address _oldLand
 	) public {
         require(_registry!= address(0), "_registry is a zero value");
-		// Ownable constructor
-		owner = msg.sender;
-		emit LogSetOwner(msg.sender);
-
 		registry = ISettingsRegistry(_registry);
 
 		resourceReleaseStartTime = _resourceReleaseStartTime;
@@ -242,9 +255,70 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
         	//see https://github.com/evolutionlandorg/common-contracts/blob/2873a4f8f970bd442ffcf9c6ae63b3dc79e743db/contracts/interfaces/IActivity.sol#L6
 		_registerInterface(InterfaceId_IActivity);
 
-        	maxMiners = 5;
-        	maxAmount = 5;
+        maxMiners = 5;
+        maxAmount = 5;
+        OLD_LAND = _oldLand;
 	}
+
+    function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
+        require(_lengths.length == 5, "invalid lengths");
+        require(migrated[_landTokenId] == false, "already migrated");
+        uint256 totalMiners = _migrateMinerStatus(_landTokenId, _lengths);
+        _migrateResourceMineState(_landTokenId, totalMiners);
+        migrated[_landTokenId] = true;
+        emit Migrated(_landTokenId);
+    }
+
+    function _migrateMinerStatus(uint256 _landTokenId, uint256[] memory _lengths) internal returns (uint256) {
+        address[5] memory resources = [
+            registry.addressOf(CONTRACT_GOLD_ERC20_TOKEN),
+            registry.addressOf(CONTRACT_WOOD_ERC20_TOKEN),
+            registry.addressOf(CONTRACT_WATER_ERC20_TOKEN),
+            registry.addressOf(CONTRACT_FIRE_ERC20_TOKEN),
+            registry.addressOf(CONTRACT_SOIL_ERC20_TOKEN)
+        ]; 
+        uint256 totalMiners = 0;
+        for (uint256 i = 0; i < 5; i++) {
+            address resource = resources[i];
+            uint256 length = _lengths[i];
+            for (uint256 index = 0; index < length; index++) {
+                uint256 miner = ILandResource(OLD_LAND).getMinerOnLand(_landTokenId, resource, index);
+                _changeMinerStatus(miner, _landTokenId, resource, uint64(index));
+                totalMiners++;
+            }
+            uint256 mintedBalance = ILandResource(OLD_LAND).mintedBalanceOnLand(_landTokenId, resource);
+            land2ResourceMineState[_landTokenId].mintedBalance[resource] = mintedBalance;
+
+            uint256 totalMinerStrength = ILandResource(OLD_LAND).getTotalMiningStrength(_landTokenId, resource);
+            land2ResourceMineState[_landTokenId].totalMinerStrength[resource] = totalMinerStrength; 
+        }
+        return totalMiners;
+    }
+
+    function _migrateResourceMineState(uint256 _landTokenId, uint256 _totalMiners) internal {
+        (
+            uint256 lastUpdateSpeedInSeconds,
+            uint256 lastDestoryAttenInSeconds,
+            uint256 industryIndex,
+            uint128 lastUpdateTime,
+            uint64 totalMiners,
+            uint64 max
+        ) = ILandResource(OLD_LAND).land2ResourceMineState(_landTokenId);
+        require(totalMiners == _totalMiners, "missing miner");
+        land2ResourceMineState[_landTokenId].lastUpdateSpeedInSeconds = lastUpdateSpeedInSeconds;
+        land2ResourceMineState[_landTokenId].lastDestoryAttenInSeconds = lastDestoryAttenInSeconds;
+        land2ResourceMineState[_landTokenId].industryIndex = industryIndex;
+        land2ResourceMineState[_landTokenId].lastUpdateTime = lastUpdateTime;
+        land2ResourceMineState[_landTokenId].totalMiners = totalMiners;
+        land2ResourceMineState[_landTokenId].maxMiners = max;
+    } 
+
+    function _changeMinerStatus(uint256 _tokenId, uint256 _landTokenId, address _resource, uint64 _indexInResource) internal {
+        miner2Index[_tokenId].landTokenId = _landTokenId;
+        miner2Index[_tokenId].resource = _resource;
+        miner2Index[_tokenId].indexInResource = _indexInResource;
+        land2ResourceMineState[_landTokenId].miners[_resource].push(_tokenId);
+    }
 
 	// get amount of speed uint at this moment
 	function _getReleaseSpeedInSeconds(uint256 _tokenId, uint256 _time)
@@ -592,6 +666,7 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint256 _landTokenId,
 		address _resource
 	) public {
+        require(migrated[_landTokenId] == true, "migrate first");
 		// require the permission from land owner;
 		require(
 			msg.sender ==
@@ -690,6 +765,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint64 minerIndex = miner2Index[_tokenId].indexInResource;
 		address resource = miner2Index[_tokenId].resource;
 		uint256 landTokenId = miner2Index[_tokenId].landTokenId;
+
+        require(migrated[landTokenId] == true, "migrate first");
 
 		// update status!
 		mine(landTokenId);
@@ -830,9 +907,9 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	// }
 
 	// V5 remove
-	// function mintedBalanceOnLand(uint256 _landTokenId, address _resourceToken) public view returns (uint256) {
-	//     return land2ResourceMineState[_landTokenId].mintedBalance[_resourceToken];
-	// }
+	function mintedBalanceOnLand(uint256 _landTokenId, address _resourceToken) public view returns (uint256) {
+	    return land2ResourceMineState[_landTokenId].mintedBalance[_resourceToken];
+	}
 
 	// function landWorkingOn(uint256 _apostleTokenId) public view returns (uint256 landTokenId) {
 	//     landTokenId = miner2Index[_apostleTokenId].landTokenId;
@@ -988,6 +1065,10 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		return land2ResourceMineState[_landId].miners[_resource][_index];
 	}
 
+    function getMinerOnLandLength(uint _landTokenId, address _resourceToken) public view returns (uint256) {
+        return land2ResourceMineState[_landTokenId].miners[_resourceToken].length;
+    }
+
 	function landWorkingOn(uint256 _apostleTokenId)
 		public
 		view
@@ -1040,6 +1121,7 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 
 	function claimItemResource(address _itemToken, uint256 _itemId) public {
 		(address staker, uint256 landId) = getLandIdByItem(_itemToken, _itemId);
+        require(migrated[landId] == true, "migrate first");
 		if (staker == address(0) && landId == 0) {
 			require(
 				ERC721(_itemToken).ownerOf(_itemId) == msg.sender,
@@ -1088,6 +1170,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	}
 
 	function claimLandResource(uint256 _landId) public {
+        require(migrated[_landId] == true, "migrate first");
+
 		require(
 			msg.sender ==
 				ERC721(registry.addressOf(CONTRACT_OBJECT_OWNERSHIP)).ownerOf(
@@ -1252,6 +1336,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		address _token,
 		uint256 _id
 	) public {
+        require(migrated[_tokenId] == true, "migrate first");
+
 		_equip(_tokenId, _resource, _index, _token, _id);
 	}
 
@@ -1367,6 +1453,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
         @param _index   Index of the Bar.
     	*/
 	function divest(uint256 _tokenId, uint256 _index) public {
+        require(migrated[_tokenId] == true, "migrate first");
+
 		_divest(_tokenId, _index);
 	}
 
