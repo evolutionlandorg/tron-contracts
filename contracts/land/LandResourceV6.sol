@@ -240,8 +240,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	// 	singletonLock = true;
 	// }
 
-    	// initializeContract be called by proxy contract
-    	// see https://blog.openzeppelin.com/the-transparent-proxy-pattern/
+    // initializeContract be called by proxy contract
+    // see https://blog.openzeppelin.com/the-transparent-proxy-pattern/
 	constructor(
 		address _registry,
 		uint256 _resourceReleaseStartTime,
@@ -256,8 +256,8 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		_registerInterface(InterfaceId_IActivity);
 
         maxMiners = 5;
-        maxAmount = 5;
-        OLD_LAND = _oldLand;
+        ggmaxAmount = 5;
+        ggOLD_LAND = _oldLand;
 	}
 
     function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
