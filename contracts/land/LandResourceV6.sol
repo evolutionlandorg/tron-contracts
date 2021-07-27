@@ -245,7 +245,7 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	constructor(
 		address _registry,
 		uint256 _resourceReleaseStartTime,
-        address _oldLand
+                address _oldLand
 	) public {
         require(_registry!= address(0), "_registry is a zero value");
 		registry = ISettingsRegistry(_registry);
@@ -255,9 +255,9 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
         	//see https://github.com/evolutionlandorg/common-contracts/blob/2873a4f8f970bd442ffcf9c6ae63b3dc79e743db/contracts/interfaces/IActivity.sol#L6
 		_registerInterface(InterfaceId_IActivity);
 
-        maxMiners = 5;
-        ggmaxAmount = 5;
-        ggOLD_LAND = _oldLand;
+                maxMiners = 5;
+                maxAmount = 5;
+                OLD_LAND = _oldLand;
 	}
 
         function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
