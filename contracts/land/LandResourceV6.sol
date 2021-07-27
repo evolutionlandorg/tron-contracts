@@ -247,7 +247,7 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint256 _resourceReleaseStartTime,
                 address _oldLand
 	) public {
-        require(_registry!= address(0), "_registry is a zero value");
+                require(_registry!= address(0), "_registry is a zero value");
 		registry = ISettingsRegistry(_registry);
 
 		resourceReleaseStartTime = _resourceReleaseStartTime;
@@ -261,63 +261,63 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	}
 
         function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
-            require(_lengths.length == 5, "invalid lengths");
-            require(migrated[_landTokenId] == false, "already migrated");
-            uint256 totalMiners = _migrateMinerStatus(_landTokenId, _lengths);
-            _migrateResourceMineState(_landTokenId, totalMiners);
-            migrated[_landTokenId] = true;
-            emit Migrated(_landTokenId);
+                require(_lengths.length == 5, "invalid lengths");
+                require(migrated[_landTokenId] == false, "already migrated");
+                uint256 totalMiners = _migrateMinerStatus(_landTokenId, _lengths);
+                _migrateResourceMineState(_landTokenId, totalMiners);
+                migrated[_landTokenId] = true;
+                emit Migrated(_landTokenId);
         }
 
         function _migrateMinerStatus(uint256 _landTokenId, uint256[] memory _lengths) internal returns (uint256) {
-            address[5] memory resources = [
-                registry.addressOf(CONTRACT_GOLD_ERC20_TOKEN),
-                registry.addressOf(CONTRACT_WOOD_ERC20_TOKEN),
-                registry.addressOf(CONTRACT_WATER_ERC20_TOKEN),
-                registry.addressOf(CONTRACT_FIRE_ERC20_TOKEN),
-                registry.addressOf(CONTRACT_SOIL_ERC20_TOKEN)
-            ]; 
-            uint256 totalMiners = 0;
-            for (uint256 i = 0; i < 5; i++) {
-                address resource = resources[i];
-                uint256 length = _lengths[i];
-                for (uint256 index = 0; index < length; index++) {
-                    uint256 miner = ILandResource(OLD_LAND).getMinerOnLand(_landTokenId, resource, index);
-                    _changeMinerStatus(miner, _landTokenId, resource, uint64(index));
-                    totalMiners++;
+                address[5] memory resources = [
+                    registry.addressOf(CONTRACT_GOLD_ERC20_TOKEN),
+                    registry.addressOf(CONTRACT_WOOD_ERC20_TOKEN),
+                    registry.addressOf(CONTRACT_WATER_ERC20_TOKEN),
+                    registry.addressOf(CONTRACT_FIRE_ERC20_TOKEN),
+                    registry.addressOf(CONTRACT_SOIL_ERC20_TOKEN)
+                ]; 
+                uint256 totalMiners = 0;
+                for (uint256 i = 0; i < 5; i++) {
+                    address resource = resources[i];
+                    uint256 length = _lengths[i];
+                    for (uint256 index = 0; index < length; index++) {
+                        uint256 miner = ILandResource(OLD_LAND).getMinerOnLand(_landTokenId, resource, index);
+                        _changeMinerStatus(miner, _landTokenId, resource, uint64(index));
+                        totalMiners++;
+                    }
+                    uint256 mintedBalance = ILandResource(OLD_LAND).mintedBalanceOnLand(_landTokenId, resource);
+                    land2ResourceMineState[_landTokenId].mintedBalance[resource] = mintedBalance;
+    
+                    uint256 totalMinerStrength = ILandResource(OLD_LAND).getTotalMiningStrength(_landTokenId, resource);
+                    land2ResourceMineState[_landTokenId].totalMinerStrength[resource] = totalMinerStrength; 
                 }
-                uint256 mintedBalance = ILandResource(OLD_LAND).mintedBalanceOnLand(_landTokenId, resource);
-                land2ResourceMineState[_landTokenId].mintedBalance[resource] = mintedBalance;
-
-                uint256 totalMinerStrength = ILandResource(OLD_LAND).getTotalMiningStrength(_landTokenId, resource);
-                land2ResourceMineState[_landTokenId].totalMinerStrength[resource] = totalMinerStrength; 
-            }
-            return totalMiners;
+                return totalMiners;
         }
 
         function _migrateResourceMineState(uint256 _landTokenId, uint256 _totalMiners) internal {
-            (
-                uint256 lastUpdateSpeedInSeconds,
-                uint256 lastDestoryAttenInSeconds,
-                uint256 industryIndex,
-                uint128 lastUpdateTime,
-                uint64 totalMiners,
-                uint64 max
-            ) = ILandResource(OLD_LAND).land2ResourceMineState(_landTokenId);
-            require(totalMiners == _totalMiners, "missing miner");
-            land2ResourceMineState[_landTokenId].lastUpdateSpeedInSeconds = lastUpdateSpeedInSeconds;
-            land2ResourceMineState[_landTokenId].lastDestoryAttenInSeconds = lastDestoryAttenInSeconds;
-            land2ResourceMineState[_landTokenId].industryIndex = industryIndex;
-            land2ResourceMineState[_landTokenId].lastUpdateTime = lastUpdateTime;
-            land2ResourceMineState[_landTokenId].totalMiners = totalMiners;
-            land2ResourceMineState[_landTokenId].maxMiners = max;
+                (
+                    uint256 lastUpdateSpeedInSeconds,
+                    uint256 lastDestoryAttenInSeconds,
+                    uint256 industryIndex,
+                    uint128 lastUpdateTime,
+                    uint64 totalMiners,
+                    uint64 max
+                ) = ILandResource(OLD_LAND).land2ResourceMineState(_landTokenId);
+                require(totalMiners == _totalMiners, "missing miner");
+                land2ResourceMineState[_landTokenId].lastUpdateSpeedInSeconds = lastUpdateSpeedInSeconds;
+                land2ResourceMineState[_landTokenId].lastDestoryAttenInSeconds = lastDestoryAttenInSeconds;
+                land2ResourceMineState[_landTokenId].industryIndex = industryIndex;
+                land2ResourceMineState[_landTokenId].lastUpdateTime = lastUpdateTime;
+                land2ResourceMineState[_landTokenId].totalMiners = totalMiners;
+                land2ResourceMineState[_landTokenId].maxMiners = max;
         } 
 
         function _changeMinerStatus(uint256 _tokenId, uint256 _landTokenId, address _resource, uint64 _indexInResource) internal {
-            miner2Index[_tokenId].landTokenId = _landTokenId;
-            miner2Index[_tokenId].resource = _resource;
-            miner2Index[_tokenId].indexInResource = _indexInResource;
-            land2ResourceMineState[_landTokenId].miners[_resource].push(_tokenId);
+                miner2Index[_tokenId].landTokenId = _landTokenId;
+                miner2Index[_tokenId].resource = _resource;
+                miner2Index[_tokenId].indexInResource = _indexInResource;
+                land2ResourceMineState[_landTokenId].miners[_resource].push(_tokenId);
         }
 
 	// get amount of speed uint at this moment
