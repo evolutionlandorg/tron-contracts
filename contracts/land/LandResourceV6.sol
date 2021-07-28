@@ -260,7 +260,7 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
                 OLD_LAND = _oldLand;
 	}
 
-        function migration(uint256 _landTokenId, uint256[] memory _lengths) public {
+        function migration(uint256 _landTokenId, uint256[] memory _lengths) public auth {
                 require(_lengths.length == 5, "invalid lengths");
                 require(migrated[_landTokenId] == false, "already migrated");
                 uint256 totalMiners = _migrateMinerStatus(_landTokenId, _lengths);
@@ -666,7 +666,6 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint256 _landTokenId,
 		address _resource
 	) public {
-        require(migrated[_landTokenId] == true, "migrate first");
 		// require the permission from land owner;
 		require(
 			msg.sender ==
@@ -765,8 +764,6 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		uint64 minerIndex = miner2Index[_tokenId].indexInResource;
 		address resource = miner2Index[_tokenId].resource;
 		uint256 landTokenId = miner2Index[_tokenId].landTokenId;
-
-        require(migrated[landTokenId] == true, "migrate first");
 
 		// update status!
 		mine(landTokenId);
@@ -1121,7 +1118,6 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 
 	function claimItemResource(address _itemToken, uint256 _itemId) public {
 		(address staker, uint256 landId) = getLandIdByItem(_itemToken, _itemId);
-        require(migrated[landId] == true, "migrate first");
 		if (staker == address(0) && landId == 0) {
 			require(
 				ERC721(_itemToken).ownerOf(_itemId) == msg.sender,
@@ -1170,8 +1166,6 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	}
 
 	function claimLandResource(uint256 _landId) public {
-        require(migrated[_landId] == true, "migrate first");
-
 		require(
 			msg.sender ==
 				ERC721(registry.addressOf(CONTRACT_OBJECT_OWNERSHIP)).ownerOf(
@@ -1336,8 +1330,6 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 		address _token,
 		uint256 _id
 	) public {
-        require(migrated[_tokenId] == true, "migrate first");
-
 		_equip(_tokenId, _resource, _index, _token, _id);
 	}
 
@@ -1453,8 +1445,6 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
         @param _index   Index of the Bar.
     	*/
 	function divest(uint256 _tokenId, uint256 _index) public {
-        require(migrated[_tokenId] == true, "migrate first");
-
 		_divest(_tokenId, _index);
 	}
 
