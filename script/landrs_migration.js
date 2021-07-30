@@ -14,8 +14,8 @@ const OLD_LAND = {
 }
 
 const NEW_LAND = {
- 	base58: "TJb6eEaan2USYeeGtdbCgPQ3sJUjYfpa3i",
-	hex: "415e8aac32131d3026f87a0eb326713a2630b58935"
+ 	base58: "TGvMZ7yVmzN7NqgFYNzg5AmASjDbBEVfQL",
+	hex: "414c3ec5a944a3eeefc04611bb861aef3b44ac29a7"
 }
 
 let params = {
@@ -23,6 +23,9 @@ let params = {
   callValue: 0,
   shouldPollResponse:true
 }
+
+let cst = { _isConstant: true }
+
 const app = async () => {
   tronWeb.setDefaultBlock('latest');
   let landId = "0x2a02000102000101000000000000000200000000000000000000000000000174"
@@ -34,17 +37,23 @@ const app = async () => {
 
   console.log("getMinerOnLand 0: ", await old_land.getMinerOnLand(landId, gold, 0).call())
   console.log("getMinerOnLand 1: ", await old_land.getMinerOnLand(landId, gold, 1).call())
+  console.log("getMinerOnLand 2: ", await old_land.getMinerOnLand(landId, gold, 2).call())
+  console.log("getMinerOnLand 3: ", await old_land.getMinerOnLand(landId, gold, 3).call())
+  console.log("getMinerOnLand 4: ", await old_land.getMinerOnLand(landId, gold, 4).call())
 
   let new_land = await tronWeb.contract(LandResourceV6.abi, NEW_LAND.hex)
-  console.log("OLD_LAND: ", await new_land.OLD_LAND().call())
-  console.log("migrated: ", await new_land.migrated(landId).call())
-  await new_land.migration(landId, [2,0,0,0,0]).send(params)
-  console.log("land2ResourceMineState: ", await new_land.land2ResourceMineState(landId).call())
-  console.log("getTotalMiningStrength: ", await new_land.getTotalMiningStrength(landId, gold).call())
-  console.log("mintedBalanceOnLand: ", await new_land.mintedBalanceOnLand(landId, gold).call())
-  console.log("getMinerOnLand 0: ", await new_land.getMinerOnLand(landId, gold, 0).call())
-  console.log("getMinerOnLand 1: ", await new_land.getMinerOnLand(landId, gold, 1).call())
-  console.log("migrated: ", await new_land.migrated(landId).call())
+  console.log("OLD_LAND: ", await new_land.OLD_LAND().call(cst))
+  console.log("migrated: ", await new_land.migrated(landId).call(cst))
+  await new_land.migration(landId, [5,0,0,0,0]).send(params)
+  console.log("land2ResourceMineState: ", await new_land.land2ResourceMineState(landId).call(cst))
+  console.log("getTotalMiningStrength: ", await new_land.getTotalMiningStrength(landId, gold).call(cst))
+  console.log("mintedBalanceOnLand: ", await new_land.mintedBalanceOnLand(landId, gold).call(cst))
+  console.log("getMinerOnLand 0: ", await new_land.getMinerOnLand(landId, gold, 0).call(cst))
+  console.log("getMinerOnLand 1: ", await new_land.getMinerOnLand(landId, gold, 1).call(cst))
+  console.log("getMinerOnLand 2: ", await new_land.getMinerOnLand(landId, gold, 2).call(cst))
+  console.log("getMinerOnLand 3: ", await new_land.getMinerOnLand(landId, gold, 3).call(cst))
+  console.log("getMinerOnLand 4: ", await new_land.getMinerOnLand(landId, gold, 4).call(cst))
+  console.log("migrated: ", await new_land.migrated(landId).call(cst))
 
   console.log("finished");
 };

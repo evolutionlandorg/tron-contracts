@@ -1,5 +1,7 @@
 var OwnedUpgradeabilityProxy = artifacts.require("OwnedUpgradeabilityProxy")
 var LandResourceV6 = artifacts.require("LandResourceV6")
+var TokenUseAuthority = artifacts.require("TokenUseAuthority")
+var MintAndBurnAuthority = artifacts.require('MintAndBurnAuthority');
 var TronWeb = require('tronweb')
 
 const SETTINGSREGISTRY = {
@@ -10,16 +12,6 @@ const SETTINGSREGISTRY = {
 const Supervisor = {
   base58: "TA2YGCFuifxkJrkRrnKbugQF5ZVkJzkk4p",
   hex: "4100A1537D251A6A4C4EFFAB76948899061FEA47B9"
-}
-
-const OLD_LAND = {
-  base58: "TB8uz1tL6HFcG51h2gq7u1YzuAPtJCdM3n",
-  hex: "410CCE145A83F344E290613028EA3123EB473E69CB"
-}
-
-const LandResourceAuthority = {
-  base58: "TQCr6mPg4C3HDKFU72m34Vn8C3PLc3g4sN",
-  hex: "419c2622fc3074864a19bf9cc1d8e7b50eb60be31c"
 }
 
 const tronWeb = new TronWeb({
@@ -51,21 +43,27 @@ async function asyncDeploy(deployer, network, accounts) {
   tronWeb.setDefaultBlock('latest');
 
   //---------------------upgrade-------------------------//
-  // await deployer.deploy(OwnedUpgradeabilityProxy)
-  // let proxy = await OwnedUpgradeabilityProxy.deployed()
-  await deployer.deploy(LandResourceV6, SETTINGSREGISTRY.hex, resourceStartTime, OLD_LAND.hex)
+  tronWeb.setDefaultBlock('latest');
+  let registry = await tronWeb.contract().at(SETTINGSREGISTRY.hex);
+  let landrs_abi = [
+    ...OwnedUpgradeabilityProxy.abi,
+    ...LandResourceV6.abi
+  ]
+  let landrs_proxy = await tronWeb.contract().new({
+    name: "LandResourceProxy",
+    abi: landrs_abi,
+    bytecode: OwnedUpgradeabilityProxy.bytecode,
+    ...params
+  });
+  deployer.logger.log("LandResourceProxy" + ':\n    (base58) ' + tronWeb.address.fromHex(landrs_proxy.address) + '\n    (hex) ' + landrs_proxy.address)
+  await deployer.deploy(LandResourceV6)
   let landrs = await LandResourceV6.deployed()
-  // proxy.upgradeTo(landrs.address)
-  // console.log("upgrade succeed")
-  // let land_proxy = await tronWeb.contract(LandResourceV6._json.abi, proxy.address)
-  // let land_proxy = await tronWeb.contract(LandResourceV6._json.abi, "41e8268b0ceaafa84fd3d20da5b4a4ed4bdc00f5a1")
-  // await land_proxy.initializeContract(SETTINGSREGISTRY.hex, resourceStartTime, OLD_LAND.hex).send(params)
-  console.log("initialize succeed")
-  // await land_proxy.setAuthority(LandResourceAuthority.hex) //TODO: remove old landrs auth
-  // console.log("LandResourceV6 setAuthority succeed.")
-  // CONTRACT_LAND_RESOURCE old "T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb"
-  // let registry = await tronWeb.contract().at(SETTINGSREGISTRY.hex);
-  // await registry.setAddressProperty("0x434f4e54524143545f4c414e445f5245534f5552434500000000000000000000", landrs.address).send(params)
-  // console.log("Upgrade LandResource succeed.")
+
+  let apostleBaseAddr = await registry.addressOf("0x434f4e54524143545f41504f53544c455f424153450000000000000000000000").call()
+  await deployer.deploy(TokenUseAuthority, [apostleBaseAddr, landrs_proxy.address]);
+  let tokenUseAuth = await TokenUseAuthority.deployed();
+
+  await deployer.deploy(MintAndBurnAuthority, landrs_proxy.address);
+  let mintAndBurnAuth = await MintAndBurnAuthority.deployed()
 }
 

@@ -26,7 +26,7 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 
 	uint256 public constant TOTAL_SECONDS = DENOMINATOR * (1 days);
 
-	// bool private singletonLock = false;
+	bool private singletonLock = false;
 
 	ISettingsRegistry public registry;
 
@@ -234,20 +234,25 @@ contract LandResourceV6 is SupportsInterfaceWithLookup, DSAuth, IActivity {
 	/*
 	 *  Modifiers
 	 */
-	// modifier singletonLockCall() {
-	// 	require(!singletonLock, "Only can call once");
-	// 	_;
-	// 	singletonLock = true;
-	// }
+	modifier singletonLockCall() {
+		require(!singletonLock, "Only can call once");
+		_;
+		singletonLock = true;
+	}
 
         // initializeContract be called by proxy contract
         // see https://blog.openzeppelin.com/the-transparent-proxy-pattern/
-	constructor(
+	function initializeContract(
 		address _registry,
 		uint256 _resourceReleaseStartTime,
                 address _oldLand
-	) public {
+	) public singletonLockCall {
+                
                 require(_registry!= address(0), "_registry is a zero value");
+                // Ownable constructor
+        owner = msg.sender;
+        emit LogSetOwner(msg.sender);
+
 		registry = ISettingsRegistry(_registry);
 
 		resourceReleaseStartTime = _resourceReleaseStartTime;
