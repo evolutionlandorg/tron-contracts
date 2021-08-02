@@ -81,7 +81,7 @@ const app = async () => {
             let miner = await old_land.getMinerOnLand(landId, resource, j).call() 
             let sts = await old_land.miner2Index(miner._hex).call()
             miners.push(sts)
-            lengths[j]++
+            lengths[i]++
           }
           catch (error) {
             break

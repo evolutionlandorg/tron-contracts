@@ -50,8 +50,8 @@ const app = async () => {
   console.log(lastLandObjectId.toNumber())
   let interstellar_encoder = await tronWeb.contract().at(INTERSTELLAR_ENCODER.hex)
   let old_land = await tronWeb.contract().at(OLD_LAND.hex)
-  // for(let i = 1; i <= lastLandObjectId.toNumber(); i++) {
-  for(let i = 1001; i <= lastLandObjectId.toNumber(); i++) {
+  for(let i = 1; i <= lastLandObjectId.toNumber(); i++) {
+  // for(let i = 1001; i <= lastLandObjectId.toNumber(); i++) {
     let land = {}
     let id = await interstellar_encoder.encodeTokenIdForObjectContract(OWNER_SHIP.hex, LAND_BASE.hex, i).call()
     let landId = id._tokenId._hex
@@ -82,7 +82,7 @@ const app = async () => {
             let miner = await old_land.getMinerOnLand(landId, resource, j).call() 
             let sts = await old_land.miner2Index(miner._hex).call()
             miners.push(sts)
-            lengths[j]++
+            lengths[i]++
           }
           catch (error) {
             break
