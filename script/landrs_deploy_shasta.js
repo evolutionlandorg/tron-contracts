@@ -17,8 +17,8 @@ const LandResource = {
 }
 
 const TokenUseAuthority = {
-  base58: "TAPKf2k9gsk93d8m6vzxqswiPdeMJjQofL",
-  hex: "41048f89c34fc7540ca3d49fc0335a31a14efe0f57"
+  base58: "TMFVEHzryA7WtYcc5k66wBKdcYD9bCJ7w9",
+  hex: "417bbd95eb1ff47f75d8c2c09d910072b50ce061f1"
 }
 
 const MintAndBurnAuthority = {
@@ -42,6 +42,7 @@ const LandResourceAuthority = {
   hex: "419C2622FC3074864A19BF9CC1D8E7B50EB60BE31C"
 }
 
+let resourceStartTime = 1579422612;
 
 let params = {
   feeLimit:1_00_000_000,
@@ -56,8 +57,6 @@ let cst = { _isConstant: true }
 
 const app = async () => {
   tronWeb.setDefaultBlock('latest');
-
-  let resourceStartTime = 1579422612;
 
   let registry = await tronWeb.contract().at(SETTINGSREGISTRY.hex);
   let landrs_proxy = await tronWeb.contract().at(LandResourceProxy.hex)

@@ -59,8 +59,9 @@ async function asyncDeploy(deployer, network, accounts) {
   await deployer.deploy(LandResourceV6)
   let landrs = await LandResourceV6.deployed()
 
+  let tokenUseAddr = await registry.addressOf("0x434f4e54524143545f544f4b454e5f5553450000000000000000000000000000").call()
   let apostleBaseAddr = await registry.addressOf("0x434f4e54524143545f41504f53544c455f424153450000000000000000000000").call()
-  await deployer.deploy(TokenUseAuthority, [apostleBaseAddr, landrs_proxy.address]);
+  await deployer.deploy(TokenUseAuthority, [tokenUseAddr, apostleBaseAddr, landrs_proxy.address]);
   let tokenUseAuth = await TokenUseAuthority.deployed();
 
   await deployer.deploy(MintAndBurnAuthority, landrs_proxy.address);
