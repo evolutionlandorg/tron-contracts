@@ -31,8 +31,6 @@ const LandResourceAuthority = {
   hex: "415899A7FEBDEF63CE6CF3F914C40002E14AC7F9C6"
 }
 
-let resourceStartTime = 1579422612;
-
 let params = {
   feeLimit:1_00_000_000,
   callValue:0,
@@ -40,7 +38,6 @@ let params = {
   originEnergyLimit:10_000_000,
   shouldPollResponse:false
 }
-
 
 const app = async () => {
   tronWeb.setDefaultBlock('latest');
