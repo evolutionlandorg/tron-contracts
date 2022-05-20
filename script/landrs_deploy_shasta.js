@@ -78,7 +78,7 @@ const app = async () => {
   // CONTRACT_LAND_RESOURCE old "T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb"
   let gold = await tronWeb.contract().at(gold_addr)
   let wood = await tronWeb.contract().at(wood_addr)
-  let water = await tronWeb.contract().at(wood_addr)
+  let water = await tronWeb.contract().at(water_addr)
   let fire = await tronWeb.contract().at(fire_addr)
   let sioo = await tronWeb.contract().at(sioo_addr)
   console.log(5, await gold.setAuthority(MintAndBurnAuthority.hex).send(params))
