@@ -13,6 +13,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "build": "tronbox compile",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
